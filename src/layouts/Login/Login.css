@@ -1,0 +1,14 @@
+.Center {
+    margin:auto; 
+}
+
+.boxContainer {
+    width: 100px;
+}
+
+.content{
+    background:black !important;
+    position: absolute;
+    width:100%;
+    height:100%;
+}

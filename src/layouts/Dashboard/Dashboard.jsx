@@ -56,7 +56,7 @@ class Dashboard extends React.Component {
         <div className="main-panel" ref="mainPanel">
           <Header {...this.props} />
           <Switch>
-            {dashboardRoutes.map((prop, key) => {
+            {dashboardRoutes.map((prop, key) => {              
               if (prop.pro) {
                 return null;
               }
@@ -64,7 +64,7 @@ class Dashboard extends React.Component {
                 return <Redirect from={prop.path} to={prop.pathTo} key={key} />;
               }
               return (
-                <Route path={prop.path} component={prop.component} key={key} />
+                <Route path={prop.path} exact component={prop.component} key={key} />
               );
             })}
           </Switch>

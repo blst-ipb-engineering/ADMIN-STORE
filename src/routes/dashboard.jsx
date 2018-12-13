@@ -14,42 +14,48 @@ var dashRoutes = [
     component: Dashboard
   },
   {
-    path: "/icons",
+    path: "/dashboard/icons",
     name: "Icons",
     icon: "nc-icon nc-diamond",
     component: Icons
   },
-  { path: "/maps", name: "Maps", icon: "nc-icon nc-pin-3", component: Maps },
+  { path: "/dashboard/maps", name: "Maps", icon: "nc-icon nc-pin-3", component: Maps },
   {
-    path: "/notifications",
+    path: "/dashboard/notifications",
     name: "Notifications",
     icon: "nc-icon nc-bell-55",
     component: Notifications
   },
   {
-    path: "/user-page",
+    path: "/dashboard/user-page",
     name: "User Profile",
     icon: "nc-icon nc-single-02",
     component: UserPage
   },
   {
-    path: "/tables",
+    path: "/dashboard/tables",
     name: "Table List",
     icon: "nc-icon nc-tile-56",
     component: TableList
   },
   {
-    path: "/typography",
+    path: "/dashboard/typography",
     name: "Typography",
     icon: "nc-icon nc-caps-small",
     component: Typography
   },
   {
     pro: true,
-    path: "/upgrade",
+    path: "/dashboard/upgrade",
     name: "Upgrade to PRO",
     icon: "nc-icon nc-spaceship"
-  },
-  { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
+  },  
+
+  // { 
+  //   redirect: true, 
+  //   path: "/", 
+  //   pathTo: "/dashboard", 
+  //   name: "Dashboard" 
+  // }
 ];
 export default dashRoutes;
