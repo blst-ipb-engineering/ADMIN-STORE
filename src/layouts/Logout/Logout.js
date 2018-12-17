@@ -10,8 +10,9 @@ class Logout extends Component {
     componentDidMount() {        
         this.props.onLogout();        
     }
-
+    
     render () {
+        console.log('halo')
         return <Redirect to="/login"></Redirect>;
     }
 }
