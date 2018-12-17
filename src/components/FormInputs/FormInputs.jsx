@@ -28,11 +28,13 @@ class FieldGroup extends React.Component {
       inputGroupAddonProps
     } = this.props;
     var classes = " ";
+
     if (inputGroupProps !== undefined) {
       if (inputGroupProps.className !== undefined) {
         classes += inputGroupProps.className + " ";
       }
     }
+    
     if (addonLeft !== undefined || addonRight !== undefined)
       return (
         <InputGroup
