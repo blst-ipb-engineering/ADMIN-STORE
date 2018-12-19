@@ -36,8 +36,8 @@ class Dashboard extends React.Component {
                   </Col>
                   <Col xs={7} md={8}>
                     <div className="numbers">
-                      <p className="card-category">Capacity</p>
-                      <CardTitle tag="p">150GB</CardTitle>
+                      <p className="card-category">Order</p>
+                      <CardTitle tag="p">3</CardTitle>
                     </div>
                   </Col>
                 </Row>
@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
                   <Col xs={7} md={8}>
                     <div className="numbers">
                       <p className="card-category">Revenue</p>
-                      <CardTitle tag="p">$ 1,345</CardTitle>
+                      <CardTitle tag="p">Rp 1,345</CardTitle>
                     </div>
                   </Col>
                 </Row>
@@ -96,7 +96,7 @@ class Dashboard extends React.Component {
                   </Col>
                   <Col xs={7} md={8}>
                     <div className="numbers">
-                      <p className="card-category">Errors</p>
+                      <p className="card-category">Waiting</p>
                       <CardTitle tag="p">23</CardTitle>
                     </div>
                   </Col>

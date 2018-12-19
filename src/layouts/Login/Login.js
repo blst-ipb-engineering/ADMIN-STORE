@@ -97,7 +97,7 @@ class Login extends Component {
 
         let authRedirect = null;        
         if (this.props.isAuth){
-            authRedirect = <Redirect to="/dashboard" />;
+            authRedirect = <Redirect to="/dashboard/index" />;
         }
 
         return(            

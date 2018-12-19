@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Card, Table, CardBody, Row, Col } from "reactstrap";
+import { Card, Button, Table, CardBody, Row, Col } from "reactstrap";
 import Products from '../../components/Products/Product';
 
 import icons from "../../variables/icons";
@@ -19,7 +19,24 @@ class Product extends Component {
         name: "Bedah Rumah ala ihum Gambreng",
         author: "Aruna Fauqiyya Hasna",
         price: 12000     
-      }],
+      },{
+        id:103,
+        name: "Bedah Rumah ala ihum Gambreng",
+        author: "Aruna Fauqiyya Hasna",
+        price: 12000     
+      },{
+        id:103,
+        name: "Bedah Rumah ala ihum Gambreng",
+        author: "Aruna Fauqiyya Hasna",
+        price: 12000     
+      },{
+        id:103,
+        name: "Bedah Rumah ala ihum Gambreng",
+        author: "Aruna Fauqiyya Hasna",
+        price: 12000     
+      }
+    
+    ],
       loadingdata:true
     }
   }
@@ -35,7 +52,7 @@ class Product extends Component {
                   <thead>
                     <tr>
                       <th></th>
-                      <th>Product</th>
+                      <th>Product <a style={{marginLeft:'10px'}} href="http://google.com"><Button color="primary" size="sm"> <i className="nc-icon nc-simple-add"></i> Add Product</Button></a></th>
                       <th>Price <small>Per PCS</small></th>
                       <th>Stock </th>
                       <th></th>

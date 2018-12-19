@@ -41,6 +41,14 @@
     margin-bottom: 10px;
 }
 
+.icon-manage-product{
+    list-style: none;
+}
+
+.icon-manage-product a{
+    color: rgb(82, 82, 82);
+}
+
 .loading-pict {
     width: 100px;
     height: 100px;

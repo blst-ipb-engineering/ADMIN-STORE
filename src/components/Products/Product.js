@@ -3,6 +3,7 @@ import './Product.css';
 import { Input,Button, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
 import NumberFormat from 'react-number-format';
 import InputMask from 'react-input-mask';
+import ReactTooltip from 'react-tooltip'
 
 class Products extends Component {
 
@@ -11,7 +12,8 @@ class Products extends Component {
         this.state = {
             idProduct: this.props.produk.id,
             price: this.formatuang(this.props.produk.price),
-            errorInput: false
+            errorInput: false,
+            savable:true
         }
     }
 
@@ -28,9 +30,9 @@ class Products extends Component {
         let isNum = /^\d+$/.test(values);
         
         if(!isNum) {
-            this.setState({errorInput:true});
+            this.setState({errorInput:true,savable:false});
         }else {
-            this.setState({errorInput:false});
+            this.setState({errorInput:false,savable:true});
         }
 
         let price = this.formatuang(event.target.value);    
@@ -44,7 +46,8 @@ class Products extends Component {
     cancelHandler = (event) => {
         event.preventDefault();
         this.setState({
-            price:this.formatuang(this.props.produk.price)
+            price:this.formatuang(this.props.produk.price),
+            errorInput:false
         })
     }
 
@@ -59,7 +62,7 @@ class Products extends Component {
 
         // Save Button
         let savebutton = null; 
-        if(this.state.price !== this.formatuang(this.props.produk.price)){
+        if(this.state.price !== this.formatuang(this.props.produk.price) && this.state.savable){
             savebutton = <div ><button style={{cursor:'pointer'}}>Save</button>  <a style={{cursor:'pointer', fontSize:'9pt'}} onClick={this.cancelHandler}>Cancel</a> </div> ;
         }
 
@@ -84,7 +87,7 @@ class Products extends Component {
             </div>
         </td>   
         {/* Price    */}
-        <td>
+        <td style={{verticalAlign:'top'}}>
             <form onSubmit={this.onSubmitHandler}>
                 {errorNotif}
                 <InputGroup>
@@ -104,12 +107,30 @@ class Products extends Component {
             </form>
         </td>
         {/* Stock */}
-        <td>
-
+        <td style={{verticalAlign:'top',textAlign:'center'}}>
+            <h5>20</h5>
         </td>
         {/* Edit Publish */}
-        <td>
-
+        <td  style={{verticalAlign:'top'}}>
+            <ul className="icon-manage-product">
+                <li>
+                    <a href="http://localhost:3000/product/edit" data-tip="Ubah">
+                    <i className="nc-icon nc-ruler-pencil" />                    
+                    </a>
+                    <ReactTooltip />
+                </li>
+                <li>
+                    <a href="http://localhost:3000/product/edit" data-tip="Duplikat">
+                    <i className="nc-icon nc-single-copy-04" />                    
+                    </a>                    
+                </li>
+                <li>
+                    <a href="http://localhost:3000/product/edit" data-tip="Hapus">
+                    <i className="nc-icon nc-simple-remove" />                    
+                    </a>                    
+                </li>
+                
+            </ul>
         </td>
     </tr>
         )
