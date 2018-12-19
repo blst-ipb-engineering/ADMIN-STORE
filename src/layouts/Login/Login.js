@@ -25,7 +25,7 @@ class Login extends Component {
         emailValid:false,
     }
 
-    componentDidMount () {
+    componentDidMount () {       
         this.props.onTryAutoSignUp();
       }
     
@@ -144,7 +144,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onCheckEmail: (email) => dispatch(actionCreator.auth(email)),
         onCheckPassword: (email, password)=>dispatch(actionCreator.authPassword(email, password)),
-        onTryAutoSignUp: () => dispatch(actionCreator.authCheckState())
+        onTryAutoSignUp: () => dispatch(actionCreator.authCheckState()),
+        onSetAuthRedirectPath:  (path) =>dispatch(actionCreator.setAuthRedirectPath(path))
     }
 };
 

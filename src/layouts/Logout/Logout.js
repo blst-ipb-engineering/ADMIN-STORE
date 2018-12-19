@@ -11,8 +11,7 @@ class Logout extends Component {
         this.props.onLogout();        
     }
     
-    render () {
-        console.log('halo')
+    render () {        
         return <Redirect to="/login"></Redirect>;
     }
 }

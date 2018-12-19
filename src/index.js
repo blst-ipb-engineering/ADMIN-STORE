@@ -15,6 +15,7 @@ import indexRoutes from "./routes/index.jsx";
 import Dashboard from "./layouts/Dashboard/Dashboard.jsx";
 import Login from './layouts/Login/Login';
 import Logout from './layouts/Logout/Logout';
+import Products from './views/Products/Products.jsx';
 
 
 // reducer 
@@ -36,7 +37,6 @@ const logger = store => {
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__|| compose;
-
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, thunk)));
 
 
@@ -44,12 +44,10 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={hist}>
       <Switch>
-        <Route path="/dashboard" exact component={Dashboard}></Route>
+        <Route path="/dashboard" component={Dashboard}></Route>
         <Route path="/login" exact component={Login}></Route>
         <Route path="/" exact component={Login}></Route>
         <Route path="/logout" exact component={Logout} />
-
-
 
         {/* {indexRoutes.map((prop, key) => {
           return <Route path={prop.path} key={key} component={prop.component} />;

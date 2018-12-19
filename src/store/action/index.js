@@ -1,3 +1,3 @@
 export {
-    auth, authPassword,authCheckState, logout
+    auth, authPassword,authCheckState, logout,setAuthRedirectPath,checkAuthTimeout
 } from './auth'

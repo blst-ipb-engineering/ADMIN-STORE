@@ -9,7 +9,9 @@ const initialState = {
     userId: null,
     loading: false,
     error: null,
-    inst:null, // is admin
+    inst:null, // is admin,
+    authRedirectPath: '/dashboard'
+    
 };
 
 const auth = (state = initialState, action ) =>  {
@@ -65,6 +67,10 @@ const auth = (state = initialState, action ) =>  {
                 userId: action.authData.data.userId,
                 loading:true,
                 inst:action.authData.data.userlevel
+            });
+        case (actionType.SET_AUTH_REDIRECT_PATH):        
+            return updateObject( state, {
+                authRedirectPath:action.path,                
             });
         default:       
         return state;
