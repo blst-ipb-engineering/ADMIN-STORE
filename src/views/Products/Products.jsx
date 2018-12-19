@@ -9,14 +9,18 @@ class Product extends Component {
     super(props);
     this.state = {
       products: [{
-        name: "Bedah Rumah ala ala",
-        author: "Bagus Dwi Utama"        
+        id:102,
+        name: "SILVER NEEDLE TEA SERAMBI BOTANI HEALTHY & NATURAL PRODUCTS IPB STORE",
+        author: "Bagus Dwi Utama",
+        price: 1120000       
       },
       {
+        id:103,
         name: "Bedah Rumah ala ihum Gambreng",
-        author: "Aruna Fauqiyya Hasna"        
-      }
-    ]
+        author: "Aruna Fauqiyya Hasna",
+        price: 12000     
+      }],
+      loadingdata:true
     }
   }
 
@@ -32,7 +36,7 @@ class Product extends Component {
                     <tr>
                       <th></th>
                       <th>Product</th>
-                      <th>Price </th>
+                      <th>Price <small>Per PCS</small></th>
                       <th>Stock </th>
                       <th></th>
                     </tr>

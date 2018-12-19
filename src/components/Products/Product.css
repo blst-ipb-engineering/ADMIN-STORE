@@ -1,3 +1,88 @@
 .tes {
     background:green
 }
+
+.box-media {
+    width: 20%;
+    vertical-align: top;
+    float:left;
+    padding-right:10px;
+}
+
+.box-short-desc{
+    width:80%;   
+    padding:10px;
+    margin-left:10px;
+}
+
+.box-short-desc a{
+    text-transform: uppercase;
+    font-size: 12pt;
+    font-weight: 600;
+    color:rgb(21, 88, 143)
+}
+
+.box-short-desc small{
+    margin:5px;
+    padding:5px;
+    border-radius: 10px;
+    background:rgb(236, 236, 236);
+}
+
+.box-short-desc .ellipsis{
+    font-size: 9pt;
+    padding:10px;
+}
+
+.errorInput {
+    font-size: 7pt;
+    color: red;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.loading-pict {
+    width: 100px;
+    height: 100px;
+    background:linear-gradient(-45deg, rgb(150, 150, 150), rgb(219, 219, 219));
+    background-size: 300% 300%;
+	-webkit-animation: Gradient 0.5s ease infinite;
+	-moz-animation: Gradient 0.5s ease infinite;
+	animation: Gradient 0.5s ease infinite;
+}
+
+@-webkit-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@-moz-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
