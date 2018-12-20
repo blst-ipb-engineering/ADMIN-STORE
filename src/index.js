@@ -15,7 +15,6 @@ import indexRoutes from "./routes/index.jsx";
 import Dashboard from "./layouts/Dashboard/Dashboard.jsx";
 import Login from './layouts/Login/Login';
 import Logout from './layouts/Logout/Logout';
-import Products from './views/Products/Products.jsx';
 
 
 // reducer 
@@ -48,6 +47,7 @@ ReactDOM.render(
         <Route path="/login" exact component={Login}></Route>
         <Route path="/" exact component={Login}></Route>
         <Route path="/logout" exact component={Logout} />
+        
 
         {/* {indexRoutes.map((prop, key) => {
           return <Route path={prop.path} key={key} component={prop.component} />;

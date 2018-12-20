@@ -136,6 +136,8 @@ class Header extends React.Component {
               </button>
             </div>
             <NavbarBrand href="/">{this.getBrand()}</NavbarBrand>
+            <a color="primary" style={{cursor:'pointer', fontSize:'8pt'}} onClick={(event) => this.props.history.goBack()} size="sm">Back</a>   
+
           </div>
           <NavbarToggler onClick={this.toggle}>
             <span className="navbar-toggler-bar navbar-kebab" />

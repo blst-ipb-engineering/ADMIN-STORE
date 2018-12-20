@@ -10,6 +10,10 @@ import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 // import FixedPlugin from "../../components/FixedPlugin/FixedPlugin.jsx";
 import * as actionCreator from '../../store/action/index';
 
+//View
+import ProductEditor from '../../views/Input/ProductEditor';
+
+
 
 import dashboardRoutes from "../../routes/dashboard";
 
@@ -84,6 +88,7 @@ class Dashboard extends React.Component {
                 <Route path={prop.path} exact component={prop.component} key={key} />
               );
             })}
+            <Route path="/dashboard/products/new" exact component={ProductEditor} />
           </Switch>
 
 

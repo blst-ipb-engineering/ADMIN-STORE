@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import { Card, Button, Table, CardBody, Row, Col } from "reactstrap";
 import Products from '../../components/Products/Product';
+import { Link } from "react-router-dom";
+
 
 import icons from "../../variables/icons";
 
@@ -52,7 +54,13 @@ class Product extends Component {
                   <thead>
                     <tr>
                       <th></th>
-                      <th>Product <a style={{marginLeft:'10px'}} href="http://google.com"><Button color="primary" size="sm"> <i className="nc-icon nc-simple-add"></i> Add Product</Button></a></th>
+                      <th>Product 
+                        <Link to="/dashboard/products/new" style={{marginLeft:'10px'}} href="http://google.com">
+                          <Button color="primary" size="sm"> 
+                            <i className="nc-icon nc-simple-add"></i> Add Product
+                          </Button>
+                        </Link>
+                      </th>
                       <th>Price <small>Per PCS</small></th>
                       <th>Stock </th>
                       <th></th>
