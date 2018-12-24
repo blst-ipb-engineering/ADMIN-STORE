@@ -5,6 +5,7 @@
     padding: 20px;
 }
 
+
 .text-desc {
     margin: 15px;
 }
@@ -29,13 +30,21 @@
   };
 
 
-  .activeStyle {
+.activeStyle {
     border-style: solid;
     border-color: #6c6;
     background-color: #eee
   };
-  .rejectStyle {
+.rejectStyle {
     border-style: solid;
     border-color: #c66;
     background-color: #eee
   };
+
+.preview-thumbnail{
+    padding: 10px;
+    width: 100%;
+    height: 250px;
+    display: flex;
+    align-items: center;
+  }

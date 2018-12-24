@@ -79,7 +79,8 @@ class ProductEditor extends Component {
             },
             newMaterial: {
                 name: '',
-            }
+            },
+            thumbnailFile: []
         }
     }
 
@@ -121,9 +122,18 @@ class ProductEditor extends Component {
     }
 
     // Image Processing 
-    onDrop = (File) => {
-        console.log((File[0]))
+    onDrop = (files) => {
+        this.setState({thumbnailFile:
+            files.map(file => Object.assign(file, {
+                preview: URL.createObjectURL(file)
+            }) )
+        })
     }
+
+    componentWillUnmount() {
+        // Make sure to revoke the data uris to avoid memory leaks
+        this.state.thumbnailFile.forEach(file => URL.revokeObjectURL(file.preview))
+      }
 
 
 
@@ -139,7 +149,7 @@ class ProductEditor extends Component {
             modalform =      
                 <Row>
                     <Col md={12}>
-                    <Label for="name" required>Category Name <small>/ Nama Kategori</small></Label>   
+                    <Label for="nasme" required>Category Name <small>/ Nama Kategori</small></Label>   
                     <Input type="text" onChange={(event)=> this.setState({newCategory: {name:event.target.value}})}></Input>
                     </Col>
                 </Row>         
@@ -168,8 +178,8 @@ class ProductEditor extends Component {
                     </Col>
                 </Row>         
         }
-        
 
+       
         return (
         <div className="content">       
         {/* Tambah Kategori */}
@@ -192,7 +202,7 @@ class ProductEditor extends Component {
                     <h6>Display Photo</h6>
                     </CardHeader>    
                     <CardBody>
-                        <ImageUploader onDrop={this.onDrop} />
+                        <ImageUploader onDrop={this.onDrop} filepreview={this.state.thumbnailFile} maxUpload={2} />
                     </CardBody>
                 </Card>                                                
             </Col>

@@ -26,44 +26,67 @@ const baseStyle = {
     backgroundColor: '#eee'
   };
 
+  const previewThumbnail = {
+    padding: '10px',
+    width: '100%',
+    height: '250px',
+    display: 'flex',
+    alignItems: 'center',
+    border: '1px #e2e2e2 solid',
+    borderRadius: '5px',
+    margin : '20px 0px'
+  }
+
 class ImageUploader extends Component {
-    onDrop = (acceptedFiles, rejectedFiles) => {
-        console.log((acceptedFiles))
-    }
-
-
+   
     render() {
-        return(
-            <Dropzone accept="image/*" onDrop={this.opDrop}>
-                {({getRootProps, getInputProps,isDragReject, isDragActive}) => {
-                    let styles = {...baseStyle}
-                    styles = isDragActive ? {...styles, ...activeStyle} : styles
-                    styles = isDragReject ? {...styles, ...rejectStyle} : styles
+        console.log(this.props.filepreview)
+        const preview = this.props.filepreview.map(file=> (
+            <div style={previewThumbnail} key={file.name}>
+                <div className="thumbnail-inner">
+                    <img alt={file.name}
+                        src={file.preview}
+                        className="img"
+                    />
+                </div>
+            </div>
+        ));
+            
 
-                    return (
-                        <div {...getRootProps()} style={styles}>
-                            <input {...getInputProps()} />
-                            <img src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png" width="150px" ></img>
-                            <p className="text-desc">
-                                <span>
-                                    <i className="nc-icon nc-simple-add" style={{marginRight:'5px'}}></i>
-                                    Pilih Gambar Barang
-                                </span>
-                            </p>
-                        </div>
-                    )
-                }}
-            </Dropzone>
-            // <div className="field-upload-image">
-            //     <input type="file" accept="image/x-png, image/png, image/gif, image/jpeg, image/pjpeg, image/bmp, image/x-bmp"></input>
-            //     <img src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png" width="150px"></img>
-            //     <p className="text-desc">
-            //         <span>
-            //             <i className="nc-icon nc-simple-add" style={{marginRight:'5px'}}></i>
-            //             Pilih Gambar Barang
-            //         </span>
-            //     </p>
-            // </div>
+        let uploader = null;
+        if (this.props.filepreview.length < this.props.maxUpload){
+            uploader = 
+            <Dropzone accept="image/*" onDrop={this.props.onDrop}>
+                {({getRootProps, getInputProps,isDragReject, isDragActive}) => {
+                                let styles = {...baseStyle}
+                                styles = isDragActive ? {...styles, ...activeStyle} : styles
+                                styles = isDragReject ? {...styles, ...rejectStyle} : styles
+
+                                return (
+                                    <div {...getRootProps()} style={styles}>
+                                        <input {...getInputProps()} />
+                                        <img src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png" width="150px" ></img>
+                                        <p className="text-desc">
+                                            <span>
+                                                <i className="nc-icon nc-simple-add" style={{marginRight:'5px'}}></i>
+                                                Pilih Gambar Barang
+                                            </span>
+                                        </p>
+                                    </div>
+                                )
+                            }}
+            </Dropzone>;
+        }
+
+
+        return(            
+            <div>
+            <div className="thumbnail-image">
+                {preview}
+            </div>
+                {uploader}
+            </div>
+            
         );
     }
 }
