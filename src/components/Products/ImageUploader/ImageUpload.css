@@ -48,3 +48,11 @@
     display: flex;
     align-items: center;
   }
+
+  .delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: 14pt;
+}

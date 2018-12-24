@@ -130,12 +130,17 @@ class ProductEditor extends Component {
         })
     }
 
+    deleteImageHandler = (event,index) => {
+       event.preventDefault();       
+       this.state.thumbnailFile.splice(index, 1);         
+       this.setState({thumbnailFile: this.state.thumbnailFile});   
+    }
+
     componentWillUnmount() {
         // Make sure to revoke the data uris to avoid memory leaks
         this.state.thumbnailFile.forEach(file => URL.revokeObjectURL(file.preview))
       }
-
-
+    
 
 
     render() {        
@@ -199,10 +204,10 @@ class ProductEditor extends Component {
             <Col md={4} xs={12}>                                               
                 <Card className="card-user">
                     <CardHeader>
-                    <h6>Display Photo</h6>
+                    <h6>Display Phot <small>Max 4 photos</small></h6>
                     </CardHeader>    
                     <CardBody>
-                        <ImageUploader onDrop={this.onDrop} filepreview={this.state.thumbnailFile} maxUpload={4} />
+                        <ImageUploader onDrop={this.onDrop} deleted={this.deleteImageHandler} filepreview={this.state.thumbnailFile} maxUpload={4} />
                     </CardBody>
                 </Card>                                                
             </Col>

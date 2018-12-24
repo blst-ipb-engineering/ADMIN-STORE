@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './ImageUpload.css';
 import Dropzone from 'react-dropzone';
+import ReactTooltip from 'react-tooltip'
+
 
 const baseStyle = {
     display: 'flex',
@@ -34,14 +36,19 @@ const baseStyle = {
     alignItems: 'center',
     border: '1px #e2e2e2 solid',
     borderRadius: '5px',
-    margin : '20px 0px'
+    margin : '20px 0px',
+    position:'relative',
+    overflow:'hidden'
   }
 
 class ImageUploader extends Component {
    
     render() {       
-        const preview = this.props.filepreview.map(file=> (
+        const preview = this.props.filepreview.map((file, index)=> (
+            
             <div style={previewThumbnail} key={file.name}>
+                <ReactTooltip />
+                <div className="delete-icon" data-tip="Hapus" onClick={(event) => this.props.deleted(event,index)}><i className="nc-icon nc-simple-remove"></i></div>
                 <div className="thumbnail-inner">
                     <img alt={file.name}
                         src={file.preview}
