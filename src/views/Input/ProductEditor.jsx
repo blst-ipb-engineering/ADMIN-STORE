@@ -6,6 +6,7 @@ import ImageUploader from '../../components/Products/ImageUploader/ImageUploader
 import {RequireSpan, Label} from '../../components/UI/Form/Label/Label';
 import Select from 'react-select';
 import {StickyContainer, Sticky}from 'react-sticky';
+import { Prompt } from 'react-router-dom'
 // import Modal from '../../components/UI/Modal/Modal';
 
 
@@ -186,7 +187,9 @@ class ProductEditor extends Component {
 
        
         return (
-        <div className="content">       
+            
+        <div className="content">   
+        <Prompt message="You have unsaved form data. Are you sure you want to leave?" />    
         {/* Tambah Kategori */}
         <Modal isOpen={this.state.modal} toggle={this.hideModal}>                    
             <form>
@@ -204,7 +207,7 @@ class ProductEditor extends Component {
             <Col md={4} xs={12}>                                               
                 <Card className="card-user">
                     <CardHeader>
-                    <h6>Display Phot <small>Max 4 photos</small></h6>
+                    <h6>Display Photos <small>Max 4</small></h6>
                     </CardHeader>    
                     <CardBody>
                         <ImageUploader onDrop={this.onDrop} deleted={this.deleteImageHandler} filepreview={this.state.thumbnailFile} maxUpload={4} />
