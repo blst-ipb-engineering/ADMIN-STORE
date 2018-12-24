@@ -39,8 +39,7 @@ const baseStyle = {
 
 class ImageUploader extends Component {
    
-    render() {
-        console.log(this.props.filepreview)
+    render() {       
         const preview = this.props.filepreview.map(file=> (
             <div style={previewThumbnail} key={file.name}>
                 <div className="thumbnail-inner">

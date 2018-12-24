@@ -123,10 +123,10 @@ class ProductEditor extends Component {
 
     // Image Processing 
     onDrop = (files) => {
-        this.setState({thumbnailFile:
+        this.setState({thumbnailFile: this.state.thumbnailFile.concat(
             files.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file)
-            }) )
+            })))
         })
     }
 
@@ -202,7 +202,7 @@ class ProductEditor extends Component {
                     <h6>Display Photo</h6>
                     </CardHeader>    
                     <CardBody>
-                        <ImageUploader onDrop={this.onDrop} filepreview={this.state.thumbnailFile} maxUpload={2} />
+                        <ImageUploader onDrop={this.onDrop} filepreview={this.state.thumbnailFile} maxUpload={4} />
                     </CardBody>
                 </Card>                                                
             </Col>
@@ -325,6 +325,7 @@ class ProductEditor extends Component {
                             <Input style={{padding:'10px'}}
                                 type="textarea" 
                                 value={this.state.description} 
+                                onChange={(event)=> this.setState({description:event.target.value})}
                                 name="description"       
                                 rows="10"
                                 cols="30">
