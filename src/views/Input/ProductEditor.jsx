@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import Header from "../../components/Header/Header.jsx";
 import { Card, Button, Modal ,ModalHeader,ModalBody, ModalFooter ,Input, CardFooter, InputGroup,InputGroupAddon,InputGroupText, CardHeader, CardBody, Row, Col } from "reactstrap";
 
 import ImageUploader from '../../components/Products/ImageUploader/ImageUploader.jsx';
-import {RequireSpan, Label} from '../../components/UI/Form/Label/Label';
+import {Label} from '../../components/UI/Form/Label/Label';
 import Select from 'react-select';
-import {StickyContainer, Sticky}from 'react-sticky';
-import { Prompt } from 'react-router-dom'
-// import Modal from '../../components/UI/Modal/Modal';
+import { Prompt } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip'
+import axios from 'axios';
+
 
 
 
@@ -16,6 +16,7 @@ class ProductEditor extends Component {
         super(props);
         this.state = {
             name : '',
+            categoryGeneral: [],
             category: [],
             description: '',
             create_price: 0,
@@ -53,6 +54,7 @@ class ProductEditor extends Component {
             percent_royalti: null,
             author:[],
             pages: 0,
+            category_general_options :[],
             category_options :[
                 { id: 1, value: 'Pertanian', label: 'Pertanian' },
                 { id: 2, value: 'Peternakan', label: 'Peternakan' },
@@ -122,6 +124,15 @@ class ProductEditor extends Component {
         })
     }
 
+    onSubmit = (event) => {
+        event.preventDefault();
+
+        const data = this.state;
+        axios.post('http://localhost:8080/product/new',data).then(result=>{
+            console.log(result)
+        })
+    }
+
     // Image Processing 
     onDrop = (files) => {
         this.setState({thumbnailFile: this.state.thumbnailFile.concat(
@@ -142,6 +153,21 @@ class ProductEditor extends Component {
         this.state.thumbnailFile.forEach(file => URL.revokeObjectURL(file.preview))
       }
     
+    componentDidMount() {
+        // call for CategoryGeneral
+        const categoryGeneral = [];
+        axios.get('http://localhost:8080/product/category-general').then(result => {
+            result.data.map((value,key)=> {
+                categoryGeneral.push({
+                    id:value.id,
+                    value:value.id,
+                    label:value.name
+                })
+            })
+            
+            this.setState({category_general_options:categoryGeneral})
+        })
+    }
 
 
     render() {        
@@ -188,10 +214,10 @@ class ProductEditor extends Component {
        
         return (
             
-        <div className="content">   
+        <div className="content">        
         <Prompt message="You have unsaved form data. Are you sure you want to leave?" />    
-        {/* Tambah Kategori */}
-        <Modal isOpen={this.state.modal} toggle={this.hideModal}>                    
+        {/* Modal Tambah */}
+        <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>                    
             <form>
             <ModalHeader>
                 {titlemodal}
@@ -222,12 +248,22 @@ class ProductEditor extends Component {
                 </CardHeader>
                 <CardBody>
                     <Col md={12}>
-                        <Label for="name" required>Code <small>/ Kode Produk</small></Label>                        
+                        <Label for="name">Code <small>/ Kode Produk</small></Label>                        
                         <Input type="text" name="sku" onChange={(event)=> this.setState({sku: event.target.value})}></Input>
                     </Col>
                     <Col md={12}>
                         <Label for="name" required>Product Name <small>/ Nama Produk</small></Label>                        
                         <Input type="text" name="name" onChange={(event)=> this.setState({name: event.target.value})}></Input>
+                    </Col>
+                    <Col md={12}>
+                    <ReactTooltip />  
+                        <Label for="name" required>Product Category <small data-tip="Hubungi tim IT untuk menambahan data jika tidak tersedia">/ Kategori Umum</small></Label>   
+                        <Select
+                            onChange={(val)=> this.setState({categoryGeneral: val})}                            
+                            name="categoryGeneral"
+                            className="basic-multi-select"
+                            options={this.state.category_general_options}
+                        />                                                                  
                     </Col>
                     <Col md={12}>
                         <Label for="name" required>Category <small>/ Kategori</small></Label>   
@@ -455,7 +491,7 @@ class ProductEditor extends Component {
                             className="basic-multi-select"
                             options={this.state.materials}
                             />  
-                            <Button onClick={this.newFormHandler} name="addMaterial" style={{float:'right'}} color="primary" size="sm"> 
+                            <Button onClick={this.newFormHandler} name="addMaterial" color="primary" size="sm"> 
                             <i className="nc-icon nc-simple-add"></i> New Material
                             </Button> 
                         </Col>
@@ -464,7 +500,13 @@ class ProductEditor extends Component {
             </Card>
           </Col>
         </Row>
-        <Input size="lg" type="submit" value="Submit" />
+        <Row >
+            <Col md={12} style={{textAlign:'right'}}>
+                <Button type="submit" onClick={(event) => this.props.history.push('/dashboard/products')} value="Submit" color="secondary">Cancel</Button>
+                <Button type="submit" value="Submit" color="secondary" >Save & Add New</Button>
+                <Button type="submit" onClick={this.onSubmit} color="success" value="Submit">Save</Button>
+            </Col>
+        </Row>
         </form>
       </div>
         );
