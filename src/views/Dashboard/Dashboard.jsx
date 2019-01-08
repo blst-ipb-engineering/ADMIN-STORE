@@ -13,6 +13,8 @@ import { Line, Pie } from "react-chartjs-2";
 // function that returns a color based on an interval of numbers
 
 import Stats from "../../components/Stats/Stats.jsx";
+import Toaster from '../../components/UI/Toaster/Toaster';
+
 
 import {
   dashboard24HoursPerformanceChart,
@@ -23,7 +25,7 @@ import {
 class Dashboard extends React.Component {
   render() {
     return (
-      <div className="content">
+      <div className="content">        
         <Row>
           <Col xs={12} sm={6} md={6} lg={3}>
             <Card className="card-stats">

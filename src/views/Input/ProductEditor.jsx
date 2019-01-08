@@ -7,8 +7,14 @@ import Select from 'react-select';
 import { Prompt } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip'
 import axios from 'axios';
+import {connect} from 'react-redux';
+import * as actionCreator from '../../store/action/index';
+import { ToastContainer,toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
+
+import {ProductList as ProductListAction, ProductCategoryGeneral,NewCategoryAction} from '../../api/index';
 
 
 class ProductEditor extends Component {
@@ -56,9 +62,9 @@ class ProductEditor extends Component {
             pages: 0,
             category_general_options :[],
             category_options :[
-                { id: 1, value: 'Pertanian', label: 'Pertanian' },
-                { id: 2, value: 'Peternakan', label: 'Peternakan' },
-                { id: 3,value: 'Teknologi', label: 'Teknologi' }
+                // { id: 1, value: 'Pertanian', label: 'Pertanian' },
+                // { id: 2, value: 'Peternakan', label: 'Peternakan' },
+                // { id: 3,value: 'Teknologi', label: 'Teknologi' }
               ],
             materials: [
                 {id:1, value: 'Book Paper', label:'Book Paper'},
@@ -73,6 +79,7 @@ class ProductEditor extends Component {
             addCategory : false,
             addAuthor : false,
             addMaterial: false,
+            addMode: null,
             modal:false,
             newCategory: {
                 name: '',
@@ -156,21 +163,46 @@ class ProductEditor extends Component {
     componentDidMount() {
         // call for CategoryGeneral
         const categoryGeneral = [];
-        axios.get('http://localhost:8080/product/category-general').then(result => {
-            result.data.map((value,key)=> {
+        const content = {}
+        ProductCategoryGeneral(content).then(res => {
+            res.map((value,key)=> {
                 categoryGeneral.push({
-                    id:value.id,
-                    value:value.id,
+                    id: value.id,
+                    value: value.id,
                     label:value.name
-                })
-            })
+                });
+            });
+            this.setState({category_general_options:categoryGeneral});
+        }).catch(err => 
+            toast.warn("Network Error, Can't get catogory data from server " + err)
             
-            this.setState({category_general_options:categoryGeneral})
-        })
+            );        
     }
+
+    AddButtonHandler = (event) => {
+        event.preventDefault();
+        const mode = this.state.addMode;
+        
+        if(mode === 'category'){
+           const content = {
+                name : this.state.newCategory.name
+            }
+            
+            NewCategoryAction(content)
+        }
+        
+    }
+
+    showToaster = (message) => {
+        const snackBarOption = {
+              isOpen: true,
+              text: message
+            };              
+      }
 
 
     render() {        
+        console.log(this.props.ui)
         let modalform = null;
         let titlemodal = null;
         let status = false;
@@ -182,7 +214,7 @@ class ProductEditor extends Component {
                 <Row>
                     <Col md={12}>
                     <Label for="nasme" required>Category Name <small>/ Nama Kategori</small></Label>   
-                    <Input type="text" onChange={(event)=> this.setState({newCategory: {name:event.target.value}})}></Input>
+                    <Input type="text" onChange={(event)=> this.setState({newCategory: {name:event.target.value},addMode:'category'})}></Input>
                     </Col>
                 </Row>         
         }
@@ -194,19 +226,19 @@ class ProductEditor extends Component {
                 <Row>
                     <Col md={12}>
                     <Label for="name" required>Author Name <small>/ Nama Penulis</small></Label>   
-                    <Input type="text" onChange={(event)=> this.setState({newAuthor: {name:event.target.value}})}></Input>
+                    <Input type="text" onChange={(event)=> this.setState({newAuthor: {name:event.target.value},addMode:'author'})}></Input>
                     </Col>
                 </Row>         
         }
         
         if(this.state.addMaterial){
-            titlemodal = "Add Category"
+            titlemodal = "Add Material"
             status = this.state.newMaterial.name === "";
             modalform =      
                 <Row>
                     <Col md={12}>
                     <Label for="name" required>Material Name <small>/ Nama Bahan</small></Label>   
-                    <Input type="text" onChange={(event)=> this.setState({newMaterial: {name:event.target.value}})}></Input>
+                    <Input type="text" onChange={(event)=> this.setState({newMaterial: {name:event.target.value},addMode:'material'})}></Input>
                     </Col>
                 </Row>         
         }
@@ -218,13 +250,13 @@ class ProductEditor extends Component {
         <Prompt message="You have unsaved form data. Are you sure you want to leave?" />    
         {/* Modal Tambah */}
         <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>                    
-            <form>
+            <form onSubmit={this.AddButtonHandler}>
             <ModalHeader>
                 {titlemodal}
             </ModalHeader>
             <ModalBody>
                     {modalform}
-                {status ? <Button disabled size="sm">Add</Button>  : <Button size="sm">Add</Button> } 
+                {status ? <Button disabled size="sm">Add</Button> : <Button onClick={(event) => this.AddButtonHandler(event)}  size="sm">Add</Button> } 
             </ModalBody>            
             </form>
         </Modal>         
@@ -300,7 +332,7 @@ class ProductEditor extends Component {
                 <CardHeader>
                     <h6>Price <small>/ Harga</small></h6>
                 </CardHeader>
-                <CardBody>
+                <CardBody style={{minHeight:"0"}}>
                 <Row>
                         <Col md={12}>
                             <Label for="name" required><strong>Price</strong><small>/ Harga Jual</small></Label>                        
@@ -326,7 +358,7 @@ class ProductEditor extends Component {
                             </Input>
                         </Col>                                                             */}
                     </Row>
-                    <Row>
+                    {/* <Row>
                         <Col md={6}>
                             <Label for="name" required>Production Price <small>/ HPP</small></Label>                        
                             <InputGroup>
@@ -355,7 +387,7 @@ class ProductEditor extends Component {
                                 </Input>
                             </InputGroup>                            
                         </Col>                                                            
-                    </Row>
+                    </Row> */}
                 </CardBody>
             </Card>
             <Card className="card-user">
@@ -508,9 +540,22 @@ class ProductEditor extends Component {
             </Col>
         </Row>
         </form>
+        <ToastContainer />
       </div>
         );
     }
 }
 
-export default ProductEditor;
+const mapStateToProps = state => {
+    return {
+        ui: state.ui    
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      toggleNotif: (message) => dispatch(actionCreator.toggleNotification(message))
+    };
+  }
+
+export default connect(mapStateToProps,mapDispatchToProps)(ProductEditor);

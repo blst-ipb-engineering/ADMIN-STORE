@@ -12,13 +12,10 @@ import * as actionCreator from '../../store/action/index';
 
 //View
 import ProductEditor from '../../views/Input/ProductEditor';
-
+import Toaster from '../../components/UI/Toaster/Toaster';
 
 
 import dashboardRoutes from "../../routes/dashboard";
-
-
-
 
 var ps;
 
@@ -60,18 +57,20 @@ class Dashboard extends React.Component {
     this.setState({ backgroundColor: color });
   }
   render() {    
+    // console.log(this.props.ui.snackBarOption.text)
+    // console.log(this.props.ui.snackBarOption.isOpen)
        
     return (
-      <div className="wrapper">
+      <div className="wrapper">        
         <Sidebar
           {...this.props}
           routes={dashboardRoutes}
           bgColor={this.state.backgroundColor}
           activeColor={this.state.activeColor}
         />
-        <div className="main-panel" ref="mainPanel">
-          <Header {...this.props} />
-          
+        <div className="main-panel" ref="mainPanel">        
+          <Header {...this.props} /> 
+          {/* <Toaster isOpen={true} message={"Warning"}/>            */}
           <Switch>                      
             {dashboardRoutes.map((prop, key) => {              
               if (prop.pro) {
@@ -108,7 +107,8 @@ class Dashboard extends React.Component {
 const mapStateToProps = state => {  
   return {
     isAuth : state.authsd.token !== null,
-    authRedirectPath: state.authsd.authRedirectPath
+    authRedirectPath: state.authsd.authRedirectPath,
+    ui:state.ui
   }
 };
 

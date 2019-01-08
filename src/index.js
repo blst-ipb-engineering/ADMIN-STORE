@@ -19,10 +19,12 @@ import Logout from './layouts/Logout/Logout';
 
 // reducer 
 import  authReducer from './store/reducer/auth';
+import  uiReducer from './store/reducer/ui-reducer';
 
 const hist = createBrowserHistory();
 const rootReducer = combineReducers({
-  authsd: authReducer
+  authsd: authReducer,
+  ui:uiReducer
 });
 
 // membuat middleware
