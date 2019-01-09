@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-import {ProductList as ProductListAction, ProductCategoryGeneral,NewCategoryAction} from '../../api/index';
+import {ProductList as ProductListAction, ProductCategory, ProductCategoryGeneral,NewCategoryAction} from '../../api/index';
 
 
 class ProductEditor extends Component {
@@ -177,7 +177,20 @@ class ProductEditor extends Component {
             this.props.setLoading(false)       
         }).catch(err => 
             toast.warn("Network Error, Can't get catogory data from server " + err) ); 
-            this.props.setLoading(false)       
+            this.props.setLoading(false);
+            
+        // call for Category
+        const category = [];
+        ProductCategory().then(res=> {
+            res.map((value,key)=> {
+                category.push({
+                    id:value.id,
+                    value:value.name,
+                    label:value.name
+                })
+            })
+            this.setState({category_options: category})
+        })
     }
 
     // Handling untuk penambahan category, material, author

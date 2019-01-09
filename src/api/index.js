@@ -9,6 +9,7 @@ const API_SERVICES = {
     SignUp : `${HOSTNAME}/auth/signup`,
     ProductIndex : `${HOSTNAME}/product/index`,
     ProductCategoryGeneral : `${HOSTNAME}/category/general`,
+    ProductCategory : `${HOSTNAME}/category`,
     CategoryProductLocalAdd: `${HOSTNAME}/category/add` 
 
 }
@@ -39,6 +40,14 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
           
     return axios(configFetch(url, 'get', content, true, extraHeaders)).then(result => result.data).catch(err=>console.log(err))
     }
+  
+  const ProductCategory = () => {
+    const url = API_SERVICES.ProductCategory;
+    const extraHeaders = {
+      Authorization: `Bearer `+localStorage.getItem('token')
+    }
+    return axios(configFetch(url, 'get', null, true, extraHeaders)).then(result => result.data).catch(err=>console.log(err))
+  }
 
   // WRITE NEW PRODUCT LOCAL CATEGORY
   const NewCategoryAction = (content) => {
@@ -54,4 +63,4 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
 
 
 
-export {ProductList, ProductCategoryGeneral, NewCategoryAction}
+export {ProductList, ProductCategoryGeneral, NewCategoryAction,ProductCategory}
