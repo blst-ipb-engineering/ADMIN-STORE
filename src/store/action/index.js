@@ -3,5 +3,5 @@ export {
 } from './auth';
 
 export {
-    toggleNotification
+    toggleNotification, toggleLoading
 } from './ui';

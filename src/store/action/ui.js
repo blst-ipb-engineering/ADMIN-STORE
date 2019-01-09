@@ -6,3 +6,10 @@ export const toggleNotification = (payload) => {
         payload
     }
 }
+
+export const toggleLoading = (data) => {
+    return {
+        type:actionTypes.TOGGLE_LOADING,
+        data: data
+    }
+}

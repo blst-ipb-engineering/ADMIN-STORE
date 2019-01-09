@@ -18,10 +18,15 @@ const ui = (state = initialState, action) => {
                     ...action.payload
                 },                 
             });
+        case (actionType.TOGGLE_LOADING) :
+            return updateObject(state, {
+                isLoading:action.data                 
+            });
         
             default:       
         return state;
     }
 }
+
 
 export default ui;

@@ -162,6 +162,7 @@ class ProductEditor extends Component {
     
     componentDidMount() {
         // call for CategoryGeneral
+        this.props.setLoading(true)
         const categoryGeneral = [];
         const content = {}
         ProductCategoryGeneral(content).then(res => {
@@ -173,12 +174,13 @@ class ProductEditor extends Component {
                 });
             });
             this.setState({category_general_options:categoryGeneral});
+            this.props.setLoading(false)       
         }).catch(err => 
-            toast.warn("Network Error, Can't get catogory data from server " + err)
-            
-            );        
+            toast.warn("Network Error, Can't get catogory data from server " + err) ); 
+            this.props.setLoading(false)       
     }
 
+    // Handling untuk penambahan category, material, author
     AddButtonHandler = (event) => {
         event.preventDefault();
         const mode = this.state.addMode;
@@ -186,9 +188,15 @@ class ProductEditor extends Component {
         if(mode === 'category'){
            const content = {
                 name : this.state.newCategory.name
-            }
-            
-            NewCategoryAction(content)
+            }            
+            NewCategoryAction(content).then(res => {
+                
+                if(res.status === "success"){
+                    toast.success("Material Added Successfully");
+                    this.hideModal()
+                }
+                
+            })
         }
         
     }
@@ -202,7 +210,7 @@ class ProductEditor extends Component {
 
 
     render() {        
-        console.log(this.props.ui)
+        
         let modalform = null;
         let titlemodal = null;
         let status = false;
@@ -554,7 +562,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      toggleNotif: (message) => dispatch(actionCreator.toggleNotification(message))
+      toggleNotif: (message) => dispatch(actionCreator.toggleNotification(message)),
+      setLoading: (data) => dispatch(actionCreator.toggleLoading(data))
     };
   }
 

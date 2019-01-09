@@ -42,8 +42,14 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
 
   // WRITE NEW PRODUCT LOCAL CATEGORY
   const NewCategoryAction = (content) => {
-      const url = API_SERVICES.CategoryProductLocalAdd
-      return axios(configFetch(url, 'post', content)).then(result => result.data).catch(err=>console.log(err))
+      const url = API_SERVICES.CategoryProductLocalAdd;
+      const extraHeaders = {
+        Authorization: `Bearer `+localStorage.getItem('token')
+      }
+
+      return axios(configFetch(url, 'post', content, true, extraHeaders))
+      .then(result => result.data)
+      .catch(err=>console.log(err))
   } 
 
 

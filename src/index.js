@@ -20,11 +20,14 @@ import Logout from './layouts/Logout/Logout';
 // reducer 
 import  authReducer from './store/reducer/auth';
 import  uiReducer from './store/reducer/ui-reducer';
+import { loadingBarReducer } from 'react-redux-loading-bar'
+
 
 const hist = createBrowserHistory();
 const rootReducer = combineReducers({
   authsd: authReducer,
-  ui:uiReducer
+  ui:uiReducer,
+  loadingBar: loadingBarReducer,
 });
 
 // membuat middleware

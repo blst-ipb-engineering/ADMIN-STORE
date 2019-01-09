@@ -13,7 +13,7 @@ import * as actionCreator from '../../store/action/index';
 //View
 import ProductEditor from '../../views/Input/ProductEditor';
 import Toaster from '../../components/UI/Toaster/Toaster';
-
+import LoadingBar from 'react-redux-loading-bar';
 
 import dashboardRoutes from "../../routes/dashboard";
 
@@ -61,15 +61,19 @@ class Dashboard extends React.Component {
     // console.log(this.props.ui.snackBarOption.isOpen)
        
     return (
-      <div className="wrapper">        
+      <div className="wrapper">     
+        
         <Sidebar
           {...this.props}
           routes={dashboardRoutes}
           bgColor={this.state.backgroundColor}
           activeColor={this.state.activeColor}
         />
-        <div className="main-panel" ref="mainPanel">        
+        
+        <div className="main-panel" ref="mainPanel">  
+          <LoadingBar />         
           <Header {...this.props} /> 
+          
           {/* <Toaster isOpen={true} message={"Warning"}/>            */}
           <Switch>                      
             {dashboardRoutes.map((prop, key) => {              
@@ -116,6 +120,7 @@ const mapDispatchToProps = dispatch =>{
   return {
     onTryAutoSignUp: () => dispatch(actionCreator.authCheckState()),
     onSetAuthRedirectPath:  (path) =>dispatch(actionCreator.setAuthRedirectPath(path)),
+    setLoading: (data) => dispatch(actionCreator.toggleLoading(data))
   }
 }
 
