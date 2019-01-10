@@ -14,7 +14,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-import {ProductList as ProductListAction, ProductCategory, ProductCategoryGeneral,NewCategoryAction} from '../../api/index';
+import {ProductList as ProductListAction, 
+    ProductCategory, 
+    ProductCategoryGeneral,
+    NewCategoryAction,
+    AuthorIndex,
+    AuthorCreate
+} from '../../api/index';
 
 
 class ProductEditor extends Component {
@@ -23,7 +29,11 @@ class ProductEditor extends Component {
         this.state = {
             name : '',
             categoryGeneral: [],
-            category: [],
+            category: [
+                // { id: 1, value: 'Pertanian', label: 'Pertanian' },
+                // { id: 2, value: 'Peternakan', label: 'Peternakan' },
+                // { id: 3,value: 'Teknologi', label: 'Teknologi' }
+            ],
             description: '',
             create_price: 0,
             published_price: 0,
@@ -71,10 +81,10 @@ class ProductEditor extends Component {
                 {id:2, value: 'Soft Cover', label:'Soft Cover'},
                 {id:3, value: 'Art Carton', label:'Art Carton'},
             ],
-            authors: [
-                {id:1, value: 'Author 1', label:'Author 1'},
-                {id:2, value: 'Author 2', label:'Author 2'},
-                {id:3, value: 'Author 3', label:'Author 3'},
+            authors_options: [
+                // {id:1, value: 'Author 1', label:'Author 1'},
+                // {id:2, value: 'Author 2', label:'Author 2'},
+                // {id:3, value: 'Author 3', label:'Author 3'},
             ],
             addCategory : false,
             addAuthor : false,
@@ -86,6 +96,7 @@ class ProductEditor extends Component {
             },
             newAuthor: {
                 name: '',
+                occupation:''
             },
             newMaterial: {
                 name: '',
@@ -160,7 +171,16 @@ class ProductEditor extends Component {
         this.state.thumbnailFile.forEach(file => URL.revokeObjectURL(file.preview))
       }
     
+    componentWillUpdate() {
+        console.log("[WILL UPDATE] tes")
+    }
+
+    componentWillMOunt() {
+        console.log("[WILL MOUNT]")
+    }
+    
     componentDidMount() {
+        console.log("[DIDMOUNT]")
         // call for CategoryGeneral
         this.props.setLoading(true)
         const categoryGeneral = [];
@@ -191,7 +211,25 @@ class ProductEditor extends Component {
             })
             this.setState({category_options: category})
         })
+
+        // call for author
+        const authorsnya = [];
+        AuthorIndex().then(res => {
+            
+            res.map((value,key)=> {
+                
+                authorsnya.push({
+                    id:value.id,
+                    value:value.name,
+                    label:value.name
+                })
+            })
+            this.setState({authors_options:authorsnya})
+        });
+        
+        
     }
+    
 
     // Handling untuk penambahan category, material, author
     AddButtonHandler = (event) => {
@@ -202,13 +240,69 @@ class ProductEditor extends Component {
            const content = {
                 name : this.state.newCategory.name
             }            
-            NewCategoryAction(content).then(res => {
-                
+            NewCategoryAction(content).then(res => {                
                 if(res.status === "success"){
                     toast.success("Material Added Successfully");
-                    this.hideModal()
-                }
-                
+                    this.hideModal()                    
+                    const addedCategory = {
+                        id: res.data.id,
+                        value:res.data.id,
+                        label:res.data.name
+                    }
+                    const oldCategory = this.state.category;
+                    const newCategory = oldCategory.concat(addedCategory);                    
+                    this.setState({category:newCategory})
+                }else{
+                    toast.warning("Error Please Reload");                    
+                }                
+            }).then((res) => {                
+                const category = [];
+                ProductCategory().then(res=> {
+                    res.map((value,key)=> {
+                        category.push({
+                            id:value.id,
+                            value:value.id,
+                            label:value.name
+                        })
+                    })
+                    this.setState({category_options: category})
+                });
+            })
+        }
+
+        if(mode === 'author'){
+            const content = {
+                name : this.state.newAuthor.name,
+                occupation: this.state.newAuthor.occupation
+            }            
+            AuthorCreate(content).then(res => {                
+                if(res.status === "success"){
+                    toast.success("Author Added Successfully");
+                    this.hideModal()                    
+                    const addedAuthor = {
+                        id: res.data.id,
+                        value:res.data.id,
+                        label:res.data.name
+                    }
+                    console.log(addedAuthor)
+                    const oldAuthor = this.state.author;
+                    const newAuthor = oldAuthor.concat(addedAuthor);                    
+                    this.setState({author:newAuthor})
+                }else{
+                    toast.warning("Error Please Reload");                    
+                }                
+            }).then((res) => {                
+                const category = [];
+                AuthorIndex().then(res=> {
+                    res.map((value,key)=> {
+                        category.push({
+                            id:value.id,
+                            value:value.id,
+                            label:value.name
+                        })
+                    })
+                    this.setState({authors: category})
+                });
             })
         }
         
@@ -222,7 +316,7 @@ class ProductEditor extends Component {
       }
 
 
-    render() {        
+    render() {            
         
         let modalform = null;
         let titlemodal = null;
@@ -324,7 +418,9 @@ class ProductEditor extends Component {
                             onChange={(val)=> this.setState({category: val})}
                             isMulti
                             name="category"
+                            value={this.state.category}
                             className="basic-multi-select"
+                            values={this.state.category}
                             options={this.state.category_options}
                         />   
                         <Button onClick={this.newFormHandler} name="addCategory" color="primary" size="sm"> 
@@ -336,9 +432,10 @@ class ProductEditor extends Component {
                         <Select
                             onChange={(val)=> this.setState({author: val})}
                             isMulti
+                            value={this.state.author}
                             name="author"
                             className="basic-multi-select"
-                            options={this.state.authors}
+                            options={this.state.authors_options}
                         />   
                         <Button onClick={this.newFormHandler} color="primary" size="sm" name="addAuthor"> 
                             <i className="nc-icon nc-simple-add"></i> New Author

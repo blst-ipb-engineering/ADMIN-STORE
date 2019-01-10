@@ -10,7 +10,9 @@ const API_SERVICES = {
     ProductIndex : `${HOSTNAME}/product/index`,
     ProductCategoryGeneral : `${HOSTNAME}/category/general`,
     ProductCategory : `${HOSTNAME}/category`,
-    CategoryProductLocalAdd: `${HOSTNAME}/category/add` 
+    CategoryProductLocalAdd: `${HOSTNAME}/category/add`,
+    AuthorIndex: `${HOSTNAME}/author`,
+    AuthorCreate: `${HOSTNAME}/author/add`,
 
 }
 
@@ -61,6 +63,28 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
       .catch(err=>console.log(err))
   } 
 
+  // AUTHOR    
+  const AuthorIndex = (content) => {
+    const url = API_SERVICES.AuthorIndex;
+    const extraHeaders = {
+      Authorization: `Bearer ` +localStorage.getItem('token')
+    }   
+
+    return axios(configFetch(url,'get',content,true,extraHeaders))
+    .then(result => result.data).catch(err=>console.log(err));
+  }
+
+  const AuthorCreate = (content) => {
+    const url = API_SERVICES.AuthorCreate;
+    const extraHeaders = {
+      Authorization: `Bearer ` +localStorage.getItem('token')
+    }
+
+    return axios(configFetch(url,'post',content,true,extraHeaders))
+    .then(result=>result.data)
+    .catch(err=>console.log(err))
+  }
 
 
-export {ProductList, ProductCategoryGeneral, NewCategoryAction,ProductCategory}
+
+export {ProductList, ProductCategoryGeneral, NewCategoryAction,ProductCategory, AuthorIndex, AuthorCreate}
