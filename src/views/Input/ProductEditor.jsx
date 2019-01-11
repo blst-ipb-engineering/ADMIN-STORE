@@ -19,7 +19,9 @@ import {ProductList as ProductListAction,
     ProductCategoryGeneral,
     NewCategoryAction,
     AuthorIndex,
-    AuthorCreate
+    AuthorCreate,
+    MaterialIndex,
+    MaterialCreate
 } from '../../api/index';
 
 
@@ -77,9 +79,9 @@ class ProductEditor extends Component {
                 // { id: 3,value: 'Teknologi', label: 'Teknologi' }
               ],
             materials: [
-                {id:1, value: 'Book Paper', label:'Book Paper'},
-                {id:2, value: 'Soft Cover', label:'Soft Cover'},
-                {id:3, value: 'Art Carton', label:'Art Carton'},
+                // {id:1, value: 'Book Paper', label:'Book Paper'},
+                // {id:2, value: 'Soft Cover', label:'Soft Cover'},
+                // {id:3, value: 'Art Carton', label:'Art Carton'},
             ],
             authors_options: [
                 // {id:1, value: 'Author 1', label:'Author 1'},
@@ -167,13 +169,14 @@ class ProductEditor extends Component {
     }
 
     componentWillUnmount() {
+        console.log("[Will Unmount]")
         // Make sure to revoke the data uris to avoid memory leaks
         this.state.thumbnailFile.forEach(file => URL.revokeObjectURL(file.preview))
       }
     
-    componentWillUpdate() {
-        console.log("[WILL UPDATE] tes")
-    }
+    // componentWillUpdate() {
+    //     console.log("[WILL UPDATE] tes")
+    // }
 
     componentWillMOunt() {
         console.log("[WILL MOUNT]")
@@ -292,16 +295,53 @@ class ProductEditor extends Component {
                     toast.warning("Error Please Reload");                    
                 }                
             }).then((res) => {                
-                const category = [];
+                const authors = [];
                 AuthorIndex().then(res=> {
                     res.map((value,key)=> {
-                        category.push({
+                        authors.push({
                             id:value.id,
                             value:value.id,
                             label:value.name
                         })
                     })
-                    this.setState({authors: category})
+                    console.log(authors)
+                    this.setState({authors_options: authors})
+                });
+            })
+        }
+
+        if(mode === 'material'){
+            const content = {
+                name : this.state.newMaterial.name,                
+            }            
+            MaterialCreate(content).then(res => {    
+                console.log(res)            
+                if(res.status === "success"){
+                    toast.success("Material Added Successfully");
+                    this.hideModal()                    
+                    const addedMaterial = {
+                        id: res.data.id,
+                        value:res.data.id,
+                        label:res.data.name
+                    }
+                    
+                    const oldMaterial = this.state.material;
+                    const newMaterial = oldMaterial.concat(addedMaterial);                    
+                    this.setState({material:newMaterial})
+                }else{
+                    toast.warning("Error Please Reload");                    
+                }                
+            }).then((res) => {                
+                const materials = [];
+                MaterialIndex().then(res=> {
+                    res.map((value,key)=> {
+                        materials.push({
+                            id:value.id,
+                            value:value.id,
+                            label:value.name
+                        })
+                    })                    
+                    this.setState({materials: materials})
                 });
             })
         }
@@ -637,6 +677,7 @@ class ProductEditor extends Component {
                             <Select
                             onChange={(val)=> this.setState({material: val})}
                             isMulti
+                            value={this.state.material}
                             name="material"
                             className="basic-multi-select"
                             options={this.state.materials}

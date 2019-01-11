@@ -13,7 +13,8 @@ const API_SERVICES = {
     CategoryProductLocalAdd: `${HOSTNAME}/category/add`,
     AuthorIndex: `${HOSTNAME}/author`,
     AuthorCreate: `${HOSTNAME}/author/add`,
-
+    MaterialIndex: `${HOSTNAME}/material`,
+    MaterialCreate: `${HOSTNAME}/material/add`
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -85,6 +86,37 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
     .catch(err=>console.log(err))
   }
 
+  // MATERIAL    
+  const MaterialIndex = (content) => {
+    const url = API_SERVICES.MaterialIndex;
+    const extraHeaders = {
+      Authorization: `Bearer ` +localStorage.getItem('token')
+    }   
+
+    return axios(configFetch(url,'get',content,true,extraHeaders))
+    .then(result => result.data).catch(err=>console.log(err));
+  }
+
+  const MaterialCreate = (content) => {
+    const url = API_SERVICES.MaterialCreate;
+    const extraHeaders = {
+      Authorization: `Bearer ` +localStorage.getItem('token')
+    }
+
+    return axios(configFetch(url,'post',content,true,extraHeaders))
+    .then(result=>result.data)
+    .catch(err=>console.log(err))
+  }
 
 
-export {ProductList, ProductCategoryGeneral, NewCategoryAction,ProductCategory, AuthorIndex, AuthorCreate}
+
+export {
+  ProductList, 
+  ProductCategoryGeneral, 
+  NewCategoryAction,
+  ProductCategory, 
+  AuthorIndex, 
+  MaterialIndex,
+  MaterialCreate,
+  AuthorCreate
+}
