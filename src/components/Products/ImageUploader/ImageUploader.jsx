@@ -42,11 +42,32 @@ const baseStyle = {
   }
 
 class ImageUploader extends Component {
-   
-    render() {       
-        const preview = this.props.filepreview.map((file, index)=> (
-            
-            <div style={previewThumbnail} key={file.name}>
+    
+    handleUploadImage = () => {        
+        const cloudName = 'blst';
+        const unsignedUploadPreset = 'product';
+        const HOST = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+        let fd = new FormData()
+
+        fd.append('upload_preset', unsignedUploadPreset);
+        fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
+        fd.append('file', this.props.filepreview);
+
+
+        fetch(HOST,{
+        body: fd,
+        method: 'POST'
+        }).then((response) => {
+        return response.json()
+        }).then((result) => {
+        this.setState({ imageURL: result.secure_url, isLoadingUploadKTP: false })
+        })
+    }
+    
+    
+    render() {             
+        const preview = this.props.filepreview.map((file, index)=> (                                  
+            <div style={previewThumbnail} key={file.index}>
                 <ReactTooltip />
                 <div className="delete-icon" data-tip="Hapus" onClick={(event) => this.props.deleted(event,index)}><i className="nc-icon nc-simple-remove"></i></div>
                 <div className="thumbnail-inner">

@@ -98,7 +98,8 @@ class ProductEditor extends Component {
             },
             newAuthor: {
                 name: '',
-                occupation:''
+                occupation:'',
+                phone:''
             },
             newMaterial: {
                 name: '',
@@ -135,6 +136,7 @@ class ProductEditor extends Component {
     newFormHandler = (event) => {
         event.preventDefault();
         let name = event.target.name;
+        this.setState({addAuthor:false, addMaterial:false, addCategory:false});
         this.setState({[name]:true,modal:true})
     }
 
@@ -146,21 +148,55 @@ class ProductEditor extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-
         const data = this.state;
         axios.post('http://localhost:8080/product/new',data).then(result=>{
             console.log(result)
-        })
+        });
     }
 
     // Image Processing 
-    onDrop = (files) => {
-        this.setState({thumbnailFile: this.state.thumbnailFile.concat(
-            files.map(file => Object.assign(file, {
+    onDrop = (files) => {  
+        const max_file = 4 - files.length;
+        const array_images = this.state.thumbnailFile.concat(
+            files.slice(0, max_file).map((file) => Object.assign(file, {
                 preview: URL.createObjectURL(file)
-            })))
-        })
+            })));
+        
+        this.setState({thumbnailFile: array_images});
+        
+        // uploading to cloudinary directly
+        files.map((file)=> {            
+            this.handleUploadImages(file);
+        })        
     }
+
+    // This function does the uploading to cloudinary
+    handleUploadImages = (image) => {        
+        console.log(image);
+        // uploads is an array that would hold all the post methods for each image to be uploaded, then we'd use axios.all()
+              
+        // our formdata
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("tags", 'product'); // Add tags for the images - {Array}
+        formData.append("upload_preset", "blst_product"); // Replace the preset name with your own
+        formData.append("api_key", "387685966233372"); // Replace API key with your own Cloudinary API key
+        formData.append("timestamp", (Date.now() / 1000) | 0);
+
+        // Replace cloudinary upload URL with yours
+        return axios.post(
+            "https://api.cloudinary.com/v1_1/blst/image/upload",
+            formData, 
+            { headers: { "X-Requested-With": "XMLHttpRequest" }})
+            .then(response => console.log(response.data))
+                
+        // // We would use axios `.all()` method to perform concurrent image upload to cloudinary.
+        // axios.all(uploads).then(() => {
+        // // ... do anything after successful upload. You can setState() or save the data
+        // console.log('Images have all being uploaded')
+        // });
+    }
+
 
     deleteImageHandler = (event,index) => {
        event.preventDefault();       
@@ -178,7 +214,7 @@ class ProductEditor extends Component {
     //     console.log("[WILL UPDATE] tes")
     // }
 
-    componentWillMOunt() {
+    componentWillMount() {
         console.log("[WILL MOUNT]")
     }
     
@@ -228,9 +264,7 @@ class ProductEditor extends Component {
                 })
             })
             this.setState({authors_options:authorsnya})
-        });
-        
-        
+        });            
     }
     
 
@@ -276,7 +310,8 @@ class ProductEditor extends Component {
         if(mode === 'author'){
             const content = {
                 name : this.state.newAuthor.name,
-                occupation: this.state.newAuthor.occupation
+                occupation: this.state.newAuthor.occupation,
+                phone: this.state.newAuthor.phone
             }            
             AuthorCreate(content).then(res => {                
                 if(res.status === "success"){
@@ -376,12 +411,15 @@ class ProductEditor extends Component {
 
         if(this.state.addAuthor){
             titlemodal = "Add Author"
-            status = this.state.newAuthor.name === "";
+            status = this.state.newAuthor.name === "" || this.state.newAuthor.phone !== "";
+            console.log(status)
             modalform =      
                 <Row>
                     <Col md={12}>
                     <Label for="name" required>Author Name <small>/ Nama Penulis</small></Label>   
                     <Input type="text" onChange={(event)=> this.setState({newAuthor: {name:event.target.value},addMode:'author'})}></Input>
+                    <Label for="name" required>Phone Number <small>/ Nomor Telp</small></Label>   
+                    <Input type="text" onChange={(event)=> this.setState({newAuthor: {phone:event.target.value},addMode:'author'})}></Input>
                     </Col>
                 </Row>         
         }
@@ -433,11 +471,7 @@ class ProductEditor extends Component {
                 <CardHeader>
                     <h6>Product Information</h6>
                 </CardHeader>
-                <CardBody>
-                    <Col md={12}>
-                        <Label for="name">Code <small>/ Kode Produk</small></Label>                        
-                        <Input type="text" name="sku" onChange={(event)=> this.setState({sku: event.target.value})}></Input>
-                    </Col>
+                <CardBody>                    
                     <Col md={12}>
                         <Label for="name" required>Product Name <small>/ Nama Produk</small></Label>                        
                         <Input type="text" name="name" onChange={(event)=> this.setState({name: event.target.value})}></Input>
@@ -687,6 +721,12 @@ class ProductEditor extends Component {
                             </Button> 
                         </Col>
                     </Row>
+                    <Row>
+                    <Col md={12}>
+                        <Label for="name">Code <small>/ Kode Produk</small></Label>                        
+                        <Input type="text" name="sku" onChange={(event)=> this.setState({sku: event.target.value})}></Input>
+                    </Col>
+                    </Row>
                 </CardBody>
             </Card>
           </Col>
@@ -695,6 +735,7 @@ class ProductEditor extends Component {
             <Col md={12} style={{textAlign:'right'}}>
                 <Button type="submit" onClick={(event) => this.props.history.push('/dashboard/products')} value="Submit" color="secondary">Cancel</Button>
                 <Button type="submit" value="Submit" color="secondary" >Save & Add New</Button>
+                <Button type="submit" value="Submit" color="secondary" >Copy & Add New</Button>
                 <Button type="submit" onClick={this.onSubmit} color="success" value="Submit">Save</Button>
             </Col>
         </Row>
