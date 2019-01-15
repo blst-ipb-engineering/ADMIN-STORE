@@ -16,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import {ProductList as ProductListAction, 
     ProductCategory, 
+    ProductAdd,
     ProductCategoryGeneral,
     NewCategoryAction,
     AuthorIndex,
@@ -104,7 +105,8 @@ class ProductEditor extends Component {
             newMaterial: {
                 name: '',
             },
-            thumbnailFile: []
+            thumbnailFile: [],
+            productImagesUrl: []
         }
     }
 
@@ -148,24 +150,23 @@ class ProductEditor extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-        const data = this.state;
-        axios.post('http://localhost:8080/product/new',data).then(result=>{
-            console.log(result)
-        });
+        const content = this.state;
+        ProductAdd(content).then(res => {
+            console.log(res)
+        })
     }
 
     // Image Processing 
     onDrop = (files) => {  
-        const max_file = 4 - files.length;
+        const max_file_count = 4 - this.state.thumbnailFile.length;
         const array_images = this.state.thumbnailFile.concat(
-            files.slice(0, max_file).map((file) => Object.assign(file, {
+            files.slice(0, max_file_count).map((file) => Object.assign(file, {
                 preview: URL.createObjectURL(file)
             })));
         
-        this.setState({thumbnailFile: array_images});
-        
+        this.setState({thumbnailFile: array_images});        
         // uploading to cloudinary directly
-        files.map((file)=> {            
+        files.slice(0, max_file_count).map((file)=> {            
             this.handleUploadImages(file);
         })        
     }
@@ -181,20 +182,22 @@ class ProductEditor extends Component {
         formData.append("tags", 'product'); // Add tags for the images - {Array}
         formData.append("upload_preset", "blst_product"); // Replace the preset name with your own
         formData.append("api_key", "387685966233372"); // Replace API key with your own Cloudinary API key
+        formData.append("folder","product");
+        formData.append("quality","low");
         formData.append("timestamp", (Date.now() / 1000) | 0);
-
+        
         // Replace cloudinary upload URL with yours
         return axios.post(
             "https://api.cloudinary.com/v1_1/blst/image/upload",
             formData, 
             { headers: { "X-Requested-With": "XMLHttpRequest" }})
-            .then(response => console.log(response.data))
-                
-        // // We would use axios `.all()` method to perform concurrent image upload to cloudinary.
-        // axios.all(uploads).then(() => {
-        // // ... do anything after successful upload. You can setState() or save the data
-        // console.log('Images have all being uploaded')
-        // });
+            .then(response => {
+                console.log(response.data)
+                // const oldImages = this.state.productImagesUrl;
+                const newImages = response.data;
+                const newArrayofImages = this.state.productImagesUrl.concat(newImages);
+                this.setState({productImagesUrl:newArrayofImages});
+            })
     }
 
 
@@ -250,6 +253,19 @@ class ProductEditor extends Component {
             })
             this.setState({category_options: category})
         })
+
+        // call for Material
+        const materials= [];
+        MaterialIndex().then(res=> {
+            res.map((value,key)=> {
+                materials.push({
+                    id:value.id,
+                    value:value.id,
+                    label:value.name
+                })
+            })                    
+            this.setState({materials: materials})
+        });
 
         // call for author
         const authorsnya = [];
@@ -589,7 +605,7 @@ class ProductEditor extends Component {
                 <CardBody>
                     <Row>
                         <Col md={12}>
-                        <Label for="name" required>Description<small>/ Deskripsi</small></Label>                                            
+                        <Label for="name" required>Description<small>/ Deskripsi</small><small style={{float:'right'}}>{500 - this.state.description.length} / 500</small></Label>                                            
                             <Input style={{padding:'10px'}}
                                 type="textarea" 
                                 value={this.state.description} 
