@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import './Products.css';
 import * as actionCreator from '../../store/action/index';
 import { connect } from 'react-redux';
+import Loader from '../../components/Loader/Loader';
+import Spinner from '../../components/Spinner/Spinner';
+
 
 
 import { ToastContainer,toast } from 'react-toastify';
@@ -52,7 +55,7 @@ class Product extends Component {
         })
       });
     }).then(res => {
-      this.setState({products:products});
+      this.setState({products:products,loadingdata:false});
       this.props.setLoading(false)       
     })
   }
@@ -69,7 +72,15 @@ class Product extends Component {
       console.log("toast from Dashboard")
     }
 
-    let ProductList = <div className="product-null-wrapper">
+    let ProductList = null;
+    if (this.state.loadingdata){
+      ProductList = <div style={{height:'100px'}}>
+        <Loader/>       
+      </div>;
+    }
+
+    if (this.state.products.length === 0 && !this.state.loadingdata) {
+      ProductList = <div className="product-null-wrapper">
         <div className="image-wrapper">
           <img src="/box.svg" alt=""/>
         </div>
@@ -80,9 +91,10 @@ class Product extends Component {
                  <i className="nc-icon nc-simple-add"></i> Add Product
                </Button>
         </Link>
-    </div>
+        </div>
+    }
 
-    if (this.state.products.length > 0) {
+    else if (this.state.products.length > 0) {
        ProductList = <Table responsive>
        <thead>
          <tr>
@@ -117,7 +129,7 @@ class Product extends Component {
         <Row>
           <Col md={12}>
             <Card>
-              <CardBody>
+              <CardBody>                
                 {ProductList}
               </CardBody>
             </Card>
