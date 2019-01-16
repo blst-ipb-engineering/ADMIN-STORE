@@ -12,7 +12,10 @@ import * as actionCreator from '../../store/action/index';
 
 //View
 import ProductEditor from '../../views/Input/ProductEditor';
-import Toaster from '../../components/UI/Toaster/Toaster';
+
+import { ToastContainer,toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import LoadingBar from 'react-redux-loading-bar';
 
 import dashboardRoutes from "../../routes/dashboard";
@@ -27,6 +30,7 @@ class Dashboard extends React.Component {
       activeColor: "warning",
     }
   }
+
 
   componentDidMount() {    
     if (navigator.platform.indexOf("Win") > -1) {
@@ -56,13 +60,12 @@ class Dashboard extends React.Component {
   handleBgClick = (color) => {
     this.setState({ backgroundColor: color });
   }
-  render() {    
+  render() {        
     // console.log(this.props.ui.snackBarOption.text)
     // console.log(this.props.ui.snackBarOption.isOpen)
-       
+    // console.log(this.props.ui.toaster.isOpenToast)
     return (
-      <div className="wrapper">     
-        
+      <div className="wrapper">             
         <Sidebar
           {...this.props}
           routes={dashboardRoutes}
@@ -120,7 +123,8 @@ const mapDispatchToProps = dispatch =>{
   return {
     onTryAutoSignUp: () => dispatch(actionCreator.authCheckState()),
     onSetAuthRedirectPath:  (path) =>dispatch(actionCreator.setAuthRedirectPath(path)),
-    setLoading: (data) => dispatch(actionCreator.toggleLoading(data))
+    setLoading: (data) => dispatch(actionCreator.toggleLoading(data)),
+    toggleToaster: (payload) => dispatch(actionCreator.toggleToaster(payload))
   }
 }
 

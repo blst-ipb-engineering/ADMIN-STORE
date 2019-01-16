@@ -3,10 +3,19 @@ import { Card, Button, Table, CardBody, Row, Col } from "reactstrap";
 import Products from '../../components/Products/Product';
 import { Link } from "react-router-dom";
 import './Products.css';
+import * as actionCreator from '../../store/action/index';
+import { connect } from 'react-redux';
+
+
+import { ToastContainer,toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 import icons from "../../variables/icons";
 import axios from "axios";
+
+import {ProductList,   
+} from '../../api/index';
 
 class Product extends Component {
   constructor(props) {
@@ -32,12 +41,34 @@ class Product extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:8080/product/index').then(result => {
-      console.log(result)
+    const products =[];
+    const content = {}
+    ProductList(content).then(res=> {
+      res.map((value,index)=> {
+        products.push({
+          id:value.id,
+          name:value.name,
+          price:value.base_price
+        })
+      });
+    }).then(res => {
+      this.setState({products:products});
+      this.props.setLoading(false)       
     })
   }
 
   render() {
+    if(this.props.ui.toaster.isOpenToast){
+      toast.warning("Toast DidMount Dashboard");
+      const toaster = {
+        isOpenToast: false,
+        toastMessage: null,
+        toastType:'success',
+    }      
+      this.props.toggleToaster(toaster)
+      console.log("toast from Dashboard")
+    }
+
     let ProductList = <div className="product-null-wrapper">
         <div className="image-wrapper">
           <img src="/box.svg" alt=""/>
@@ -97,4 +128,21 @@ class Product extends Component {
   }
 }
 
-export default Product;
+const mapStateToProps = state => {  
+  return {
+    isAuth : state.authsd.token !== null,
+    authRedirectPath: state.authsd.authRedirectPath,
+    ui:state.ui
+  }
+};
+
+const mapDispatchToProps = dispatch =>{  
+  return {
+    onTryAutoSignUp: () => dispatch(actionCreator.authCheckState()),
+    onSetAuthRedirectPath:  (path) =>dispatch(actionCreator.setAuthRedirectPath(path)),
+    setLoading: (data) => dispatch(actionCreator.toggleLoading(data)),
+    toggleToaster: (payload) => dispatch(actionCreator.toggleToaster(payload))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Product);

@@ -11,7 +11,9 @@ import {connect} from 'react-redux';
 import * as actionCreator from '../../store/action/index';
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Loader from '../../components/Loader/Loader';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 import {ProductList as ProductListAction, 
@@ -40,17 +42,11 @@ class ProductEditor extends Component {
             description: '',
             create_price: 0,
             published_price: 0,
-            base_price: 0,            
-            is_preorder: false,
-            pre_order_start: null,
-            pre_order_end: null,
-            sale_start: null,
-            sale_end: null,
-            weight: 0,
-            minimum_order: 1,
+            base_price: 0, 
+            publish_date: new Date(),                                    
+            weight: 0,            
             isbn : '',
-            status: 'draft',
-            language: '',
+            status: 'draft',            
             height: 0,
             width: 0,
             thick: 0,
@@ -92,6 +88,7 @@ class ProductEditor extends Component {
             addCategory : false,
             addAuthor : false,
             addMaterial: false,
+            saveable:true,
             addMode: null,
             modal:false,
             newCategory: {
@@ -106,8 +103,10 @@ class ProductEditor extends Component {
                 name: '',
             },
             thumbnailFile: [],
-            productImagesUrl: []
-        }
+            productImagesUrl: [],
+            sumFilled:0,
+            prompt:true
+        }        
     }
 
     formatuang(amount) {
@@ -132,7 +131,8 @@ class ProductEditor extends Component {
         }
         else if (values.length <= 1){
             this.setState({[key]:0})  
-        }             
+        }    
+        this.countFilled();         
     }
 
     newFormHandler = (event) => {
@@ -148,16 +148,34 @@ class ProductEditor extends Component {
         })
     }
 
-    onSubmit = (event) => {
-        event.preventDefault();
-        const content = this.state;
-        ProductAdd(content).then(res => {
-            console.log(res)
+    onSaveHandler = (event) => {
+        this.setState({prompt:false}, ()=> {
+            event.preventDefault();
+            const content = this.state;
+            ProductAdd(content).then(res => {
+                console.log(res)
+                if(res.status === "success"){
+                    const toaster = {
+                        isOpenToast: true,
+                        toastMessage: res.data.name+ "Succesfully Added",
+                        toastType:'success',
+                    }
+                    
+                    toast.success(res.data.name+ "Successfully Added");
+                    this.props.history.replace('/dashboard/products');
+                    this.props.history.push('/dashboard/products');
+                    this.props.toggleToaster(toaster)
+                }   
+            }).catch(err=> {
+                toast.warn("Whoops Something Error" + err); 
+            });
         })
+       
     }
 
     // Image Processing 
     onDrop = (files) => {  
+        this.setState({saveable:false})
         const max_file_count = 4 - this.state.thumbnailFile.length;
         const array_images = this.state.thumbnailFile.concat(
             files.slice(0, max_file_count).map((file) => Object.assign(file, {
@@ -167,8 +185,12 @@ class ProductEditor extends Component {
         this.setState({thumbnailFile: array_images});        
         // uploading to cloudinary directly
         files.slice(0, max_file_count).map((file)=> {            
-            this.handleUploadImages(file);
-        })        
+            this.handleUploadImages(file).then(()=> {
+                this.setState({saveable:true})
+                this.countFilled();  
+            })  ;            
+        })
+           
     }
 
     // This function does the uploading to cloudinary
@@ -200,6 +222,43 @@ class ProductEditor extends Component {
             })
     }
 
+    countFilled = () => {
+        const title= this.state.name !== '' ? 1 : 0;
+        const category= this.state.category.length !== 0 ? 1 : 0;
+        const author= this.state.author.length !== 0 ? 1 : 0;
+        const productImagesUrl= this.state.productImagesUrl.length !== 0 ? 1 : 0;
+        const material= this.state.category.material !== 0 ? 1 : 0;
+        const categoryGeneral = this.state.categoryGeneral.length !== 0 ? 1 : 0;
+        const description= this.state.description !== '' ? 1 : 0;
+        const base_price= this.state.base_price !== 0 ? 1 : 0;
+        const weight= this.state.weight !== 0 ? 1 : 0;
+        const pages= this.state.pages !== 0 ? 1 : 0;
+        const height= this.state.weight !== 0 ? 1 : 0;
+        const thick= this.state.weight !== 0 ? 1 : 0;
+        const isbn= this.state.isbn !== '' ? 1 : 0;
+
+        const sum =
+        [title ,
+        category ,
+        author ,
+        productImagesUrl ,
+        material ,
+        categoryGeneral ,
+        description ,
+        base_price ,
+        weight ,
+        pages ,
+        height ,
+        thick ,
+        isbn];        
+
+        const sums = sum.reduce((a, b) => a + b, 0);
+        const pembagi = sum.length;
+        const percent = (sums/pembagi)*100;        
+
+        this.setState({sumFilled:Math.ceil(percent)})
+    }
+
 
     deleteImageHandler = (event,index) => {
        event.preventDefault();       
@@ -212,10 +271,6 @@ class ProductEditor extends Component {
         // Make sure to revoke the data uris to avoid memory leaks
         this.state.thumbnailFile.forEach(file => URL.revokeObjectURL(file.preview))
       }
-    
-    // componentWillUpdate() {
-    //     console.log("[WILL UPDATE] tes")
-    // }
 
     componentWillMount() {
         console.log("[WILL MOUNT]")
@@ -235,6 +290,8 @@ class ProductEditor extends Component {
                     label:value.name
                 });
             });
+            
+        }).then(res => {
             this.setState({category_general_options:categoryGeneral});
             this.props.setLoading(false)       
         }).catch(err => 
@@ -405,10 +462,11 @@ class ProductEditor extends Component {
               text: message
             };              
       }
+    
 
 
-    render() {            
-        
+    render() {       
+                   
         let modalform = null;
         let titlemodal = null;
         let status = false;
@@ -451,12 +509,11 @@ class ProductEditor extends Component {
                     </Col>
                 </Row>         
         }
-
        
         return (
             
-        <div className="content">        
-        <Prompt message="You have unsaved form data. Are you sure you want to leave?" />    
+        <div className="content">       
+        <Prompt when={this.state.prompt}  message="You have unsaved form data. Are you sure you want to leave?" />     
         {/* Modal Tambah */}
         <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>                    
             <form onSubmit={this.AddButtonHandler}>
@@ -490,13 +547,13 @@ class ProductEditor extends Component {
                 <CardBody>                    
                     <Col md={12}>
                         <Label for="name" required>Product Name <small>/ Nama Produk</small></Label>                        
-                        <Input type="text" name="name" onChange={(event)=> this.setState({name: event.target.value})}></Input>
+                        <Input type="text" name="name" onChange={(event)=> this.setState({name: event.target.value},()=>{this.countFilled()})}></Input>
                     </Col>
                     <Col md={12}>
                     <ReactTooltip />  
                         <Label for="name" required>Product Category <small data-tip="Hubungi tim IT untuk menambahan data jika tidak tersedia">/ Kategori Umum</small></Label>   
                         <Select
-                            onChange={(val)=> this.setState({categoryGeneral: val})}                            
+                            onChange={(val)=> this.setState({categoryGeneral: val},()=>{this.countFilled()})}                            
                             name="categoryGeneral"
                             className="basic-multi-select"
                             options={this.state.category_general_options}
@@ -505,7 +562,7 @@ class ProductEditor extends Component {
                     <Col md={12}>
                         <Label for="name" required>Category <small>/ Kategori</small></Label>   
                         <Select
-                            onChange={(val)=> this.setState({category: val})}
+                            onChange={(val)=> this.setState({category: val},()=>{this.countFilled()})}
                             isMulti
                             name="category"
                             value={this.state.category}
@@ -520,7 +577,7 @@ class ProductEditor extends Component {
                     <Col md={12}>
                         <Label for="name" required>Author <small>/ Penulis</small></Label>   
                         <Select
-                            onChange={(val)=> this.setState({author: val})}
+                            onChange={(val)=> this.setState({author: val},()=>{this.countFilled()})}
                             isMulti
                             value={this.state.author}
                             name="author"
@@ -530,6 +587,15 @@ class ProductEditor extends Component {
                         <Button onClick={this.newFormHandler} color="primary" size="sm" name="addAuthor"> 
                             <i className="nc-icon nc-simple-add"></i> New Author
                         </Button>                                          
+                    </Col>
+                    <Col md={12}>
+                        <Label for="date_publish" required>Published Date <small>/ Tanggal Terbit</small></Label>   
+                        <DatePicker
+                            className="form-control"
+                            selected={this.state.publish_date}
+                            dateFormat="dd-MM-yyyy"
+                            onChange={(val) => this.setState({publish_date:val})}
+                        />                                                                                
                     </Col>
                 </CardBody>
                 <CardFooter>
@@ -609,7 +675,7 @@ class ProductEditor extends Component {
                             <Input style={{padding:'10px'}}
                                 type="textarea" 
                                 value={this.state.description} 
-                                onChange={(event)=> this.setState({description:event.target.value})}
+                                onChange={(event)=> this.setState({description:event.target.value},()=>{this.countFilled()})}
                                 name="description"       
                                 rows="10"
                                 cols="30">
@@ -717,7 +783,7 @@ class ProductEditor extends Component {
                                 type="text" 
                                 value={this.state.isbn} 
                                 name="isbn"                             
-                                onChange={(event)=> this.setState({isbn:event.target.value})}>
+                                onChange={(event)=> this.setState({isbn:event.target.value},()=>{this.countFilled()})}>
                             </Input>    
                         </Col>
                     </Row>
@@ -740,21 +806,31 @@ class ProductEditor extends Component {
                     <Row>
                     <Col md={12}>
                         <Label for="name">Code <small>/ Kode Produk</small></Label>                        
-                        <Input type="text" name="sku" onChange={(event)=> this.setState({sku: event.target.value})}></Input>
+                        <Input type="text" name="sku" onChange={(event)=> this.setState({sku: event.target.value},()=>{this.countFilled()})}></Input>
                     </Col>
                     </Row>
                 </CardBody>
             </Card>
+            <Row >
+            <Col md={12} style={{textAlign:'right'}}>
+                    {this.state.saveable  ? (
+                        <div>                        
+                        <Button onClick={(event) => this.props.history.push('/dashboard/products')} color="secondary">Cancel</Button>
+                        <Button value="Submit" color="secondary" >Save & Add New</Button>
+                        <Button value="Submit" color="secondary" >Copy & Add New</Button>
+                        <Button onClick={this.onSaveHandler} color="success" >Save</Button>                        
+                        </div>                        
+                    ) : (
+                        <div>
+                            <Loader/>
+                        </div>
+                    )}
+                
+            </Col>
+            </Row>
           </Col>
         </Row>
-        <Row >
-            <Col md={12} style={{textAlign:'right'}}>
-                <Button type="submit" onClick={(event) => this.props.history.push('/dashboard/products')} value="Submit" color="secondary">Cancel</Button>
-                <Button type="submit" value="Submit" color="secondary" >Save & Add New</Button>
-                <Button type="submit" value="Submit" color="secondary" >Copy & Add New</Button>
-                <Button type="submit" onClick={this.onSubmit} color="success" value="Submit">Save</Button>
-            </Col>
-        </Row>
+        
         </form>
         <ToastContainer />
       </div>
@@ -771,7 +847,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
       toggleNotif: (message) => dispatch(actionCreator.toggleNotification(message)),
-      setLoading: (data) => dispatch(actionCreator.toggleLoading(data))
+      setLoading: (data) => dispatch(actionCreator.toggleLoading(data)),
+      toggleToaster: (payload) => dispatch(actionCreator.toggleToaster(payload))
     };
   }
 

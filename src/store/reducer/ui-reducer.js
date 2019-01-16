@@ -7,7 +7,11 @@ const initialState = {
         text: '',
         autoHideDuration: 100000000
     },
-    isLoading: false
+    isLoading: false,
+    toaster: {isOpenToast: false,
+                toastMessage: null,
+                toastType:'success', 
+            }
 }
 
 const ui = (state = initialState, action) => {    
@@ -21,6 +25,12 @@ const ui = (state = initialState, action) => {
         case (actionType.TOGGLE_LOADING) :
             return updateObject(state, {
                 isLoading:action.data                 
+            });
+        case (actionType.TOGGLE_TOASTER) :
+            return updateObject(state, {
+                toaster:{
+                    ...action.payload
+                }                 
             });
         
             default:       
