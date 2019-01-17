@@ -8,7 +8,7 @@ const initialState = {
         autoHideDuration: 100000000
     },
     isLoading: false,
-    toaster: {isOpenToast: false,
+    toaster: {  isOpenToast: false,
                 toastMessage: null,
                 toastType:'success', 
             }

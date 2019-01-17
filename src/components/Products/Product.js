@@ -76,7 +76,7 @@ class Products extends Component {
         <td>
             <div className="products-display-container">
                 <div className="box-media">
-                    <div className="loading-pict"></div>
+                    <div className="product-pict" style={{background:`url(${this.props.images})`}}></div>
                     {/* <img className="img-frame" src="https://www.most.co.id/tradingv2/Image/ShowImage/40?useDefault=False" alt={this.props.produk.name}></img> */}
                 </div>
                 <div className="box-short-desc">
@@ -108,7 +108,7 @@ class Products extends Component {
         </td>
         {/* Stock */}
         <td style={{verticalAlign:'top',textAlign:'center'}}>
-            <h5>20</h5>
+            <h5>..</h5>
         </td>
         {/* Edit Publish */}
         <td  style={{verticalAlign:'top'}}>

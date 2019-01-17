@@ -97,7 +97,7 @@ class Dashboard extends React.Component {
             <Route path="/dashboard/products/new" exact component={ProductEditor} />
           </Switch>
 
-
+          <ToastContainer />
           <Footer fluid />
         </div>
         {/* <FixedPlugin

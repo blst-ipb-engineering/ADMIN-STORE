@@ -385,17 +385,19 @@ class ProductEditor extends Component {
                 name : this.state.newAuthor.name,
                 occupation: this.state.newAuthor.occupation,
                 phone: this.state.newAuthor.phone
-            }            
+            }   
+            console.log(content)         
             AuthorCreate(content).then(res => {                
                 if(res.status === "success"){
                     toast.success("Author Added Successfully");
-                    this.hideModal()                    
+                    this.hideModal();
+                                 
                     const addedAuthor = {
                         id: res.data.id,
                         value:res.data.id,
                         label:res.data.name
                     }
-                    console.log(addedAuthor)
+                    
                     const oldAuthor = this.state.author;
                     const newAuthor = oldAuthor.concat(addedAuthor);                    
                     this.setState({author:newAuthor})
@@ -485,15 +487,39 @@ class ProductEditor extends Component {
 
         if(this.state.addAuthor){
             titlemodal = "Add Author"
-            status = this.state.newAuthor.name === "" || this.state.newAuthor.phone !== "";
-            console.log(status)
+            status = this.state.newAuthor.name === "" || this.state.newAuthor.phone === "";
+           
             modalform =      
                 <Row>
                     <Col md={12}>
                     <Label for="name" required>Author Name <small>/ Nama Penulis</small></Label>   
-                    <Input type="text" onChange={(event)=> this.setState({newAuthor: {name:event.target.value},addMode:'author'})}></Input>
+                    <Input type="text" onChange={(event)=> {
+                        const value = event.target.value;                        
+                        this.setState((prevState)=> ({
+                        ...prevState,
+                        addMode:'author',
+                        newAuthor: {
+                            ...prevState.newAuthor,
+                            name:value
+                                    }
+                                                    }))
+                        }}
+                        ></Input>
                     <Label for="name" required>Phone Number <small>/ Nomor Telp</small></Label>   
-                    <Input type="text" onChange={(event)=> this.setState({newAuthor: {phone:event.target.value},addMode:'author'})}></Input>
+                    <Input type="text" 
+                        onChange={(event)=> {
+                            const value = event.target.value;                        
+                            this.setState((prevState)=> ({
+                            ...prevState,
+                            addMode:'author',
+                            newAuthor: {
+                                ...prevState.newAuthor,
+                                phone:value
+                                        }
+                                }))
+                            }}
+                    
+                    ></Input>
                     </Col>
                 </Row>         
         }
