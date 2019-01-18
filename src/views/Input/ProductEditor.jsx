@@ -19,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {ProductList as ProductListAction, 
     ProductCategory, 
     ProductAdd,
+    ProductEdit,
     ProductCategoryGeneral,
     NewCategoryAction,
     AuthorIndex,
@@ -33,7 +34,11 @@ class ProductEditor extends Component {
         super(props);
         this.state = {
             name : '',
-            categoryGeneral: [],
+            categoryGeneral: {
+                id:4,
+                label:"Book",
+                value:4
+            },
             category: [
                 // { id: 1, value: 'Pertanian', label: 'Pertanian' },
                 // { id: 2, value: 'Peternakan', label: 'Peternakan' },
@@ -157,11 +162,11 @@ class ProductEditor extends Component {
                 if(res.status === "success"){
                     const toaster = {
                         isOpenToast: true,
-                        toastMessage: res.data.name+ "Succesfully Added",
+                        toastMessage: res.data.name+ " Succesfully Added",
                         toastType:'success',
                     }
                     
-                    toast.success(res.data.name+ "Successfully Added");
+                    toast.success(res.data.name+ " Successfully Added");
                     this.props.history.replace('/dashboard/products');
                     this.props.history.push('/dashboard/products');
                     this.props.toggleToaster(toaster)
@@ -327,9 +332,7 @@ class ProductEditor extends Component {
         // call for author
         const authorsnya = [];
         AuthorIndex().then(res => {
-            
             res.map((value,key)=> {
-                
                 authorsnya.push({
                     id:value.id,
                     value:value.name,
@@ -337,7 +340,17 @@ class ProductEditor extends Component {
                 })
             })
             this.setState({authors_options:authorsnya})
-        });            
+        });      
+        
+        // if status == edit
+        if(this.props.match.params.status === "edit"){
+            const content = {
+                id: this.props.match.params.id
+            }
+            ProductEdit(content).then(res=> {
+                console.log(res);
+            })
+        }
     }
     
 
@@ -467,8 +480,8 @@ class ProductEditor extends Component {
     
 
 
-    render() {       
-                   
+    render() {
+        console.log("[RENDER]")              
         let modalform = null;
         let titlemodal = null;
         let status = false;
@@ -581,6 +594,7 @@ class ProductEditor extends Component {
                         <Select
                             onChange={(val)=> this.setState({categoryGeneral: val},()=>{this.countFilled()})}                            
                             name="categoryGeneral"
+                            value={this.state.categoryGeneral}
                             className="basic-multi-select"
                             options={this.state.category_general_options}
                         />                                                                  
@@ -839,7 +853,7 @@ class ProductEditor extends Component {
             </Card>
             <Row >
             <Col md={12} style={{textAlign:'right'}}>
-                    {this.state.saveable  ? (
+                    {this.state.saveable  && this.state.sumFilled > 80 && this.state.thumbnailFile.length > 0 ? (
                         <div>                        
                         <Button onClick={(event) => this.props.history.push('/dashboard/products')} color="secondary">Cancel</Button>
                         <Button value="Submit" color="secondary" >Save & Add New</Button>
@@ -848,7 +862,7 @@ class ProductEditor extends Component {
                         </div>                        
                     ) : (
                         <div>
-                            <Loader/>
+                            <Loader text="Waiting for you"/>
                         </div>
                     )}
                 

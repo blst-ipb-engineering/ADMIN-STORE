@@ -47,29 +47,30 @@ class Product extends Component {
   componentDidMount() {
     const products =[];
     const content = {}
-    ProductList(content).then(res=> {
-      
+    ProductList(content).then(res=> {      
+      console.log(res)
       res.map((value,index)=> {
         
         products.push({
           id:value.id,
           name:value.name,
           price:value.base_price,
-          picture_url:value.Pictures[0].url ? value.Pictures[0].url : null
+          picture_url:value.Pictures[0].url ? value.Pictures[0].url : null,
+          category_general:value.category_general.name
         })
       });
     }).then(res => {
       this.setState({products:products,loadingdata:false},()=> {
-        if(this.props.ui.toaster.isOpenToast){
-          toast.warning("Toast DidMount Dashboard");
-          const toaster = {
-            isOpenToast: false,
-            toastMessage: null,
-            toastType:'success',
-        }      
-          this.props.toggleToaster(toaster)
-          console.log("toast from Dashboard")
-        }
+        // if(this.props.ui.toaster.isOpenToast){
+        //   toast.warning("Toast DidMount Dashboard");
+        //   const toaster = {
+        //     isOpenToast: false,
+        //     toastMessage: null,
+        //     toastType:'success',
+        // }      
+        //   this.props.toggleToaster(toaster)
+        //   console.log("toast from Dashboard")
+        // }
       });
       this.props.setLoading(false)       
     })
@@ -138,9 +139,11 @@ class Product extends Component {
          {          
            this.state.products.map((res, key) =>                                             
                <Products
+               id={res.id}
                produk={res}
                key={key}
-               images={res.picture_url}
+               images={res.picture_url}    
+                          
                />                                            
            )
          }                    

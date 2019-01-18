@@ -82,7 +82,7 @@ class Products extends Component {
                 <div className="box-short-desc">
                     <a href="http://google.com" target="_blank">{this.props.produk.name}</a>
                     <small>Cetakan ke 2</small>
-                    <div className="ellipsis">Makanan & Minuman - Minuman - Teh</div> 
+                    <div className="ellipsis">{this.props.produk.category_general}</div> 
                 </div>                
             </div>
         </td>   

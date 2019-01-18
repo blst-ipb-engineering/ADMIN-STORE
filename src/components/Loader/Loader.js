@@ -1,11 +1,11 @@
 import React from 'react';
 import {Loadercss} from './Loader.css';
 
-const Loader = () => (
+const Loader = (props) => (
     <div className="Loadercss ">
         <div className="bar">
             <div className="circle"></div>
-            <p>Loading</p>
+            <p>{props.text}</p>
         </div>  
     </div>
     
