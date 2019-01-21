@@ -48,15 +48,14 @@ class Product extends Component {
     const products =[];
     const content = {}
     ProductList(content).then(res=> {      
-      console.log(res)
-      res.map((value,index)=> {
-        
+     
+      res.map((value,index)=> {           
         products.push({
           id:value.id,
           name:value.name,
           price:value.base_price,
-          picture_url:value.Pictures[0].url ? value.Pictures[0].url : null,
-          category_general:value.category_general.name
+          picture_url:typeof value.Pictures[0] !== 'undefined' ? value.Pictures[0].url_small : 'https://www.bukalapak.com/images/jual_barang/upload-image-v4.png',
+          category_general:value.CategoryGeneral.name
         })
       });
     }).then(res => {
@@ -124,7 +123,7 @@ class Product extends Component {
          <tr>
            <th></th>
            <th>Product 
-             <Link to="/dashboard/products/new" style={{marginLeft:'10px'}} href="http://google.com">
+             <Link to="/dashboard/products/new" style={{marginLeft:'10px'}} >
                <Button color="primary" size="sm"> 
                  <i className="nc-icon nc-simple-add"></i> Add Product
                </Button>

@@ -95,7 +95,7 @@ class Dashboard extends React.Component {
               );
             })}
             <Route path="/dashboard/products/:status" exact component={ProductEditor} />
-            <Route path="/dashboard/products/:id/:status" exact component={ProductEditor} />
+            <Route name='product-edit' path="/dashboard/products/:id/:status" exact component={ProductEditor} />
           </Switch>
 
           <ToastContainer />

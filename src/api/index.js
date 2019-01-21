@@ -34,7 +34,7 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
   // API PRODUCT
   const ProductList =(content) => {
       const url = API_SERVICES.ProductIndex;
-      return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err=>console.log(err))
+      return axios(configFetch(url, 'get', content)).then(result => result.data.result).catch(err=>console.log(err))
   }
 
   const ProductAdd = (content) => {

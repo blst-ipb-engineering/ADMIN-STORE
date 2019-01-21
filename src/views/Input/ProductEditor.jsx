@@ -157,8 +157,7 @@ class ProductEditor extends Component {
         this.setState({prompt:false}, ()=> {
             event.preventDefault();
             const content = this.state;
-            ProductAdd(content).then(res => {
-                console.log(res)
+            ProductAdd(content).then(res => {                
                 if(res.status === "success"){
                     const toaster = {
                         isOpenToast: true,
@@ -167,9 +166,9 @@ class ProductEditor extends Component {
                     }
                     
                     toast.success(res.data.name+ " Successfully Added");
-                    this.props.history.replace('/dashboard/products');
-                    this.props.history.push('/dashboard/products');
-                    this.props.toggleToaster(toaster)
+                    // this.props.history.replace('/dashboard/products');
+                    // this.props.history.push('/dashboard/products');
+                    // this.props.toggleToaster(toaster)
                 }   
             }).catch(err=> {
                 toast.warn("Whoops Something Error" + err); 
@@ -179,14 +178,20 @@ class ProductEditor extends Component {
     }
 
     // Image Processing 
-    onDrop = (files) => {  
+    onDrop = (files, rejectedFiles) => {          
+        if(rejectedFiles.length > 0){
+            toast.error(rejectedFiles.length +" file ditolak karena melebihi ukuran 2MB. Ini akan berdampak pada kecepatan loading yang akan lama jika melebihi dari ukuran tersebut. Kasihan yang pakai koneksi esia hidayah :(")
+        }
+
         this.setState({saveable:false})
         const max_file_count = 4 - this.state.thumbnailFile.length;
         const array_images = this.state.thumbnailFile.concat(
-            files.slice(0, max_file_count).map((file) => Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            })));
-        
+            files.slice(0, max_file_count).map((file) =>                 
+                    Object.assign(file, {   
+                        preview: URL.createObjectURL(file)
+                    })                                                           
+            ));      
+
         this.setState({thumbnailFile: array_images});        
         // uploading to cloudinary directly
         files.slice(0, max_file_count).map((file)=> {            
@@ -199,20 +204,19 @@ class ProductEditor extends Component {
     }
 
     // This function does the uploading to cloudinary
-    handleUploadImages = (image) => {        
-        console.log(image);
+    handleUploadImages = (image) => {                
         // uploads is an array that would hold all the post methods for each image to be uploaded, then we'd use axios.all()
               
         // our formdata
         const formData = new FormData();
         formData.append("file", image);
-        formData.append("tags", 'product'); // Add tags for the images - {Array}
+        formData.append("tags", ['product','halo']); // Add tags for the images - {Array}
         formData.append("upload_preset", "blst_product"); // Replace the preset name with your own
         formData.append("api_key", "387685966233372"); // Replace API key with your own Cloudinary API key
         formData.append("folder","product");
-        formData.append("quality","low");
+        formData.append("quality","low");        
         formData.append("timestamp", (Date.now() / 1000) | 0);
-        
+       
         // Replace cloudinary upload URL with yours
         return axios.post(
             "https://api.cloudinary.com/v1_1/blst/image/upload",
@@ -224,7 +228,7 @@ class ProductEditor extends Component {
                 const newImages = response.data;
                 const newArrayofImages = this.state.productImagesUrl.concat(newImages);
                 this.setState({productImagesUrl:newArrayofImages});
-            })
+            }).catch(err=>console.log(err))
     }
 
     countFilled = () => {
@@ -267,6 +271,14 @@ class ProductEditor extends Component {
 
     deleteImageHandler = (event,index) => {
        event.preventDefault();       
+       const public_id = this.state.productImagesUrl[index];
+        
+       if(typeof public_id !== 'undefined'){
+           axios.delete("https://api.cloudinary.com/v1_1/blst/image/upload?public_ids[]="+public_id.public_id).then(res=>{
+               console.log(res)
+           });       
+       } 
+
        this.state.thumbnailFile.splice(index, 1);         
        this.setState({thumbnailFile: this.state.thumbnailFile});   
     }
@@ -348,7 +360,60 @@ class ProductEditor extends Component {
                 id: this.props.match.params.id
             }
             ProductEdit(content).then(res=> {
-                console.log(res);
+                const categories = [];
+                const authors = [];
+                const materials =[];
+                const push_cat = res.Categories.map((value,key)=> {
+                    categories.push({
+                        id: value.id,
+                        value: value.id,
+                        label:value.name
+                    })
+                });
+
+                const push_author = res.Categories.map((value,index)=> {
+                    authors.push({
+                        id:value.id,
+                        value:value.id,
+                        label: value.name
+                    })
+                });
+
+                const push_material = res.Materials.map((value,index)=> {
+                    materials.push({
+                        id:value.id,
+                        value:value.id,
+                        label: value.name
+                    })
+                })
+
+                Promise.all([push_cat,push_author]).then(()=> {
+                    this.setState({category:categories});
+                    this.setState({author:authors});
+                    this.setState({material:authors});
+                })
+
+
+                this.setState({
+                    name:res.name,
+                    categoryGeneral:{
+                        id:res.CategoryGeneral.id,
+                        label:res.CategoryGeneral.name,
+                        value:res.CategoryGeneral.id,
+                        publish_date:res.publish_date,
+                        price:res.base_price,
+                        description:res.description,
+                        weight:res.weight,
+                        width:res.width,
+                        height:res.height,
+                        thick:res.thick,
+                        product_edition:res.version,
+                        production_version:res.fabrication_version,
+                        pages:res.pages,
+                        isbn:res.isbn,
+                        sku:res.sku,
+                    }
+                })
             })
         }
     }
@@ -555,7 +620,7 @@ class ProductEditor extends Component {
         <Prompt when={this.state.prompt}  message="You have unsaved form data. Are you sure you want to leave?" />     
         {/* Modal Tambah */}
         <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>                    
-            <form onSubmit={this.AddButtonHandler}>
+            <form onSubmit={(event) => this.AddButtonHandler(event)}>
             <ModalHeader>
                 {titlemodal}
             </ModalHeader>
@@ -586,7 +651,7 @@ class ProductEditor extends Component {
                 <CardBody>                    
                     <Col md={12}>
                         <Label for="name" required>Product Name <small>/ Nama Produk</small></Label>                        
-                        <Input type="text" name="name" onChange={(event)=> this.setState({name: event.target.value},()=>{this.countFilled()})}></Input>
+                        <Input type="text" value={this.state.name} name="name" onChange={(event)=> this.setState({name: event.target.value},()=>{this.countFilled()})}></Input>
                     </Col>
                     <Col md={12}>
                     <ReactTooltip />  
@@ -856,8 +921,8 @@ class ProductEditor extends Component {
                     {this.state.saveable  && this.state.sumFilled > 80 && this.state.thumbnailFile.length > 0 ? (
                         <div>                        
                         <Button onClick={(event) => this.props.history.push('/dashboard/products')} color="secondary">Cancel</Button>
-                        <Button value="Submit" color="secondary" >Save & Add New</Button>
-                        <Button value="Submit" color="secondary" >Copy & Add New</Button>
+                        <Button color="secondary" >Save & Add New</Button>
+                        <Button color="secondary" >Copy & Add New</Button>
                         <Button onClick={this.onSaveHandler} color="success" >Save</Button>                        
                         </div>                        
                     ) : (

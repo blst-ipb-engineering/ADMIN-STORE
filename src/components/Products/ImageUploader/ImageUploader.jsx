@@ -80,10 +80,10 @@ class ImageUploader extends Component {
         ));
             
 
-        let uploader = null;
+        let uploader = null;    
         if (this.props.filepreview.length < this.props.maxUpload){
             uploader = 
-            <Dropzone accept="image/*" onDrop={this.props.onDrop}>
+            <Dropzone maxSize={2000000} accept="image/*" onDrop={this.props.onDrop}>
                 {({getRootProps, getInputProps,isDragReject, isDragActive}) => {
                                 let styles = {...baseStyle}
                                 styles = isDragActive ? {...styles, ...activeStyle} : styles
@@ -93,10 +93,10 @@ class ImageUploader extends Component {
                                     <div {...getRootProps()} style={styles}>
                                         <input {...getInputProps()} />
                                         <img src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png" width="150px" ></img>
-                                        <p className="text-desc">
+                                        <p className="text-desc text-center">
                                             <span>
                                                 <i className="nc-icon nc-simple-add" style={{marginRight:'5px'}}></i>
-                                                Pilih Gambar Barang
+                                                Pilih Gambar Barang <br/>(max 2 MB)
                                             </span>
                                         </p>
                                     </div>

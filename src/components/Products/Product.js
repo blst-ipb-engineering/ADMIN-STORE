@@ -4,6 +4,8 @@ import { Input,Button, InputGroup, InputGroupAddon, InputGroupText } from "react
 import NumberFormat from 'react-number-format';
 import InputMask from 'react-input-mask';
 import ReactTooltip from 'react-tooltip'
+import { Link } from "react-router-dom";
+
 
 class Products extends Component {
 
@@ -80,7 +82,9 @@ class Products extends Component {
                     {/* <img className="img-frame" src="https://www.most.co.id/tradingv2/Image/ShowImage/40?useDefault=False" alt={this.props.produk.name}></img> */}
                 </div>
                 <div className="box-short-desc">
-                    <a href="http://google.com" target="_blank">{this.props.produk.name}</a>
+                    <Link to={`/dashboard/products/${this.props.produk.id}/edit`}>
+                        <a href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</a>
+                    </Link>
                     <small>Cetakan ke 2</small>
                     <div className="ellipsis">{this.props.produk.category_general}</div> 
                 </div>                
