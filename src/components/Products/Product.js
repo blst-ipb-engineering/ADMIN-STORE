@@ -117,15 +117,19 @@ class Products extends Component {
         <td  style={{verticalAlign:'top'}}>
             <ul className="icon-manage-product">
                 <li>
-                    <a href="http://localhost:3000/product/edit" data-tip="Ubah">
-                    <i className="nc-icon nc-ruler-pencil" />                    
-                    </a>
+                    <Link to={`/dashboard/products/${this.props.produk.id}/edit`}>
+                        <a href="http://localhost:3000/product/edit" data-tip="Ubah">
+                        <i className="nc-icon nc-ruler-pencil" />                    
+                        </a>
+                    </Link>
                     <ReactTooltip />
                 </li>
                 <li>
-                    <a href="http://localhost:3000/product/edit" data-tip="Duplikat">
-                    <i className="nc-icon nc-single-copy-04" />                    
-                    </a>                    
+                    <Link to={`/dashboard/products/${this.props.produk.id}/duplicate`}>
+                        <a href="http://localhost:3000/product/edit" data-tip="Duplikat">
+                        <i className="nc-icon nc-single-copy-04" />                    
+                        </a>                    
+                    </Link>
                 </li>
                 <li>
                     <a style={{cursor:"pointer"}} onClick={(event)=>this.props.deleteHandler(event,this.props.produk)} data-tip="Hapus">

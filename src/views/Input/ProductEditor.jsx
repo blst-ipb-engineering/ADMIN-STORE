@@ -20,6 +20,7 @@ import {ProductList as ProductListAction,
     ProductCategory, 
     ProductAdd,
     ProductEdit,
+    ProductUpdate,
     ProductCategoryGeneral,
     NewCategoryAction,
     AuthorIndex,
@@ -100,7 +101,9 @@ class ProductEditor extends Component {
             thumbnailFile: [],
             productImagesUrl: [],
             sumFilled:0,
-            prompt:true
+            prompt:true,
+            edit_status: "new",
+            productId: null
         }        
     }
 
@@ -143,6 +146,27 @@ class ProductEditor extends Component {
         })
     }
 
+    onUpdateHandler = (event) => {
+        this.setState({prompt:false}, () => {
+            event.preventDefault();
+            const content = this.state;
+            ProductUpdate(content).then(res=> {
+               if(res.status === "success") {
+                
+                const toaster = {
+                    isOpenToast: true,
+                    toastMessage: res.data.name+ " Berhasil diUpdate",
+                    toastType:'success',
+                }
+                this.props.toggleToaster(toaster)
+                   
+                   this.props.history.replace('/dashboard/products');
+                   this.props.history.push('/dashboard/products');                
+               }
+            })
+        })
+    }
+
     onSaveHandler = (event) => {
         this.setState({prompt:false}, ()=> {
             event.preventDefault();
@@ -154,11 +178,11 @@ class ProductEditor extends Component {
                         toastMessage: res.data.name+ " Succesfully Added",
                         toastType:'success',
                     }
+                    this.props.toggleToaster(toaster)
                     
                     toast.success(res.data.name+ " Successfully Added");
                     this.props.history.replace('/dashboard/products');
                     this.props.history.push('/dashboard/products');
-                    this.props.toggleToaster(toaster)
                 }   
             }).catch(err=> {
                 toast.warn("Whoops Something Error" + err); 
@@ -348,11 +372,13 @@ class ProductEditor extends Component {
         });      
         
         // if status == edit
-        if(this.props.match.params.status === "edit"){
+        if(this.props.match.params.status === "edit" || this.props.match.params.status === "duplicate" ){
             const content = {
                 id: this.props.match.params.id
             }
             ProductEdit(content).then(res=> {
+                
+                this.setState({edit_status:this.props.match.params.status});
                 const categories = [];
                 const authors = [];
                 const materials =[];
@@ -421,12 +447,13 @@ class ProductEditor extends Component {
                         width:res.width,
                         height:res.height,
                         thick:res.thick,
-                        product_edition:res.version,
+                        version:res.version,
                         production_version:res.fabrication_version,
                         pages:res.pages,
                         isbn:res.isbn,
                         sku:res.sku,
                         saveable:true,
+                        productId:res.id
                     },()=> {
                         this.countFilled();
                     })
@@ -568,7 +595,7 @@ class ProductEditor extends Component {
 
     render() {
         console.log("[RENDER]")  
-        console.log(this.state.thumbnailFile)            
+        
         let modalform = null;
         let titlemodal = null;
         let status = false;
@@ -933,7 +960,7 @@ class ProductEditor extends Component {
                     <Row>
                     <Col md={12}>
                         <Label for="name">Code <small>/ Kode Produk</small></Label>                        
-                        <Input type="text" name="sku" onChange={(event)=> this.setState({sku: event.target.value},()=>{this.countFilled()})}></Input>
+                        <Input value={this.state.sku} type="text" name="sku" onChange={(event)=> this.setState({sku: event.target.value},()=>{this.countFilled()})}></Input>
                     </Col>
                     </Row>
                 </CardBody>
@@ -943,9 +970,9 @@ class ProductEditor extends Component {
                     {this.state.saveable  && this.state.sumFilled > 80 && this.state.thumbnailFile.length > 0 ? (
                         <div>                        
                         <Button onClick={(event) => this.props.history.push('/dashboard/products')} color="secondary">Cancel</Button>
-                        <Button color="secondary" >Save & Add New</Button>
-                        <Button color="secondary" >Copy & Add New</Button>
-                        <Button onClick={this.onSaveHandler} color="success" >Save</Button>                        
+                        {/* <Button color="secondary" >Save & Add New</Button>
+                        <Button color="secondary" >Copy & Add New</Button>                         */}
+                        {this.state.edit_status !== "edit" ? (<Button onClick={this.onSaveHandler} color="success" >Save</Button>) : (<Button onClick={this.onUpdateHandler} color="success" >Update</Button>) }                      
                         </div>                        
                     ) : (
                         <div>

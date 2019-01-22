@@ -64,6 +64,10 @@ class Product extends Component {
 
   componentDidMount() {
     this.loadProduct();
+    console.log(this.props.ui.toaster.isOpenToast)
+    if(this.props.ui.toaster.isOpenToast){
+      toast.success(this.props.ui.toaster.toastMessage);
+    }
   }
 
   hideModal = () => {
@@ -90,9 +94,12 @@ class Product extends Component {
     }
     ProductDelete(content).then((res) => {
       if(res.status === "Deleted"){
-        this.hideModal();
-        toast.success("Product Deleted");
-        this.loadProduct();   
+        this.hideModal();       
+        const load1 = this.loadProduct();   
+        Promise.all([load1]).then(()=> {
+          console.log("halo")
+          toast.success("Product Deleted");
+        })
       }
       
     })
@@ -206,6 +213,7 @@ class Product extends Component {
             </Card>
           </Col>
         </Row>
+        <ToastContainer />
       </div>
     );
   }
