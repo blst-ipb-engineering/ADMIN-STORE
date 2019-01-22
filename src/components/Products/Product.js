@@ -53,7 +53,6 @@ class Products extends Component {
         })
     }
 
-
     render() {
 
         // Validation Error
@@ -129,7 +128,7 @@ class Products extends Component {
                     </a>                    
                 </li>
                 <li>
-                    <a href="http://localhost:3000/product/edit" data-tip="Hapus">
+                    <a style={{cursor:"pointer"}} onClick={(event)=>this.props.deleteHandler(event,this.props.produk)} data-tip="Hapus">
                     <i className="nc-icon nc-simple-remove" />                    
                     </a>                    
                 </li>

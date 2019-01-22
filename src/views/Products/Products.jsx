@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Card, Button, Table, CardBody, Row, Col } from "reactstrap";
+import { Card, Button,Modal,ModalHeader,ModalBody,ModalFooter, Table, CardBody, Row, Col } from "reactstrap";
 import Products from '../../components/Products/Product';
 import { Link } from "react-router-dom";
 import './Products.css';
@@ -11,6 +11,7 @@ import LoadingProductAdmin from '../../components/UI/LoadingData/ProductList/Loa
 
 
 
+
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -18,33 +19,29 @@ import 'react-toastify/dist/ReactToastify.css';
 import icons from "../../variables/icons";
 import axios from "axios";
 
-import {ProductList,   
+import {
+  ProductList,
+  ProductDelete   
 } from '../../api/index';
 
 class Product extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [
-      //   {
-      //   id:1,
-      //   name:"Product 1 Paijo bin paimin",
-      //   price: 100000,
-      // },{
-      //   id:1,
-      //   name:"Product 1 Paijo bin paimin",
-      //   price: 100000,
-      // },{
-      //   id:1,
-      //   name:"Product 1 Paijo bin paimin",
-      //   price: 100000,
-      // }
-    ],
-      loadingdata:true
+      products: [],
+      loadingdata:true,
+      modal:false,
+      delete_product:{
+        id: null,
+        name:null,
+        price:null,
+        picture_url:null,
+        category_general:null
+      }
     }
   }
 
-  componentDidMount() {
+  loadProduct = () => {
     const products =[];
     const content = {}
     ProductList(content).then(res=> {      
@@ -59,19 +56,45 @@ class Product extends Component {
         })
       });
     }).then(res => {
-      this.setState({products:products,loadingdata:false},()=> {
-        // if(this.props.ui.toaster.isOpenToast){
-        //   toast.warning("Toast DidMount Dashboard");
-        //   const toaster = {
-        //     isOpenToast: false,
-        //     toastMessage: null,
-        //     toastType:'success',
-        // }      
-        //   this.props.toggleToaster(toaster)
-        //   console.log("toast from Dashboard")
-        // }
+      this.setState({products:products,loadingdata:false},()=> {       
       });
       this.props.setLoading(false)       
+    });
+  }
+
+  componentDidMount() {
+    this.loadProduct();
+  }
+
+  hideModal = () => {
+    this.setState({
+        modal:!this.state.modal
+    })
+  }
+
+  deleteHandler =(event,product)=> {
+    this.setState({delete_product:{
+      id: product.id,
+      name:product.name,
+      price:product.price,
+      picture_url:product.picture_url,
+      category_general:product.category_general
+    }},() => {
+      this.setState({modal:true})
+    })
+  }
+
+  deleteAction = (event,product) =>{
+    const content= {
+      id: product.id
+    }
+    ProductDelete(content).then((res) => {
+      if(res.status === "Deleted"){
+        this.hideModal();
+        toast.success("Product Deleted");
+        this.loadProduct();   
+      }
+      
     })
   }
   
@@ -142,7 +165,7 @@ class Product extends Component {
                produk={res}
                key={key}
                images={res.picture_url}    
-                          
+               deleteHandler={this.deleteHandler} 
                />                                            
            )
          }                    
@@ -151,7 +174,29 @@ class Product extends Component {
     }
 
     return (
+      
       <div className="content">
+        <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>
+          <ModalHeader>
+            Apakah kamu yakin akan menghapus produk ini ?
+          </ModalHeader>
+          <ModalBody>
+            <div className="products-display-container">
+                <div className="box-media">
+                    <div className="product-pict" style={{background:`url(${this.state.delete_product.picture_url})`}}></div>
+                </div>
+                <div className="box-short-desc">                    
+                    <a href="#">{this.state.delete_product.name}</a>                    
+                    <small>Cetakan ke 2</small>
+                    <div className="ellipsis">{this.state.delete_product.category_general}</div> 
+                </div>                
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={()=>this.setState({modal:false})}>No</Button>
+            <Button color="success" onClick={(event) => this.deleteAction(event,this.state.delete_product)}>Yes</Button>
+          </ModalFooter>
+        </Modal>
         <Row>
           <Col md={12}>
             <Card>

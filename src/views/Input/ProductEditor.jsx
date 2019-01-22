@@ -59,17 +59,7 @@ class ProductEditor extends Component {
             version: 1,
             production_version: 1,
             sku: '',
-            format: null,       
-            pict_1 : null,
-            pict_2 : null,
-            pict_3 : null,
-            pict_4 : null,
-            pict_5 : null,
-            video_1 : null,
-            video_2 : null,
-            video_3 : null,
-            video_4 : null,
-            video_5 : null,
+            format: null,                  
             material : [],
             percent_royalti: null,
             author:[],
@@ -416,30 +406,35 @@ class ProductEditor extends Component {
                     this.setState({material:materials});
                     this.setState({thumbnailFile:pictures});
                     this.setState({productImagesUrl:picture_url});
+
+                    this.setState({
+                        name:res.name,
+                        categoryGeneral:{
+                            id:res.CategoryGeneral.id,
+                            label:res.CategoryGeneral.name,
+                            value:res.CategoryGeneral.id,                        
+                        },
+                        publish_date:res.publish_date,
+                        base_price:res.base_price,
+                        description:res.description,
+                        weight:res.weight,
+                        width:res.width,
+                        height:res.height,
+                        thick:res.thick,
+                        product_edition:res.version,
+                        production_version:res.fabrication_version,
+                        pages:res.pages,
+                        isbn:res.isbn,
+                        sku:res.sku,
+                        saveable:true,
+                    },()=> {
+                        this.countFilled();
+                    })
+
                 })
 
-
-                this.setState({
-                    name:res.name,
-                    categoryGeneral:{
-                        id:res.CategoryGeneral.id,
-                        label:res.CategoryGeneral.name,
-                        value:res.CategoryGeneral.id,                        
-                    },
-                    publish_date:res.publish_date,
-                    base_price:res.base_price,
-                    description:res.description,
-                    weight:res.weight,
-                    width:res.width,
-                    height:res.height,
-                    thick:res.thick,
-                    product_edition:res.version,
-                    production_version:res.fabrication_version,
-                    pages:res.pages,
-                    isbn:res.isbn,
-                    sku:res.sku,
-                    saveable:true,
-                })
+                
+                
             })
         }
     }
