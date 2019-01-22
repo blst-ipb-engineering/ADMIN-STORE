@@ -166,9 +166,9 @@ class ProductEditor extends Component {
                     }
                     
                     toast.success(res.data.name+ " Successfully Added");
-                    // this.props.history.replace('/dashboard/products');
-                    // this.props.history.push('/dashboard/products');
-                    // this.props.toggleToaster(toaster)
+                    this.props.history.replace('/dashboard/products');
+                    this.props.history.push('/dashboard/products');
+                    this.props.toggleToaster(toaster)
                 }   
             }).catch(err=> {
                 toast.warn("Whoops Something Error" + err); 
@@ -279,8 +279,11 @@ class ProductEditor extends Component {
            });       
        } 
 
-       this.state.thumbnailFile.splice(index, 1);         
-       this.setState({thumbnailFile: this.state.thumbnailFile});   
+       const del1= this.state.thumbnailFile.splice(index, 1);     
+       const del2 = this.state.productImagesUrl.splice(index,1);    
+       Promise.all([del1,del2]).then(()=>{           
+    })
+    this.setState({thumbnailFile: this.state.thumbnailFile,productImagesUrl: this.state.productImagesUrl});   
     }
 
     componentWillUnmount() {
@@ -363,6 +366,8 @@ class ProductEditor extends Component {
                 const categories = [];
                 const authors = [];
                 const materials =[];
+                const pictures = [];
+                const picture_url = [];
                 const push_cat = res.Categories.map((value,key)=> {
                     categories.push({
                         id: value.id,
@@ -387,10 +392,30 @@ class ProductEditor extends Component {
                     })
                 })
 
-                Promise.all([push_cat,push_author]).then(()=> {
+                const push_picture = res.Pictures.map((value,index)=> {
+                    const file =new File([], value.original_filename,{lastModified: value.updated_at});
+                    pictures.push(
+                        Object.assign(file, {   
+                            preview: value.url_medium
+                        })
+                    )
+
+                    picture_url.push({
+                        public_id:value.public_id,
+                        alt:value.alt,
+                        bytes:value.size,
+                        original_filename:value.original_filename,
+                        signature:value.signature
+                    })
+                    
+                })
+
+                Promise.all([push_cat,push_author,push_material,push_picture]).then(()=> {
                     this.setState({category:categories});
                     this.setState({author:authors});
-                    this.setState({material:authors});
+                    this.setState({material:materials});
+                    this.setState({thumbnailFile:pictures});
+                    this.setState({productImagesUrl:picture_url});
                 })
 
 
@@ -413,6 +438,7 @@ class ProductEditor extends Component {
                     pages:res.pages,
                     isbn:res.isbn,
                     sku:res.sku,
+                    saveable:true,
                 })
             })
         }
@@ -546,7 +572,8 @@ class ProductEditor extends Component {
 
 
     render() {
-        console.log("[RENDER]")              
+        console.log("[RENDER]")  
+        console.log(this.state.thumbnailFile)            
         let modalform = null;
         let titlemodal = null;
         let status = false;
