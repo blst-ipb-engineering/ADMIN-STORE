@@ -1,5 +1,13 @@
 import axios from 'axios';
-import querystring from 'querystring'
+import querystring from 'querystring';
+import jwt from 'jsonwebtoken';
+
+const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
+
+const data_user = {
+  userId:JWT_DECODE.userId,
+  companyId:JWT_DECODE.companyId
+}
 
 const HOSTNAME = 'http://localhost:8080';
 
@@ -34,12 +42,25 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
 
 
   // API PRODUCT
-  const ProductList =(content) => {
+  const ProductList =(contents) => {
+
+      const content = {
+        ...contents,
+        ...data_user
+      }
+
+      console.log(content)
       const url = API_SERVICES.ProductIndex;
       return axios(configFetch(url, 'get', content)).then(result => result.data.result).catch(err=>console.log(err))
   }
 
-  const ProductAdd = (content) => {
+  const ProductAdd = (contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.ProductAdd;
     const extraHeaders = {
       Authorization: `Bearer `+localStorage.getItem('token')
@@ -50,7 +71,13 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
     .catch(err=>console.log(err))
   }
 
-  const ProductEdit = (content) => {
+  const ProductEdit = (contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.ProductEdit;
     const extraHeaders = {
       Authorization: `Bearer `+localStorage.getItem('token')
@@ -61,7 +88,13 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
     .catch(err=>console.log(err))
   }
 
-  const ProductUpdate = (content) => {
+  const ProductUpdate = (contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.ProductUpdate;
     const extraHeaders = {
       Authorization: `Bearer `+localStorage.getItem('token')
@@ -72,7 +105,13 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
     .catch(err=>console.log(err))
   }
 
-  const ProductDelete = (content) => {
+  const ProductDelete = (contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.ProductDelete;
     const extraHeaders = {
       Authorization: `Bearer `+localStorage.getItem('token')
@@ -84,7 +123,13 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
   }
   
 
-  const ProductCategoryGeneral =(content) => {
+  const ProductCategoryGeneral =(contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.ProductCategoryGeneral;
     const extraHeaders = {
         Authorization: `Bearer `+localStorage.getItem('token')
@@ -102,7 +147,13 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
   }
 
   // WRITE NEW PRODUCT LOCAL CATEGORY
-  const NewCategoryAction = (content) => {
+  const NewCategoryAction = (contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
       const url = API_SERVICES.CategoryProductLocalAdd;
       const extraHeaders = {
         Authorization: `Bearer `+localStorage.getItem('token')
@@ -114,7 +165,13 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
   } 
 
   // AUTHOR    
-  const AuthorIndex = (content) => {
+  const AuthorIndex = (contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.AuthorIndex;
     const extraHeaders = {
       Authorization: `Bearer ` +localStorage.getItem('token')
@@ -124,7 +181,12 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
     .then(result => result.data).catch(err=>console.log(err));
   }
 
-  const AuthorCreate = (content) => {
+  const AuthorCreate = (contents) => {
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.AuthorCreate;
     const extraHeaders = {
       Authorization: `Bearer ` +localStorage.getItem('token')
@@ -136,7 +198,12 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
   }
 
   // MATERIAL    
-  const MaterialIndex = (content) => {
+  const MaterialIndex = (contents) => {
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.MaterialIndex;
     const extraHeaders = {
       Authorization: `Bearer ` +localStorage.getItem('token')
@@ -146,7 +213,13 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
     .then(result => result.data).catch(err=>console.log(err));
   }
 
-  const MaterialCreate = (content) => {
+  const MaterialCreate = (contents) => {
+
+    const content = {
+      ...contents,
+      ...data_user
+    }
+
     const url = API_SERVICES.MaterialCreate;
     const extraHeaders = {
       Authorization: `Bearer ` +localStorage.getItem('token')

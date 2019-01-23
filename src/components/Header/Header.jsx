@@ -18,6 +18,8 @@ import {
   Input
 } from "reactstrap";
 
+import jwt from "jsonwebtoken";
+
 import dashboardRoutes from "../../routes/dashboard.jsx";
 
 class Header extends React.Component {
@@ -105,6 +107,7 @@ class Header extends React.Component {
     }
   }
   render() {
+    const user = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak');    
     return (
       // add or remove classes depending if we are on full-screen-maps page or not
       <Navbar
@@ -149,7 +152,10 @@ class Header extends React.Component {
             navbar
             className="justify-content-end"
           >
-            <form>
+          <div>
+            <small><b>{user.nameUser}</b>  |  {user.name_company}</small>
+          </div>
+            {/* <form>
               <InputGroup className="no-border">
                 <Input placeholder="Search..." />
                 <InputGroupAddon addonType="append">
@@ -158,7 +164,7 @@ class Header extends React.Component {
                   </InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-            </form>
+            </form> */}
             <Nav navbar>
               <NavItem>
                 <Link to="#pablo" className="nav-link btn-magnify">

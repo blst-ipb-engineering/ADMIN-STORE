@@ -88,7 +88,8 @@ export const auth = (email) => {
 
     return dispatch => {
         dispatch(authStart());
-        axios.post('http://localhost:8080/auth/checkemail', data).then(result => {            
+        axios.post('http://localhost:8080/auth/checkemail', data).then(result => {     
+            
             if(result.data.message === "E-mail found"){
                 dispatch(emailValid(result.data))
             }else{
@@ -110,19 +111,19 @@ export const authPassword = (email,password) =>{
 
     return dispatch => {          
         dispatch(passStart());     
-        axios.post('http://localhost:8080/auth/login', data).then(result => {                        
+        axios.post('http://localhost:8080/auth/login', data).then(result => {         
+            console.log(result)               
             if(result.data.code === 401){
                 dispatch(passWrong(email));
             }else{                
                 const expDate = new Date(new Date().getTime() + 1000*60*60*10) // 10 Jam dari backend node expressnya                            
                 localStorage.setItem('token', result.data.token);
                 localStorage.setItem('expireIn', expDate);
-                localStorage.setItem('user', result.data.userId);
-                localStorage.setItem('comp', result.data.data.companyId);
-                localStorage.setItem('inst', result.data.data.userlevel);
+                // localStorage.setItem('user', result.data.userId);
+                // localStorage.setItem('comp', result.data.companyId);
+                // localStorage.setItem('inst', result.data.data.userlevel);
                 dispatch(authSuccess(result));                 
                 dispatch(checkAuthTimeout(expDate));    
-
             }
         }).catch(err => {
             console.log(err);

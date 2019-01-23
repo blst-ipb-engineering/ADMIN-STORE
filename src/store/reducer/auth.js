@@ -44,7 +44,7 @@ const auth = (state = initialState, action ) =>  {
             return updateObject( state, {
                 emailValid:false, 
                 loading:false, 
-                error: "E-Mail Account Not Found",
+                error: "User Account Not Found",
                 email: null
             });
         

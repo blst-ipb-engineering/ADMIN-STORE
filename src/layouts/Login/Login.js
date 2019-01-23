@@ -88,9 +88,9 @@ class Login extends Component {
         let loginForm = null;
         if(this.props.email == null && !this.props.loading ){
             loginForm = <Input style={{textAlign:'center',padding:'20px'}}
-            type="email"
+            type="text"
             name="email"                                           
-            placeholder="Enter email"
+            placeholder="Enter Username"
             onChange={(event) => {this.inputChangeHandler(event, 'email')}}
             />  
         }
