@@ -62,11 +62,20 @@ class Product extends Component {
     });
   }
 
+  componentWillUnmount() {
+    const toaster = {
+      isOpenToast: false,
+      toastMessage: "",
+      toastType:'success',
+    }
+    this.props.toggleToaster(toaster)
+  }
+
   componentDidMount() {
     this.loadProduct();
     console.log(this.props.ui.toaster.isOpenToast)
     if(this.props.ui.toaster.isOpenToast){
-      toast.success(this.props.ui.toaster.toastMessage);
+      toast.success(this.props.ui.toaster.toastMessage);      
     }
   }
 

@@ -837,7 +837,23 @@ class ProductEditor extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={3}>
+                        <Col md={12}>
+                            <Label required> Material</Label>
+                            <Select
+                            onChange={(val)=> this.setState({material: val})}
+                            isMulti
+                            value={this.state.material}
+                            name="material"
+                            className="basic-multi-select"
+                            options={this.state.materials}
+                            />  
+                            <Button onClick={this.newFormHandler} name="addMaterial" color="primary" size="sm"> 
+                            <i className="nc-icon nc-simple-add"></i> New Material
+                            </Button> 
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4}>
                                 <Label for="name" required>Weight <small>/ Berat</small></Label>                        
                                 <InputGroup>                                    
                                     <Input 
@@ -851,7 +867,7 @@ class ProductEditor extends Component {
                                     </InputGroupAddon>
                                 </InputGroup>   
                         </Col>
-                        <Col md={3}>
+                        <Col md={4}>
                                 <Label for="name" required>Width <small>/ Lebar</small></Label>                        
                                 <InputGroup>                                    
                                     <Input 
@@ -865,7 +881,7 @@ class ProductEditor extends Component {
                                     </InputGroupAddon>
                                 </InputGroup>   
                         </Col>
-                        <Col md={3}>
+                        <Col md={4}>
                                 <Label for="name" required>Height <small>/ Tinggi</small></Label>                        
                                 <InputGroup>                                    
                                     <Input 
@@ -879,7 +895,7 @@ class ProductEditor extends Component {
                                     </InputGroupAddon>
                                 </InputGroup>   
                         </Col>
-                        <Col md={3}>
+                        {/* <Col md={3}>
                                 <Label for="name" required>Thick <small>/ Tebal</small></Label>                        
                                 <InputGroup>                                    
                                     <Input 
@@ -892,7 +908,7 @@ class ProductEditor extends Component {
                                             <InputGroupText>cm</InputGroupText>
                                     </InputGroupAddon>
                                 </InputGroup>   
-                        </Col>
+                        </Col> */}
                     </Row>
                     <Row>
                         <Col md={4}>
@@ -941,22 +957,7 @@ class ProductEditor extends Component {
                             </Input>    
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={12}>
-                            <Label required> Material</Label>
-                            <Select
-                            onChange={(val)=> this.setState({material: val})}
-                            isMulti
-                            value={this.state.material}
-                            name="material"
-                            className="basic-multi-select"
-                            options={this.state.materials}
-                            />  
-                            <Button onClick={this.newFormHandler} name="addMaterial" color="primary" size="sm"> 
-                            <i className="nc-icon nc-simple-add"></i> New Material
-                            </Button> 
-                        </Col>
-                    </Row>
+                    
                     <Row>
                     <Col md={12}>
                         <Label for="name">Code <small>/ Kode Produk</small></Label>                        
@@ -967,7 +968,7 @@ class ProductEditor extends Component {
             </Card>
             <Row >
             <Col md={12} style={{textAlign:'right'}}>
-                    {this.state.saveable  && this.state.sumFilled > 80 && this.state.thumbnailFile.length > 0 ? (
+                    {this.state.saveable  && this.state.sumFilled > 80 ? (
                         <div>                        
                         <Button onClick={(event) => this.props.history.push('/dashboard/products')} color="secondary">Cancel</Button>
                         {/* <Button color="secondary" >Save & Add New</Button>

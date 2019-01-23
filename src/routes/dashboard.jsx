@@ -20,12 +20,12 @@ var dashRoutes = [
     icon: "nc-icon nc-atom",
     component: Products
   },
-  {
-    path: "/dashboard/icons",
-    name: "Icons",
-    icon: "nc-icon nc-diamond",
-    component: Icons
-  },
+  // {
+  //   path: "/dashboard/icons",
+  //   name: "Icons",
+  //   icon: "nc-icon nc-diamond",
+  //   component: Icons
+  // },
   // { path: "/dashboard/maps", name: "Maps", icon: "nc-icon nc-pin-3", component: Maps },
   // {
   //   path: "/dashboard/notifications",
@@ -33,12 +33,12 @@ var dashRoutes = [
   //   icon: "nc-icon nc-bell-55",
   //   component: Notifications
   // },
-  {
-    path: "/dashboard/user-page",
-    name: "User Profile",
-    icon: "nc-icon nc-single-02",
-    component: UserPage
-  },
+  // {
+  //   path: "/dashboard/user-page",
+  //   name: "User Profile",
+  //   icon: "nc-icon nc-single-02",
+  //   component: UserPage
+  // },
   // {
   //   path: "/dashboard/tables",
   //   name: "Table List",

@@ -6,7 +6,9 @@ const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak
 
 const data_user = {
   userId:JWT_DECODE.userId,
-  companyId:JWT_DECODE.companyId
+  companyId:JWT_DECODE.companyId,
+  createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
+  updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
 }
 
 const HOSTNAME = 'http://localhost:8080';
