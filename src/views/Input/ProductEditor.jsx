@@ -943,8 +943,7 @@ class ProductEditor extends Component {
                                         onChange={(event)=> this.onChangeMoneyHandler(event)}>
                                     </Input>                                   
                                   
-                        </Col>
-                        
+                        </Col>                        
                     </Row>
                     <Row>
                         <Col md={12}>
@@ -979,8 +978,7 @@ class ProductEditor extends Component {
                         <div>
                             <Loader text="Waiting for you"/>
                         </div>
-                    )}
-                
+                    )}                
             </Col>
             </Row>
           </Col>

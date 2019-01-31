@@ -2,14 +2,26 @@ import axios from 'axios';
 import querystring from 'querystring';
 import jwt from 'jsonwebtoken';
 
-const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
+const token = localStorage.getItem('token'); 
+const exptime = new Date(localStorage.getItem('expireIn'));  
+const now = new Date();
 
-const data_user = {
-  userId:JWT_DECODE.userId,
-  companyId:JWT_DECODE.companyId,
-  createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
-  updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
+// validasi jika token expired
+const condition = now.getTime() < exptime.getTime();
+let data_user = null;
+
+if (token && condition) {
+  const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
+  data_user = {
+    userId:JWT_DECODE.userId,
+    nameUser: JWT_DECODE.nameUser,
+    name_company: JWT_DECODE.name_company,
+    companyId:JWT_DECODE.companyId,
+    createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
+    updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
+  }
 }
+
 
 const HOSTNAME = 'http://localhost:8080';
 
@@ -246,5 +258,6 @@ export {
   AuthorIndex, 
   MaterialIndex,
   MaterialCreate,
-  AuthorCreate
+  AuthorCreate,
+  data_user
 }
