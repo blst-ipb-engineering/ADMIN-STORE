@@ -23,7 +23,8 @@ if (token && condition) {
 }
 
 
-const HOSTNAME = process.env.API_URL || 'http://localhost:8080';
+const HOSTNAME = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+console.log(process.env.REACT_APP_API_URL)
 
 const API_SERVICES = {
     Login : `${HOSTNAME}/auth/login`,

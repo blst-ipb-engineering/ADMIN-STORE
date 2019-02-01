@@ -155,7 +155,7 @@ class Header extends React.Component {
             className="justify-content-end"
           >
           <div>
-            { data_user.nameUser ?
+            { data_user !== null ?
             (<small><b>{data_user.nameUser}</b>  |  {data_user.name_company}</small>) : ''
             }
           </div>

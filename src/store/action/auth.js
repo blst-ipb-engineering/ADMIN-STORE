@@ -88,7 +88,7 @@ export const auth = (email) => {
 
     return dispatch => {
         dispatch(authStart());
-        axios.post('http://localhost:8080/auth/checkemail', data).then(result => {     
+        axios.post(`${process.env.REACT_APP_API_URL}/auth/checkemail`, data).then(result => {     
             
             if(result.data.message === "E-mail found"){
                 dispatch(emailValid(result.data))
