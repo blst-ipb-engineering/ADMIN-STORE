@@ -111,7 +111,7 @@ export const authPassword = (email,password) =>{
 
     return dispatch => {          
         dispatch(passStart());     
-        axios.post('http://localhost:8080/auth/login', data).then(result => {         
+        axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data).then(result => {         
             console.log(result)               
             if(result.data.code === 401){
                 dispatch(passWrong(email));
