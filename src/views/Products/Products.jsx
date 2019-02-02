@@ -203,7 +203,7 @@ class Product extends Component {
                 </div>
                 <div className="box-short-desc">                    
                     <a href="#">{this.state.delete_product.name}</a>                    
-                    <small>Cetakan ke 2</small>
+                    {/* <small>Cetakan ke 2</small> */}
                     <div className="ellipsis">{this.state.delete_product.category_general}</div> 
                 </div>                
             </div>
