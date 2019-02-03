@@ -8,15 +8,15 @@ import jwt from 'jsonwebtoken'
 
 const store = createStore(authreducers); // redux api for get store without using connect
 
-// const token = localStorage.getItem('token'); 
-// const exptime = new Date(localStorage.getItem('expireIn'));  
-// const now = new Date();
+const token = localStorage.getItem('token'); 
+const exptime = new Date(localStorage.getItem('expireIn'));  
+const now = new Date();
 
 // // validasi jika token expired
-// const condition = now.getTime() < exptime.getTime();
-// let data_user = null;
+const condition = now.getTime() < exptime.getTime();
+let data_user = null;
 
-// if (token && condition) {
+if (token && condition) {
 const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
 const data_user = {
     userId:JWT_DECODE.userId,
@@ -26,7 +26,7 @@ const data_user = {
     createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
     updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
   }
-// }
+}
 
 // console.log(object)
 
