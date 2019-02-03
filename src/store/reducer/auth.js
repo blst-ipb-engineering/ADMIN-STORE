@@ -1,18 +1,28 @@
 import * as actionType from '../action/actionTypes';
 import {updateObject} from '../uitlity';
 
+
+
 const initialState = {
     email: null,
     emailValid: false,
     password:null,
     token: null,
-    userId: null,
     loading: false,
     error: null,
     inst:null, // is admin,
-    authRedirectPath: '/dashboard'
-    
+    authRedirectPath: '/dashboard',
+    userId: null,
+    nameUser:null,
+    companyId:null,
+    createdBy: null,
+    updatedBy: null,
+    deletedBy: null,
+    name_company:null,
+
 };
+
+
 
 const auth = (state = initialState, action ) =>  {
     
@@ -65,8 +75,12 @@ const auth = (state = initialState, action ) =>  {
             return updateObject( state, {
                 token:action.authData.data.token,
                 userId: action.authData.data.userId,
-                loading:true,
-                inst:action.authData.data.userlevel
+                nameUser: action.authData.data.nameUser,
+                name_company: action.authData.data.name_company,
+                companyId: action.authData.data.companyId,
+                createdBy: action.authData.data.createdBy,
+                updatedBy: action.authData.data.updatedBy,
+                loading:true,                
             });
         case (actionType.SET_AUTH_REDIRECT_PATH):        
             return updateObject( state, {

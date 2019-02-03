@@ -30,6 +30,7 @@ const rootReducer = combineReducers({
   loadingBar: loadingBarReducer,
 });
 
+
 // membuat middleware
 const logger = store => {
   return next => {

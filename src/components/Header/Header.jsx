@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+
 import {
   Collapse,
   Navbar,
@@ -155,9 +157,9 @@ class Header extends React.Component {
             className="justify-content-end"
           >
           <div>
-            { data_user !== null ?
-            (<small><b>{data_user.nameUser}</b>  |  {data_user.name_company}</small>) : ''
-            }
+           
+            <small><b>{this.props.auth.nameUser}</b>  |  {this.props.auth.name_company}</small>
+           
           </div>
             {/* <form>
               <InputGroup className="no-border">
@@ -211,4 +213,14 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+const mapStateToProps = state => {  
+  return {
+    isAuth : state.authsd.token !== null,
+    authRedirectPath: state.authsd.authRedirectPath,
+    ui:state.ui,
+    auth:state.authsd
+  }
+};
+
+
+export default connect(mapStateToProps)(Header);

@@ -84,12 +84,13 @@ class Products extends Component {
                     <Link to={`/dashboard/products/${this.props.produk.id}/edit`}>
                         <a href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</a>
                     </Link>
-                    <small>Cetakan ke 2</small>
+                    {/* <small>Cetakan ke 2</small> */}
                     <div className="ellipsis">{this.props.produk.category_general}</div> 
                 </div>                
             </div>
         </td>   
-        {/* Price    */}
+        {/* Price    */} 
+
         <td style={{verticalAlign:'top'}}>
             <form onSubmit={this.onSubmitHandler}>
                 {errorNotif}

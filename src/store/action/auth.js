@@ -1,5 +1,7 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
+
 // import { Redirect } from 'react-router-dom';
 
 
@@ -18,7 +20,7 @@ export const emailValid = (email) => {
 
 export const emailInValid = () => {
     return {
-        type: actionTypes.EMAIL_INVALID,       
+        type: actionTypes.EMAIL_INVALID,
     };
 }
 
@@ -38,14 +40,14 @@ export const passStart = () => {
 export const passWrong = (email) => {
     return {
         type: actionTypes.PASS_INVALID,
-        email:email
+        email: email
     }
 }
 
 export const authFail = (error) => {
     return {
         type: actionTypes.AUTH_FAIL,
-        error : error
+        error: error
     }
 }
 
@@ -68,62 +70,59 @@ export const logout = () => {
     }
 }
 
-
-
-
-
 // action jika token kadaluarsa
-export const checkAuthTimeout = (expireTime) => {      
+export const checkAuthTimeout = (expireTime) => {
     return dispatch => {
-        setTimeout(() => { 
+        setTimeout(() => {
             dispatch(logout());
-        }, expireTime.getTime() /1000);
+        }, expireTime.getTime() / 1000);
     };
 };
 
 export const auth = (email) => {
     const data = {
-        email : email
+        email: email
     }
 
     return dispatch => {
         dispatch(authStart());
-        axios.post(`${process.env.REACT_APP_API_URL}/auth/checkemail`, data).then(result => {     
-            
-            if(result.data.message === "E-mail found"){
+        axios.post(`${process.env.REACT_APP_API_URL}/auth/checkemail`, data).then(result => {
+
+            if (result.data.message === "E-mail found") {
                 dispatch(emailValid(result.data))
-            }else{
+            } else {
                 dispatch(emailInValid())
             }
 
-        }).catch(err => {           
+        }).catch(err => {
             dispatch(authFail(err));
         });
     }
 }
 
-export const authPassword = (email,password) =>{
-    const data= {
-        email:email,
-        password :password
+export const authPassword = (email, password) => {
+    const data = {
+        email: email,
+        password: password
     }
-  
 
-    return dispatch => {          
-        dispatch(passStart());     
-        axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data).then(result => {         
-            console.log(result)               
-            if(result.data.code === 401){
+
+    return dispatch => {
+        dispatch(passStart());
+        axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data).then(result => {            
+            if (result.data.code === 401) {
                 dispatch(passWrong(email));
-            }else{                
-                const expDate = new Date(new Date().getTime() + 1000*60*60*10) // 10 Jam dari backend node expressnya                            
-                localStorage.setItem('token', result.data.token);
-                localStorage.setItem('expireIn', expDate);
+            } else {
+                const expDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 10) // 10 Jam dari backend node expressnya                            
+                const setToken = localStorage.setItem('token', result.data.token);
+                const setExpireTime = localStorage.setItem('expireIn', expDate);
                 // localStorage.setItem('user', result.data.userId);
                 // localStorage.setItem('comp', result.data.companyId);
                 // localStorage.setItem('inst', result.data.data.userlevel);
-                dispatch(authSuccess(result));                 
-                dispatch(checkAuthTimeout(expDate));    
+                Promise.all([setToken,setExpireTime]).then(()=> {
+                    dispatch(authSuccess(result));
+                    dispatch(checkAuthTimeout(expDate));
+                })
             }
         }).catch(err => {
             console.log(err);
@@ -133,24 +132,36 @@ export const authPassword = (email,password) =>{
 };
 
 export const authCheckState = () => {
-    return dispatch => {        
-        const token = localStorage.getItem('token');           
-        if(!token) {
+    return dispatch => {
+        const token = localStorage.getItem('token');
+       
+        if (!token) {
             dispatch(logout());
-        }else {
-            const expireTime = new Date(localStorage.getItem('expireIn'));                   
-            if (expireTime.getTime() < new Date().getTime()){
+        } else {
+            
+            const exptime = new Date(localStorage.getItem('expireIn'));
+            const now = new Date();
+            const condition = now.getTime() > exptime.getTime();
+            console.log(condition)
+            // const expireTime = new Date(localStorage.getItem('expireIn'));
+            if (condition) {
                 dispatch(logout());
             }
 
+            let data_user = null;
+            const JWT_DECODE = jwt.verify(localStorage.getItem('token'), 'secretmasojodibukak');
             const data = {
                 data: {
-                    token:localStorage.getItem('token'),
-                    userId:localStorage.getItem('user'),
-                    userlevel:localStorage.getItem('inst')
+                    token: localStorage.getItem('token'),                                        
+                    userId: JWT_DECODE.userId,
+                    nameUser: JWT_DECODE.nameUser,
+                    name_company: JWT_DECODE.name_company,
+                    companyId: JWT_DECODE.companyId,
+                    createdBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
+                    updatedBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
                 }
-            }            
-            dispatch(authSuccess(data));            
+            }
+            dispatch(authSuccess(data));
             // dispatch(checkAuthTimeout((expireTime.getTime()) - (new Date().getTime())));
         }
     }
