@@ -14,9 +14,8 @@ const now = new Date();
 
 // // validasi jika token expired
 const condition = now.getTime() < exptime.getTime();
-let data_user = null;
 
-if (token && condition) {
+
 const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
 const data_user = {
     userId:JWT_DECODE.userId,
@@ -26,7 +25,7 @@ const data_user = {
     createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
     updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
   }
-}
+
 
 // console.log(object)
 
@@ -93,6 +92,8 @@ const ProductAdd = (contents) => {
     ...contents,
     ...data_user
   }
+
+  console.log(content)
 
   const url = API_SERVICES.ProductAdd;
   const extraHeaders = {
