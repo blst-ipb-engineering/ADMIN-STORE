@@ -142,7 +142,7 @@ export const authCheckState = () => {
             const exptime = new Date(localStorage.getItem('expireIn'));
             const now = new Date();
             const condition = now.getTime() > exptime.getTime();
-            console.log(condition)
+            
             // const expireTime = new Date(localStorage.getItem('expireIn'));
             if (condition) {
                 dispatch(logout());

@@ -4,6 +4,8 @@ import { createStore } from 'redux';
 import authreducers from "../store/reducer/auth";
 import { connect } from 'react-redux';
 import jwt from 'jsonwebtoken'
+import {logout} from '../store/action/auth';
+
 
 
 const store = createStore(authreducers); // redux api for get store without using connect
@@ -13,18 +15,26 @@ const exptime = new Date(localStorage.getItem('expireIn'));
 const now = new Date();
 
 // // validasi jika token expired
-const condition = now.getTime() < exptime.getTime();
+const condition = now.getTime() > exptime.getTime();
+let data_user = null;
+
+if(condition){
+  store.dispatch(logout());
+}
+
+function getToken () {
+  const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
+  return data_user = {
+      userId:JWT_DECODE.userId,
+      nameUser: JWT_DECODE.nameUser,
+      name_company: JWT_DECODE.name_company,
+      companyId:JWT_DECODE.companyId,
+      createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
+      updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
+    }    
+}
 
 
-const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
-const data_user = {
-    userId:JWT_DECODE.userId,
-    nameUser: JWT_DECODE.nameUser,
-    name_company: JWT_DECODE.name_company,
-    companyId:JWT_DECODE.companyId,
-    createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
-    updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
-  }
 
 
 // console.log(object)
@@ -41,7 +51,6 @@ const data_user = {
 // }
 
 const HOSTNAME = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-
 
 const API_SERVICES = {
   Login: `${HOSTNAME}/auth/login`,
@@ -76,6 +85,8 @@ const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
 // API PRODUCT
 const ProductList = (contents) => {
 
+  getToken();
+
   const content = {
     ...contents,
     ...data_user
@@ -87,6 +98,8 @@ const ProductList = (contents) => {
 }
 
 const ProductAdd = (contents) => {
+
+  getToken();
 
   const content = {
     ...contents,
@@ -107,6 +120,7 @@ const ProductAdd = (contents) => {
 
 const ProductEdit = (contents) => {
 
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -124,6 +138,7 @@ const ProductEdit = (contents) => {
 
 const ProductUpdate = (contents) => {
 
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -141,6 +156,7 @@ const ProductUpdate = (contents) => {
 
 const ProductDelete = (contents) => {
 
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -159,6 +175,7 @@ const ProductDelete = (contents) => {
 
 const ProductCategoryGeneral = (contents) => {
 
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -173,6 +190,8 @@ const ProductCategoryGeneral = (contents) => {
 }
 
 const ProductCategory = () => {
+
+  getToken();
   const url = API_SERVICES.ProductCategory;
   const extraHeaders = {
     Authorization: `Bearer ` + localStorage.getItem('token')
@@ -183,6 +202,7 @@ const ProductCategory = () => {
 // WRITE NEW PRODUCT LOCAL CATEGORY
 const NewCategoryAction = (contents) => {
 
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -201,6 +221,7 @@ const NewCategoryAction = (contents) => {
 // AUTHOR    
 const AuthorIndex = (contents) => {
 
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -216,6 +237,8 @@ const AuthorIndex = (contents) => {
 }
 
 const AuthorCreate = (contents) => {
+
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -233,6 +256,8 @@ const AuthorCreate = (contents) => {
 
 // MATERIAL    
 const MaterialIndex = (contents) => {
+
+  getToken();
   const content = {
     ...contents,
     ...data_user
@@ -248,6 +273,8 @@ const MaterialIndex = (contents) => {
 }
 
 const MaterialCreate = (contents) => {
+
+  getToken();
 
   const content = {
     ...contents,

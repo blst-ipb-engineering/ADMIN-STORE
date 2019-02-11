@@ -127,7 +127,8 @@ class ProductEditor extends Component {
         let values = event.target.value.toString().replace(/\,/g, '');
 
         // let isNum = /^\d+$/.test(values); // tanpakoma
-        let isNum = /^[0-9]+\.?[0-9]*$/.test(values); // dengan koma        
+        let isNum = /^[0-9]+\.?[0-9]*$/.test(values); // dengan koma output true or false                 
+
         let key = event.target.name;
         if (isNum || event.target.value === null) {
             this.setState({ [key]: (values) })
