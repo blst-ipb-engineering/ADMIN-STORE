@@ -2,6 +2,28 @@
 //
 //## For each of Bootstrap's buttons, define text, background and border color.
 
+// Bagus titipan
+$break-small: 480px;
+$break-medium: 839px;
+$break-big: 1024px;
+$headline-font: 'Viga', sans-serif;
+$body-font: 'Open Sans', sans-serif;
+
+$inner-width-container-small: 90%;
+$inner-width-container-medium:90%;
+$inner-width-container-big: 80%;
+
+$border-radius: 5px;
+
+$header-background : hsl(240, 100%, 17%);
+$header-background-light : hsl(219, 86%, 44%);
+$header-background-dark : hsl(240, 100%, 5%);
+
+$color-secondary: #d71149;
+$color-secondary-light: #f13f71;
+$color-secondary-dark: #940a31;
+$grey-color-background: rgb(241, 241, 241);
+
 $font-color:                 #66615b !default;
 $fill-font-color:            rgba(255, 255, 255, 0.8);
 $font-family-sans-serif:     'Montserrat', "Helvetica", Arial, sans-serif;

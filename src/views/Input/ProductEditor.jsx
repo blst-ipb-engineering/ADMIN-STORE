@@ -230,7 +230,7 @@ class ProductEditor extends Component {
         // our formdata
         const formData = new FormData();
         formData.append("file", image);
-        formData.append("tags", ['product', 'halo']); // Add tags for the images - {Array}
+        formData.append("tags", ['product']); // Add tags for the images - {Array}
         formData.append("upload_preset", "blst_product"); // Replace the preset name with your own
         formData.append("api_key", "387685966233372"); // Replace API key with your own Cloudinary API key
         formData.append("folder", "product");

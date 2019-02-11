@@ -1,0 +1,30 @@
+.main-slider-wrapper{
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgb(233, 233, 233);  
+    display: flex;
+    flex-direction: row;
+
+    .main-slider-input{
+        width: 63%;
+        height: 145px;
+        // background-image: url("https://ipbstore.com/wp-content/uploads/2019/01/HP-FE-3-1.png");
+        // background:grey;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;    
+        align-items: center;
+        border: 1px solid black;
+        border-style: dashed;
+    }
+
+    .main-slider-desc{
+        padding-right:10px;
+        padding-left:10px;
+        width: 35%;
+        
+    }
+}

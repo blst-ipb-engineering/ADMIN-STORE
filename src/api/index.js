@@ -67,7 +67,9 @@ const API_SERVICES = {
   AuthorIndex: `${HOSTNAME}/author`,
   AuthorCreate: `${HOSTNAME}/author/add`,
   MaterialIndex: `${HOSTNAME}/material`,
-  MaterialCreate: `${HOSTNAME}/material/add`
+  MaterialCreate: `${HOSTNAME}/material/add`,
+  SlideBarCreate: `${HOSTNAME}/slidebar/add`,
+  SlideBarGet: `${HOSTNAME}/slidebar/index`
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -254,6 +256,43 @@ const AuthorCreate = (contents) => {
     .catch(err => console.log(err))
 }
 
+//SLIDEBAR
+
+const getSlidebar = (contents)=> {
+  getToken()
+  const content = {
+    ...contents,
+    ...data_user
+  }
+  console.log(content)
+  const url = API_SERVICES.SlideBarGet;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const CreateSlidebar = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.SlideBarCreate;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+} 
+
+
 // MATERIAL    
 const MaterialIndex = (contents) => {
 
@@ -305,5 +344,7 @@ export {
   MaterialIndex,
   MaterialCreate,
   AuthorCreate,
-  data_user
+  data_user,
+  CreateSlidebar,
+  getSlidebar
 }

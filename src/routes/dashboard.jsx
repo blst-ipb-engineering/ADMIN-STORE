@@ -5,6 +5,7 @@ import Typography from "../views/Typography/Typography.jsx";
 import TableList from "../views/TableList/TableList.jsx";
 import Maps from "../views/Maps/Maps.jsx";
 import UserPage from "../views/UserPage/UserPage.jsx";
+import SliderEditor from '../views/SliderEditor/SliderEditor';
 import Products from "../views/Products/Products.jsx";
 
 var dashRoutes = [
@@ -19,6 +20,12 @@ var dashRoutes = [
     name: "Product",
     icon: "nc-icon nc-atom",
     component: Products
+  },
+  {
+    path: "/dashboard/slider",
+    name: "Slider Front",
+    icon: "nc-icon nc-layout-11",
+    component: SliderEditor
   },
   // {
   //   path: "/dashboard/icons",
