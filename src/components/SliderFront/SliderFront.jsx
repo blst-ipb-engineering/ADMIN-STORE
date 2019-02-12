@@ -101,11 +101,8 @@ class SliderFront extends Component {
           }}
         />
         )) 
-      }
-            
+      }            
     }
-
-
 
     return (
       <Container>
@@ -113,28 +110,14 @@ class SliderFront extends Component {
           <div className="inner-container-slider">
             <div className="main-slider">
               <Slider {...setting}>
-                {slide}
-                {/* <div className="item-slider-wrapper">
-                                    <div
-                                        className="loading-slider"
-                                        style={{
-                                            width: '100%',
-                                            background: 'url("https://ipbstore.com/wp-content/uploads/2019/01/HP-FE-3-1.png")',
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                            backgroundRepeat: 'no-repeat'
-                                        }}>
-                                    </div>
-                                </div>                                 */}
+                {slide}                
               </Slider>
             </div>
             <div className="promo-static-slider">
               <div className="static-slider-item">
                 {static_1}
-                {/* <img src="" alt=""/> */}
               </div>
               <div className="static-slider-item">
-                {/* <img src="" alt=""/> */}
                 {static_2}
               </div>
             </div>
