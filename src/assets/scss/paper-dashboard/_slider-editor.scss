@@ -10,9 +10,9 @@
         height: 145px;
         // background-image: url("https://ipbstore.com/wp-content/uploads/2019/01/HP-FE-3-1.png");
         // background:grey;
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
+        background-size: contain !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
         display: flex;
         flex-direction: row;
         justify-content: center;    
@@ -25,6 +25,13 @@
         padding-right:10px;
         padding-left:10px;
         width: 35%;
+        position: relative;
         
     }
+
+   
+}
+
+.grey-back{
+    background: rgb(245, 245, 245);
 }

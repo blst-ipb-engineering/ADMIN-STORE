@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
-import { Input, InputGroup } from "reactstrap";
+import { Input, InputGroup, Button } from "reactstrap";
 import Spinner from "../../../components/Spinner/Spinner";
+import { updateSlidebar } from '../../../api/index';
 
 const baseStyle = {
   display: "flex",
@@ -40,101 +41,112 @@ const previewThumbnail = {
   overflow: "hidden"
 };
 
-const backgroundProperty = {
-  backgroundSize: "contain",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center"
-};
+
 
 class SliderMain extends Component {
+  
+
   render() {
+
+
     const backgroundImageSlide = this.props.preview
       ? this.props.preview.preview
-      : undefined;
+      : this.props.previewNew.slidebar;
 
     const backgroundUploaded = {
       background: "url(" + backgroundImageSlide + ")",
-      backgroundSize: "contain"
+
     };
 
     // let halo = !this.props.isEditable ? "this.props.isEditable" : null;
     return (
-      <div className="main-slider-wrapper">
+      <div className={!this.props.isEditable ? "main-slider-wrapper grey-back" : "main-slider-wrapper"} >
         {/* {halo} */}
-        {this.props.isUploading && this.props.number === 0 ? (
+        {this.props.isUploading && !this.props.isEditable ? (
+
           <div
             style={{
               position: "relative",
               width: "100%",
-              height: "100px",
+              height: "145px",
               overflow: "hidden"
             }}
           >
             <Spinner />
           </div>
         ) : (
-          <Dropzone
-            maxSize={2000000}
-            accept="image/*"
-            onDrop={this.props.onDrop}
-            multiple={false}
-          >
-            {({ getRootProps, getInputProps, isDragReject, isDragActive }) => {
-              let styles = {
-                ...baseStyle,
-                ...backgroundUploaded,
-                ...backgroundProperty
-              };
-              styles = isDragActive ? { ...styles, ...activeStyle } : styles;
-              styles = isDragReject ? { ...styles, ...rejectStyle } : styles;
+            <Dropzone
+              maxSize={2000000}
+              accept="image/*"
+              onDrop={this.props.onDrop}
+              multiple={false}
+            >
+              {({ getRootProps, getInputProps, isDragReject, isDragActive }) => {
+                let styles = {
+                  ...baseStyle,
+                  ...backgroundUploaded,
 
-              return (
-                <div
-                  {...getRootProps()}
-                  style={styles}
-                  className="main-slider-input"
-                >
-                  <input {...getInputProps()} />
+                };
+                styles = isDragActive ? { ...styles, ...activeStyle } : styles;
+                styles = isDragReject ? { ...styles, ...rejectStyle } : styles;
 
-                  {!this.props.preview ? (
-                    <div style={{ textAlign: "center" }}>
-                      <img
-                        src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png"
-                        width="80px"
-                        alt="slider"
-                      />
-                      <p className=" text-center">
-                        <span>
-                          <i
-                            className="nc-icon nc-simple-add"
-                            style={{ marginRight: "5px" }}
-                          />
-                          Pilih Gambar Slider dengan ukuran 1028 x 380 px <br />
-                          (max 2 MB)
+                return (
+                  <div
+                    {...getRootProps()}
+                    style={styles}
+                    className="main-slider-input"
+                  >
+                    <input {...getInputProps()} />
+
+                    {this.props.previewNew && this.props.previewNew.slidebar == null ? (
+                      <div style={{ textAlign: "center" }}>
+                        <img
+                          src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png"
+                          width="80px"
+                          alt="slider"
+                        />
+                        <p className=" text-center">
+                          <span>
+                            <i
+                              className="nc-icon nc-simple-add"
+                              style={{ marginRight: "5px" }}
+                            />
+                            Pilih Gambar Slider dengan ukuran 1028 x 380 px <br />
+                            (max 2 MB)
                         </span>
-                      </p>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              );
-            }}
-          </Dropzone>
-        )}
+                        </p>
+                      </div>
+                    ) : (
+                        ""
+                      )}
+                  </div>
+                );
+              }}
+            </Dropzone>
+          )}
 
         <div className="main-slider-desc container">
+          {this.props.isEditable ?
+            (<Button color="danger" onClick={(event) => this.props.deleteHandlerProp(event, this.props.slideData.id, this.props.slideData.slidebar)} size="sm" style={{ position: 'absolute', right: '0', top: '0', zIndex: '100' }}>X</Button>
+            ) :
+            null
+
+          }
           <p style={{ margin: 0 }}>Order</p>
           <InputGroup>
             {this.props.isEditable ? (
-              <Input type="text" onChange={(event)=>{this.onChangeOrderHandler(event, this.props.idSlide)}} name="order" />
+              <Input type="text" placeholder={this.props.slideData.order} onChange={(event)=>this.props.onEditOrder(event,this.props.idSlide,this.props.slideData)} name="order" />
             ) : (
-              <Input type="text" name="order" />
-            )}
+                <Input onChange={this.props.orderOnChange} type="text" name="order" />
+              )}
           </InputGroup>
           <p style={{ margin: 0 }}>Hyperlink</p>
           <InputGroup>
-            <Input type="text" name="hyperlink" />
+            {this.props.isEditable ? (
+              <Input type="text" placeholder={this.props.slideData.hyperlink} onChange={(event) => { this.props.onEditHyperlink(event, this.props.idSlide,this.props.slideData) }} name="hyperlink" />
+            ) : (
+                <Input onChange={this.props.HyperlinkOnChange} type="text" name="hyperlink" />
+              )}
           </InputGroup>
         </div>
       </div>

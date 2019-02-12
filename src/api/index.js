@@ -69,7 +69,9 @@ const API_SERVICES = {
   MaterialIndex: `${HOSTNAME}/material`,
   MaterialCreate: `${HOSTNAME}/material/add`,
   SlideBarCreate: `${HOSTNAME}/slidebar/add`,
-  SlideBarGet: `${HOSTNAME}/slidebar/index`
+  SlideBarGet: `${HOSTNAME}/slidebar/index`,
+  SlideBarUpdate:`${HOSTNAME}/slidebar/update`,
+  SlideBarDelete:`${HOSTNAME}/slidebar/delete`
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -264,7 +266,7 @@ const getSlidebar = (contents)=> {
     ...contents,
     ...data_user
   }
-  console.log(content)
+  
   const url = API_SERVICES.SlideBarGet;
   const extraHeaders = {
     Authorization: `Bearer ` + localStorage.getItem('token')
@@ -288,6 +290,40 @@ const CreateSlidebar = (contents) => {
   }
 
   return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+} 
+
+const updateSlidebar = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.SlideBarUpdate;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'put', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+} 
+
+const deleteSlidebar = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.SlideBarDelete;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'delete', content, true, extraHeaders))
     .then(result => result.data)
     .catch(err => console.log(err))
 } 
@@ -338,13 +374,19 @@ export {
   ProductUpdate,
   ProductDelete,
   ProductCategoryGeneral,
+
   NewCategoryAction,
   ProductCategory,
+
   AuthorIndex,
+
   MaterialIndex,
   MaterialCreate,
   AuthorCreate,
   data_user,
+
   CreateSlidebar,
-  getSlidebar
+  getSlidebar,
+  updateSlidebar,
+  deleteSlidebar
 }
