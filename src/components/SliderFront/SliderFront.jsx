@@ -30,7 +30,7 @@ class SliderFront extends Component {
       ]
     };
 
-    let slide = 
+    let slide =
       <div className="item-slider-wrapper">
         <div
           className="loading-background"
@@ -38,24 +38,73 @@ class SliderFront extends Component {
         />
       </div>;
 
-      if(this.props.SliderPreview.length !== 0){
+    if (this.props.SliderPreview.length !== 0) {
+      slide = this.props.SliderPreview.map((value, index) => (
+        <div className="item-slider-wrapper" key={index}>
+          <div
+            className="loading-slider"
+            style={{
+              width: "100%",
+              background:
+                'url("' + value.slidebar + '")',
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat"
+            }}
+          />
+        </div>
+      ));
+    }
 
-          slide = this.props.SliderPreview.map((value, index) => (
-              <div className="item-slider-wrapper" key={index}>
-                  <div
-                  className="loading-slider"
-                  style={{
-                      width: "100%",
-                      background:
-                      'url("'+value.slidebar+'")',
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat"
-                  }}
-                  />
-              </div>
-              ));
+    let static_1 = <div
+      className="loading-slider loading-background static-slider"
+      style={{
+        width: "100%",
+      }}
+    />;
+
+    let static_2 = <div
+      className="loading-slider loading-background static-slider"
+      style={{
+        width: "100%",
+      }}
+    />;
+    // console.log(this.props.StaticSliderPreview +" ---- "+ this.props.SliderPreview)
+
+    if (this.props.StaticSliderPreview.length > 0) {
+      static_1 = this.props.StaticSliderPreview.slice(0, 1).map((value, index) => (
+        <div
+          className="loading-slider static-slider"
+          style={{
+            width: "100%",
+            background:
+              'url("' + value.slidebar + '")',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
+          }}
+        />
+      ))
+
+      
+      if(this.props.StaticSliderPreview.slice(1,2).length > 0){
+        static_2 = this.props.StaticSliderPreview.slice(1,2).map((value,index)=> (
+          <div
+          className="loading-slider static-slider"
+          style={{
+            width: "100%",
+            background:
+              'url("' + value.slidebar + '")',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
+          }}
+        />
+        )) 
       }
+            
+    }
+
 
 
     return (
@@ -81,32 +130,12 @@ class SliderFront extends Component {
             </div>
             <div className="promo-static-slider">
               <div className="static-slider-item">
-                <div
-                  className="loading-slider static-slider"
-                  style={{
-                    width: "100%",
-                    background:
-                      'url("https://ipbstore.com/wp-content/uploads/2019/01/HP-FE-3-1.png")',
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat"
-                  }}
-                />
+                {static_1}
                 {/* <img src="" alt=""/> */}
               </div>
               <div className="static-slider-item">
                 {/* <img src="" alt=""/> */}
-                <div
-                  className="loading-slider static-slider"
-                  style={{
-                    width: "100%",
-                    background:
-                      'url("https://ipbstore.com/wp-content/uploads/2019/01/HP-FE-3-1.png")',
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat"
-                  }}
-                />
+                {static_2}
               </div>
             </div>
           </div>

@@ -83,7 +83,15 @@ class SlideEditor extends Component {
 
     getSlidebar(content)
       .then(result => {
+        
         const main_slider_preview_2 = [];
+
+        if(result.result.length === 0){
+          this.setState({
+            main_slider:[],
+            main_slider_preview:[]
+          })
+        }
 
         result.result.map((value, index) => {
 
@@ -117,26 +125,34 @@ class SlideEditor extends Component {
             main_slider: main_slidebar_preview,
             main_slider_preview: main_slider_preview_2,
             add: false
-          });
-
-
+          });          
         });
       })
       .then(() => {
 
       });
+
+      
   };
 
   loadSlidebarStatic = () => {
     const static_slidebar_preview = [];
     const content = { name: "static" };
+    
 
     getSlidebar(content)
       .then(result => {
         const static_slider_preview_2 = [];
+        
+        if(result.result.length === 0){
+          this.setState({
+            static_slider:[],
+            static_slider_preview:[]
+          })
+        }
 
         result.result.map((value, index) => {
-
+          
           const file = new File([], value.hyperlink, {
             lastModified: value.updated_at
           });
@@ -169,6 +185,7 @@ class SlideEditor extends Component {
             add: false
           });
 
+         
 
         });
       })
@@ -324,7 +341,7 @@ class SlideEditor extends Component {
             slidebar: null,
             hyperlink: null,
             order: null,
-            name: "main"
+            name: "static"
           },
           addStatic: false
         });
@@ -410,17 +427,18 @@ class SlideEditor extends Component {
 
   deleteSliderAction = (event) => {
     event.preventDefault();
-
-
     const content = this.state.deleteSlider;
 
     deleteSlidebar(content).then((res) => {
       if (res.status === "Deleted") {
         this.hideModal();
         const load1 = this.loadSlidebar();
-        Promise.all([load1]).then(() => {
+        const load2 = this.loadSlidebarStatic();
+        Promise.all([load1,load2]).then(() => {
           toast.success("Slidebar Deleted");
         })
+
+        
       }
 
     })
@@ -514,6 +532,18 @@ class SlideEditor extends Component {
         />
       ));
     }
+    
+    if(this.state.main_slider.length === 0){
+      main_slider= <div style={{textAlign:'center'}}>
+        <h5>Belum Ada Slider Ditambahkan</h5>
+      </div>
+    }
+
+    if(this.state.static_slider.length === 0){
+      static_slider= <div style={{textAlign:'center'}}>
+        <h5>Belum Ada Slider Ditambahkan</h5>
+      </div>
+    }
 
     if (this.state.static_slider.length !== 0) {
       static_slider = this.state.static_slider.map((value, index) => (
@@ -553,8 +583,11 @@ class SlideEditor extends Component {
         </Modal>
 
 
-        <h4>Preview</h4>
-        <SliderFront SliderPreview={this.state.main_slider_preview} />
+        <h4 style={{background:'grey',color:'white',padding:'5px',textAlign:'center'}}>Preview</h4>
+        <SliderFront 
+        SliderPreview={this.state.main_slider_preview} 
+        StaticSliderPreview={this.state.static_slider_preview}
+        />
         <Row>
           <Col md={8} xs={12}>
             <Card className="card-user">
