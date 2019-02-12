@@ -36,12 +36,19 @@ class SlideEditor extends Component {
     this.state = {
       main_slider_preview: [],
       main_slider: [],
-      add: false,
+      add: true,
       addMainSlide: {
         slidebar: null,
         hyperlink: null,
         order: null,
         name: "main"
+      },
+      editMainSlide: {
+        id:null,
+        slidebar: null,
+        hyperlink: null,
+        order: null,
+        name: null
       },
       isUploading: false,
       isLoading: true
@@ -54,6 +61,8 @@ class SlideEditor extends Component {
 
     getSlidebar(content)
       .then(result => {
+        const main_slider_preview_2 = [];
+
         result.result.map((value, index) => {
           const file = new File([], value.hyperlink, {
             lastModified: value.updated_at
@@ -61,10 +70,24 @@ class SlideEditor extends Component {
 
           main_slidebar_preview.push(
             Object.assign(file, {
-              preview: value.slidebar
+              preview: value.slidebar,
+              idSlide:value.id
             })
           );
-          this.setState({ main_slider: main_slidebar_preview });
+
+          main_slider_preview_2.push({
+            id:value.id,
+            slidebar: value.slidebar,
+            hyperlink: value.hyperlink,
+            order: value.order,
+            name: value.name
+          });
+
+          this.setState({
+            main_slider: main_slidebar_preview,
+            main_slider_preview: main_slider_preview_2,
+            add: false
+          });
 
           // main_slidebar_preview.push({
           //   slidebar: value.slidebar,
@@ -85,13 +108,16 @@ class SlideEditor extends Component {
 
   // Image Processing
   onDrop = (files, rejectedFiles) => {
+    const oldSlide = this.state.main_slider;
+    const newSlide = [];
+
     if (rejectedFiles.length > 0) {
       toast.error(
         rejectedFiles.length +
           " file ditolak karena melebihi ukuran 2MB. Ini akan berdampak pada kecepatan loading yang akan lama jika melebihi dari ukuran tersebut. Kasihan yang pakai koneksi esia hidayah :("
       );
     } else {
-      const array_images = this.state.main_slider.concat(
+      const array_images = newSlide.concat(
         files.map(file =>
           Object.assign(file, {
             preview: URL.createObjectURL(file)
@@ -99,17 +125,21 @@ class SlideEditor extends Component {
         )
       );
 
-      this.setState({
-        main_slider: array_images,
-        add: false,
-        isUploading: true
-      });
-      // uploading to cloudinary directly
-      files.map(file => {
-        this.handleUploadImages(file).then(() => {
-          //   this.setState({ saveable: true })
-          //   this.countFilled();
-        });
+      const insertToFirstArray = oldSlide.unshift(array_images[0]);
+
+      Promise.all([insertToFirstArray]).then(() => {
+          this.setState({
+            main_slider: oldSlide,
+            add: false,
+            isUploading: true
+          });
+          // uploading to cloudinary directly
+          files.map(file => {
+            this.handleUploadImages(file).then(() => {
+              //   this.setState({ saveable: true })
+              //   this.countFilled();
+            });
+          });
       });
     }
   };
@@ -155,6 +185,7 @@ class SlideEditor extends Component {
 
     CreateSlidebar(this.state.addMainSlide).then(res => {
       if (res.status === "success") {
+        this.loadSlidebar();
         toast.success("Slider Added Successfully");
         this.setState({
           addMainSlide: {
@@ -174,23 +205,17 @@ class SlideEditor extends Component {
   onAddMainSlider = event => {
     event.preventDefault();
     this.setState({ add: !this.state.add });
-    // })
-    // const main_slider=[];
-    // const newArrayofImages = this.state.main_slider.concat(main_slider);
-
-    // const pushData = main_slider.push({
-    //     image:""
-    // })
-
-    // Promise.all([pushData]).then(()=> {
-    //     console.log(main_slider);
-    //     this.setState({main_slider:newArrayofImages})
-    // })
   };
+  
 
-  render() {
+  render() {    
+    console.log(this.state.main_slider)
+
     let main_slider = (
-      <div className="main-slider-input" style={{display:'flex',flexDirection:'row'}}>
+      <div
+        className="main-slider-input"
+        style={{ display: "flex", flexDirection: "row" }}
+      >
         <div
           className="loading-background"
           style={{ width: "100%", height: "150px" }}
@@ -198,11 +223,11 @@ class SlideEditor extends Component {
         <div className="main-slider-desc container">
           <div
             className="loading-background"
-            style={{ width: "100%", height: "20px", marginBottom:'10px'}}
+            style={{ width: "100%", height: "20px", marginBottom: "10px" }}
           />
           <div
             className="loading-background"
-            style={{ width: "70%", height: "20px",marginBottom:'10px' }}
+            style={{ width: "70%", height: "20px", marginBottom: "10px" }}
           />
           <div
             className="loading-background"
@@ -212,19 +237,26 @@ class SlideEditor extends Component {
       </div>
     );
 
-    main_slider = this.state.main_slider.map((value, index) => (
-      <SliderMain
-        isUploading={this.state.isUploading}
-        sliderFile={value}
-        preview={value}
-        key={index}
-      />
-    ));
+    if (this.state.main_slider.length !== 0) {
+          
+
+      main_slider = this.state.main_slider.map((value, index) => (
+        <SliderMain
+          isEditable={true}    
+          number={index}     
+          isUploading={this.state.isUploading}
+          sliderFile={value}
+          idSlide={value.idSlide}
+          preview={value}
+          key={index}          
+        />
+      ));
+    }
 
     return (
       <div className="content">
         <h4>Preview</h4>
-        <SliderFront />
+        <SliderFront SliderPreview={this.state.main_slider_preview} />
         <Row>
           <Col md={8} xs={12}>
             <Card className="card-user">
@@ -250,15 +282,16 @@ class SlideEditor extends Component {
                   <Button
                     color="warning"
                     onClick={this.triggerUpdateMainSlide}
-                    size="sm"
+                    size="lg"
                   >
-                    Upload
+                    Update
                   </Button>
                 )}
               </CardHeader>
               <CardBody>
                 {this.state.add ? (
                   <SliderMain
+                    isEditable={false}
                     isUploading={this.state.isUploading}
                     onDrop={this.onDrop}
                   />

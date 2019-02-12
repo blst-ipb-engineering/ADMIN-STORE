@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 import { Input, InputGroup } from "reactstrap";
-import Spinner from '../../../components/Spinner/Spinner';
+import Spinner from "../../../components/Spinner/Spinner";
 
 const baseStyle = {
   display: "flex",
@@ -13,7 +13,8 @@ const baseStyle = {
   borderWidth: 2,
   borderColor: "#bbb",
   borderStyle: "dashed",
-  cursor: "pointer"
+  cursor: "pointer",
+  backgroundSize: "contain"
 };
 const activeStyle = {
   borderStyle: "solid",
@@ -39,6 +40,12 @@ const previewThumbnail = {
   overflow: "hidden"
 };
 
+const backgroundProperty = {
+  backgroundSize: "contain",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center"
+};
+
 class SliderMain extends Component {
   render() {
     const backgroundImageSlide = this.props.preview
@@ -47,75 +54,83 @@ class SliderMain extends Component {
 
     const backgroundUploaded = {
       background: "url(" + backgroundImageSlide + ")",
-      backgroundSize: "contain",
-      backgroundRepeat: "no-repeat",
-      backgroundPosition: "center"
+      backgroundSize: "contain"
     };
 
+    // let halo = !this.props.isEditable ? "this.props.isEditable" : null;
     return (
       <div className="main-slider-wrapper">
-        {this.props.isUploading ? 
-        (
-        <div style={{position:'relative',width:'100%',height:'100px',overflow:'hidden'}}>
-            <Spinner/>
-        </div>
-        
-        ) :
-            (
-                <Dropzone
-          maxSize={2000000}
-          accept="image/*"
-          onDrop={this.props.onDrop}
-          multiple={false}
-        >
-          {({ getRootProps, getInputProps, isDragReject, isDragActive }) => {
-            let styles = { ...baseStyle, ...backgroundUploaded };
-            styles = isDragActive ? { ...styles, ...activeStyle } : styles;
-            styles = isDragReject ? { ...styles, ...rejectStyle } : styles;
+        {/* {halo} */}
+        {this.props.isUploading && this.props.number === 0 ? (
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "100px",
+              overflow: "hidden"
+            }}
+          >
+            <Spinner />
+          </div>
+        ) : (
+          <Dropzone
+            maxSize={2000000}
+            accept="image/*"
+            onDrop={this.props.onDrop}
+            multiple={false}
+          >
+            {({ getRootProps, getInputProps, isDragReject, isDragActive }) => {
+              let styles = {
+                ...baseStyle,
+                ...backgroundUploaded,
+                ...backgroundProperty
+              };
+              styles = isDragActive ? { ...styles, ...activeStyle } : styles;
+              styles = isDragReject ? { ...styles, ...rejectStyle } : styles;
 
-            return (
-              <div
-                {...getRootProps()}
-                style={styles}
-                className="main-slider-input"
-              >
-                <input {...getInputProps()} />
+              return (
+                <div
+                  {...getRootProps()}
+                  style={styles}
+                  className="main-slider-input"
+                >
+                  <input {...getInputProps()} />
 
-                {!this.props.preview ? (
-                  <div style={{textAlign:'center'}}>
-                    <img
-                      src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png"
-                      width="80px"
-                      alt="slider"
-                    />
-                    <p className=" text-center">
-                      <span>
-                        <i
-                          className="nc-icon nc-simple-add"
-                          style={{ marginRight: "5px" }}
-                        />
-                        Pilih Gambar Barang 1028 x 380 px <br />
-                        (max 2 MB)
-                      </span>
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-            );
-          }}
-        </Dropzone>
-
-            )    
-        }
-        
-        
+                  {!this.props.preview ? (
+                    <div style={{ textAlign: "center" }}>
+                      <img
+                        src="https://www.bukalapak.com/images/jual_barang/upload-image-v4.png"
+                        width="80px"
+                        alt="slider"
+                      />
+                      <p className=" text-center">
+                        <span>
+                          <i
+                            className="nc-icon nc-simple-add"
+                            style={{ marginRight: "5px" }}
+                          />
+                          Pilih Gambar Slider dengan ukuran 1028 x 380 px <br />
+                          (max 2 MB)
+                        </span>
+                      </p>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              );
+            }}
+          </Dropzone>
+        )}
 
         <div className="main-slider-desc container">
           <p style={{ margin: 0 }}>Order</p>
           <InputGroup>
-            <Input type="text" name="order" />
+            {this.props.isEditable ? (
+              <Input type="text" onChange={(event)=>{this.onChangeOrderHandler(event, this.props.idSlide)}} name="order" />
+            ) : (
+              <Input type="text" name="order" />
+            )}
           </InputGroup>
           <p style={{ margin: 0 }}>Hyperlink</p>
           <InputGroup>
