@@ -71,7 +71,9 @@ const API_SERVICES = {
   SlideBarCreate: `${HOSTNAME}/slidebar/add`,
   SlideBarGet: `${HOSTNAME}/slidebar/index`,
   SlideBarUpdate:`${HOSTNAME}/slidebar/update`,
-  SlideBarDelete:`${HOSTNAME}/slidebar/delete`
+  SlideBarDelete:`${HOSTNAME}/slidebar/delete`,
+  ListPayment: `${HOSTNAME}/orderproduct/subtotal`,
+  ConfirmPayment : `${HOSTNAME}/order/updatepayment`
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -366,6 +368,44 @@ const MaterialCreate = (contents) => {
     .catch(err => console.log(err))
 }
 
+const ListPayment = (contents) => {
+
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.ListPayment;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const ConfirmPayment = (contents) => {
+
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.ConfirmPayment;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'put', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
 
 export {
   ProductList,
@@ -388,5 +428,9 @@ export {
   CreateSlidebar,
   getSlidebar,
   updateSlidebar,
-  deleteSlidebar
+  deleteSlidebar,
+
+  // Payment Confirmation
+  ListPayment,
+  ConfirmPayment
 }

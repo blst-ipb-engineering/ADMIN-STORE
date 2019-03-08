@@ -43,7 +43,7 @@ class Sidebar extends React.Component {
             </div>
           </a>
           <a
-            href="https://www.creative-tim.com"
+            href="https://www.blst.co.id"
             className="simple-text logo-normal"
           >
             <b>STORE</b> ADMIN

@@ -110,8 +110,8 @@ class Login extends Component {
                         <CardHeader>
                             <CardTitle tag="h4">{this.props.email !== null ? 'Password' : 'Log In'}</CardTitle>                       
                         </CardHeader>
-                        <CardBody>
-                            <form onSubmit={this.submitHandler}>  
+                        <CardBody style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
+                            <form style={{width:'100%'}} onSubmit={this.submitHandler}>  
                                 {loginForm}                              
                                 {password}
                                 {notifError}                     

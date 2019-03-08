@@ -1,0 +1,48 @@
+.otd-wrapper{
+    width: 100%;
+    height: 80vh;
+    background: rgb(241, 241, 241);
+
+    .otd-header-wrapper{
+        width:100%;
+        padding: 10px;
+        background: rgb(255, 255, 255);
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        .search-input-wrap{
+            width: 40%;
+            padding-right: 20px;
+            border-right: 1px solid rgb(224, 224, 224) ;
+
+            input{
+                background: rgb(224, 224, 224);
+                border: none;
+                padding: 10px;
+
+                &::placeholder{
+                    color:rgb(151, 151, 151) !important;
+                }
+            }
+        }
+
+        .date-input-filter{
+            padding-left: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 60%;
+
+            .count{
+                font-weight: 700;
+            }
+
+            label{
+                margin: 0;                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+}

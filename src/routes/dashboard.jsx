@@ -7,6 +7,8 @@ import Maps from "../views/Maps/Maps.jsx";
 import UserPage from "../views/UserPage/UserPage.jsx";
 import SliderEditor from '../views/SliderEditor/SliderEditor';
 import Products from "../views/Products/Products.jsx";
+import PaymentConfrimation from "../views/PaymentConfirmation/PaymentConfirmation.jsx";
+import OrderListToDeliver from "../views/OrderListToDeliver/OrderListToDeliver.jsx";
 
 var dashRoutes = [
   {
@@ -27,12 +29,24 @@ var dashRoutes = [
     icon: "nc-icon nc-layout-11",
     component: SliderEditor
   },
-  // {
-  //   path: "/dashboard/icons",
-  //   name: "Icons",
-  //   icon: "nc-icon nc-diamond",
-  //   component: Icons
-  // },
+  {
+    path: "/dashboard/payment-confirmation",
+    name: "Payment Confirmation",
+    icon: "nc-icon nc-money-coins",
+    component: PaymentConfrimation
+  },
+  {
+    path: "/dashboard/order-to-deliver",
+    name: "Order to Deliver",
+    icon: "nc-icon nc-box",
+    component: OrderListToDeliver
+  },
+  {
+    path: "/dashboard/icons",
+    name: "Icons",
+    icon: "nc-icon nc-diamond",
+    component: Icons
+  },
   // { path: "/dashboard/maps", name: "Maps", icon: "nc-icon nc-pin-3", component: Maps },
   // {
   //   path: "/dashboard/notifications",

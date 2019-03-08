@@ -1,0 +1,59 @@
+.payment-card-wrapper{
+    display: flex;
+    justify-content: center;
+
+    .conf-button{
+        padding: 10px;
+        font-size: 12pt;
+    }
+}
+
+.icon-background-paymen-conf{
+    font-size: 128pt;
+    color: #d3d3d3;
+    // position: absolute;
+    height: 38vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.nav-link{
+    display: flex !important;
+}
+
+.input-data{
+    margin-bottom: 30px;
+
+    .input-by{
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    input{
+        font-size: 30pt;
+        padding: 10px;    
+        text-align: center;
+        
+        &::placeholder{
+            color: rgb(197, 197, 197);
+        }
+    }
+}
+
+@media screen and (max-width: $break-medium){
+   .payment-card-wrapper{
+       
+        .conf-button{
+            margin-top: 20px !important;
+        }
+    }
+
+    .input-data{
+        
+        input{
+            margin-top:10px;
+        }
+    }
+}
