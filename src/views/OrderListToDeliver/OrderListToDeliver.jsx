@@ -104,6 +104,30 @@ class OrderListToDeliver extends Component {
                             />
                         </div>
                     </div>
+                    <div className="otd-card">
+                        <div className="otd-card-description">
+                            <h5>No Pesanan: 20191230343 <Button size="sm" style={{fontSize:'7pt'}}>Detail</Button> </h5>
+                            <div className="otd-p-info">Nilai Total : <strong> Rp. 920,000</strong></div>
+                            <div className="otd-p-info">Metode Pembayaran :<br></br> <strong> BANK BRI a.n PT PENERBIT IPB PRESS</strong></div>
+                            <div className="shipment-info-wrapper">
+                                <div className="descri">Nomor Resi: <strong>023231432489247283</strong> </div>
+                                <div className="descri">Shipping Service: <strong>JNE YES (3-5)</strong></div>
+                            </div>
+                        </div>
+                        <div className="otd-timeline-process">
+                            <div className="chip yellow"><strong>Pesanan dibuat</strong><br></br><small>Jumat 23 Januari 2019 Pukul 16:02 WIB</small> </div>
+                            <div className="chip green"><strong>Pembayaran dikonfirmasi</strong><br></br><small>Jumat 23 Januari 2019 Pukul 16:02 WIB</small> </div>
+                            <div className="chip blue"><strong>Pesanan diproses</strong><br></br><small>Jumat 23 Januari 2019 Pukul 16:02 WIB</small> </div>
+                            <div className="chip red"><strong>Pesanan dikirim</strong><br></br><small>Jumat 23 Januari 2019 Pukul 16:02 WIB</small> </div>
+
+                        </div>
+
+                        <div className="otd-card-shipment">
+                            <h4>Alamat Pengiriman</h4>
+                            <strong>Fulan</strong>
+                            <p>Perumahan Bukit IPB Press Jalan Institut Pertanian Bogor, No 99 Kabupaten Bojonegoro, Jawa Timur, Republik Indonesia</p>
+                        </div>
+                    </div>
                 </div>
                 {/* <Row className="payment-card-wrapper">
                         <Col xs={12} sm={12} md={10} lg={10}>
@@ -114,7 +138,6 @@ class OrderListToDeliver extends Component {
                             </Card>
                         </Col>
                     </Row> */}
-
 
                 {/* <Row className="payment-card-wrapper">
                     <Col xs={12} sm={12} md={10} lg={10}>

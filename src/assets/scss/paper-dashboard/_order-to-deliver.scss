@@ -45,4 +45,98 @@
             }
         }
     }
+
+    .otd-card{
+        width:100%;
+        padding: 25px;
+        background: rgb(255, 255, 255);
+        margin-top: 15px;
+        display: flex;
+        flex-direction: row;
+        line-height: 24px;
+        justify-content: space-between;
+        // align-items:
+        font-size: 10pt;
+
+        .otd-card-description{
+            width: 40%;
+            
+            h5{
+                margin: 0;
+            }
+            
+            .shipment-info-wrapper{
+                background: #ebedeb;
+                padding: 10px;
+                margin-top: 20px;
+            }
+        }
+
+        .otd-timeline-process{
+            line-height: 1;
+            width:30%;
+            background: #ebedeb;
+            padding: 10px;
+
+            .chip{
+                
+                padding: 5px;
+                margin-top: 8px;
+            }
+
+            .yellow{
+                background: rgb(255, 255, 140);
+            }
+
+            .green{
+                background: rgb(101, 245, 101);
+            }
+
+            .blue{
+                background: rgb(101, 228, 245);
+            }
+
+            .red{
+                background: rgb(245, 101, 108);
+            }
+        }
+
+        .otd-card-shipment{
+            width:30%;
+            background: #ebedeb;
+            padding: 20px;
+
+            h4{
+                margin: 0;
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width:$break-small) {
+    .otd-wrapper{
+        margin-top: -40px;
+        padding: 0px -10px;
+        margin-top: -40px;
+        margin-left: -13px;
+        width: 107%;
+
+        .otd-header-wrapper{
+
+            flex-direction: column;
+
+            .search-input-wrap{
+                width:100%;
+                border: none;
+                padding: 0px;
+            }
+
+            .date-input-filter{
+                width: 100%;
+                margin-top: 10px;
+                padding-left: 0px;
+            }
+        }
+    }
 }
