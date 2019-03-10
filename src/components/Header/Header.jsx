@@ -142,7 +142,7 @@ class Header extends React.Component {
                 <span className="navbar-toggler-bar bar3" />
               </button>
             </div>
-            <NavbarBrand href="/">{this.getBrand()}</NavbarBrand>
+            <NavbarBrand>{this.getBrand()}</NavbarBrand>
             <a color="primary" style={{cursor:'pointer', fontSize:'8pt'}} onClick={(event) => this.props.history.goBack()} size="sm">Back</a>   
 
           </div>
@@ -157,10 +157,11 @@ class Header extends React.Component {
             className="justify-content-end"
           >
           <div>
-           
+            
             <small><b>{this.props.auth.nameUser}</b>  |  {this.props.auth.name_company}</small>
            
           </div>
+          
             {/* <form>
               <InputGroup className="no-border">
                 <Input placeholder="Search..." />

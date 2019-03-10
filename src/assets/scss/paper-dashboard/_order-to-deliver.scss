@@ -1,7 +1,8 @@
 .otd-wrapper{
     width: 100%;
-    height: 80vh;
+    margin-bottom: 30vh;
     background: rgb(241, 241, 241);
+    position: relative;
 
     .otd-header-wrapper{
         width:100%;
@@ -14,7 +15,7 @@
         .search-input-wrap{
             width: 40%;
             padding-right: 20px;
-            border-right: 1px solid rgb(224, 224, 224) ;
+            border-right: 1px solid rgb(224, 224, 224) ;    
 
             input{
                 background: rgb(224, 224, 224);
@@ -45,72 +46,6 @@
             }
         }
     }
-
-    .otd-card{
-        width:100%;
-        padding: 25px;
-        background: rgb(255, 255, 255);
-        margin-top: 15px;
-        display: flex;
-        flex-direction: row;
-        line-height: 24px;
-        justify-content: space-between;
-        // align-items:
-        font-size: 10pt;
-
-        .otd-card-description{
-            width: 40%;
-            
-            h5{
-                margin: 0;
-            }
-            
-            .shipment-info-wrapper{
-                background: #ebedeb;
-                padding: 10px;
-                margin-top: 20px;
-            }
-        }
-
-        .otd-timeline-process{
-            line-height: 1;
-            width:30%;
-            background: #ebedeb;
-            padding: 10px;
-
-            .chip{
-                
-                padding: 5px;
-                margin-top: 8px;
-            }
-
-            .yellow{
-                background: rgb(255, 255, 140);
-            }
-
-            .green{
-                background: rgb(101, 245, 101);
-            }
-
-            .blue{
-                background: rgb(101, 228, 245);
-            }
-
-            .red{
-                background: rgb(245, 101, 108);
-            }
-        }
-
-        .otd-card-shipment{
-            width:30%;
-            background: #ebedeb;
-            padding: 20px;
-
-            h4{
-                margin: 0;
-            }
-        }
-    }
 }
 
 
@@ -138,5 +73,38 @@
                 padding-left: 0px;
             }
         }
+
+        .otd-card{
+            flex-direction: column;
+
+            .otd-card-description{
+                width: 100%;
+
+                .shipment-info-wrapper{
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    width: 100%;
+                    margin-right: 0px;
+                }
+            }
+
+            .otd-timeline-process{
+                width: 100%;
+            }
+
+            .otd-card-shipment{
+                width: 100%;
+            }
+            
+        }
     }
 }
+
+
+// @media screen and (max-width: $break-medium){
+//     .otd-wrapper{
+
+//         .otd-card
+//     }
+
+// }

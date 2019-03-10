@@ -262,7 +262,7 @@ class PaymentConfrimation extends Component {
                     </Col>
                     <Col md={7} xs={12}>
                         <Input
-                            value={this.formatuang(this.state.value)}
+                            // value={this.formatuang(this.state.value)}
                             name="value"
                             onChange={(event) => this.onChangeMoneyHandler(event)}
                             placeholder="Masukkan Angka" size="lg"

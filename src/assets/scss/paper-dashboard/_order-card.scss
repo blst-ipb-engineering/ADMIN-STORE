@@ -1,0 +1,185 @@
+.otd-card{
+    width:100%;
+    padding: 25px;
+    background: rgb(255, 255, 255);
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    line-height: 24px;
+    justify-content: space-between;
+    // align-items:
+    font-size: 10pt;
+
+    .otd-card-description{
+        width: 40%;
+        position: relative;
+
+        .otd-opened{
+            max-height:300px !important; 
+            padding: 15px;
+        }
+
+        .backdrop{
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            opacity: 0.7;
+            position: fixed;
+            top:0;
+            left: 0;
+            z-index:1045;
+        }
+
+        .otd-dtail-order-wrapper{
+            position: absolute;
+            background: rgb(255, 255, 255);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1200;
+            max-height: 0px;
+            overflow: scroll;
+            transition: 0.2s;
+
+            .otd-dtail-inner{
+                position: relative;
+
+                .close-button{
+                    position: absolute;
+                    right: 10px;
+                    top:10px;
+                    font-size: 14pt;
+                    color: white;
+                    cursor: pointer;
+                }
+
+                .otd-header-product{
+                    font-weight: 700;
+                    text-align: left;
+                    font-size: 13pt;
+                    background: grey;
+                    color: white;
+                    padding: 11px;      
+                    // position: absolute;
+                   }
+    
+    
+                .otd-product{
+                    display: flex;
+                    flex-direction: row;
+                    border-bottom: 1px solid rgb(199, 199, 199);
+                    padding: 10px 0px;
+                    
+                    .pict{
+                        img{
+                            height: 80px;
+                            padding-right: 10px;
+                        }
+                    }
+    
+                    .desc{
+                        flex:1;
+                        text-transform: lowercase;
+                        line-height: 1.5;
+                    }
+                }
+            }
+
+
+        }
+        
+        h5{
+            margin: 0;
+        }
+        
+        .shipment-info-wrapper{
+            background: #ebedeb;
+            padding: 10px;
+            margin-top: 20px;
+            margin-right: 20px
+        }
+    }
+
+    .otd-timeline-process{
+        line-height: 1;
+        width:30%;
+        background: #ebedeb;    
+        display: flex;
+        justify-content: center;
+        flex-direction: column;       
+        position: relative;
+
+        
+        // input resi
+            .inpr-wrapper-open{
+                height: 100% !important;
+                padding: 10px;
+            }
+            
+        .inpr-wrapper{
+            width: 100%;
+            position: absolute;
+            display: flex;
+            height: 0px;
+            justify-content: center;
+            align-items: flex-start;
+            background: #ebedeb;   
+            overflow: hidden; 
+            // height: 0%;
+            z-index: 1200;
+            flex-direction: column;
+            // padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: 0.2s;
+
+            .descri{
+                margin-bottom: 10px;
+            }
+        }
+
+        .chip{
+            font-size: 8pt;
+            padding: 5px;
+            margin-top: 2px;
+            line-height: 13px;
+            color: white;
+            background: rgb(160, 160, 160);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            strong{
+                width:50%;
+                font-size: 8pt;
+            }
+        }
+
+        .yellow{
+            background: #ea9100;
+        }
+
+        .green{
+            background: #20c160;
+        }
+
+        .blue{
+            background: #1575d4;
+        }
+
+        .red{
+            background: #f0544b;
+        }
+
+        .blue-light{
+            background: #3acced;
+        }
+    }
+
+    .otd-card-shipment{
+        width:30%;
+        background: #ebedeb;
+        padding: 20px;
+
+        h4{
+            margin: 0;
+        }
+    }
+}
