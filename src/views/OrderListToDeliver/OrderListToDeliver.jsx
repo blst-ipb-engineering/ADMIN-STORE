@@ -10,14 +10,14 @@ import {
     Row,
     Col
 } from "reactstrap";
-import Stats from "../../components/Stats/Stats.jsx";
 import { Label } from '../../components/UI/Form/Label/Label';
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
 
-
 import Toaster from '../../components/UI/Toaster/Toaster';
 import OrderCard from '../../components/OrderCard/OrderCard.jsx';
+
+import { ListOrder,ConfirmSend } from '../../api/index';
 
 
 class OrderListToDeliver extends Component {
@@ -25,15 +25,18 @@ class OrderListToDeliver extends Component {
         super(props);
 
         this.state = {
+            isFetching:false,
             selectBy: { id: 2, value: 'Jumlah Transfer', label: 'Jumlah Transfer' },
             selectByOptions: [
                 { id: 1, value: 'Nomor Invoice', label: 'Nomor Invoice' },
                 { id: 2, value: 'Jumlah Transfer', label: 'Jumlah Transfer' },
             ],
-            paymentDate: new Date(),
+            // paymentDate: new Date(),
             value: null,
-            startDate: new Date().setMonth(new Date().getMonth() - 1),
-            endDate: new Date()
+            startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+            endDate: new Date(),
+            count:0,
+            dataListOrder:null            
 
         }
     }
@@ -66,23 +69,66 @@ class OrderListToDeliver extends Component {
 
     }
 
-    fetchOrderCard = (event) => {
-        event.preventDefault();
+    fetchOrderCard = () => {    
+        this.setState({isFetching:true})  
+        const content = {
+            querysearch: this.state.value,
+            startDate: this.state.startDate,
+            endDate:this.state.endDate,
+            statusId:[2,3],
+	        page: 1
+        }
 
+        ListOrder(content).then(result => {
+            this.setState({dataListOrder:result.result,isFetching:false});
+        })
+    }
+
+    queryInputChangeHandler = (event)=> {
+        event.preventDefault();
+        this.setState({value:event.target.value})
 
     }
 
+    handleChangeStart = (val) => {
+       
+        this.setState({startDate:val})
+
+    }
+
+    handleChangeEnd = (val) => {
+        
+        this.setState({endDate:val})
+    }
+
+    componentDidMount(){
+        this.fetchOrderCard()
+    }
+
+
     render() {
+        let listorder = <>
+        <div className="loading-background" style={{width:'100%',height:'40px',marginTop:'10px'}}></div>
+        <div className="loading-background" style={{width:'100%',height:'40px',marginTop:'10px'}}></div>
+        <div className="loading-background" style={{width:'100%',height:'40px',marginTop:'10px'}}></div>
+        </>
+
+        if(this.state.dataListOrder !== null ){
+            listorder = this.state.dataListOrder.map((value,index)=>
+                (<OrderCard tesOnload={this.fetchOrderCard} OrderProps={value} key={index}></OrderCard>            )        
+            )
+        }
+
         return (
             <div className="content">
                 <div className="otd-wrapper">
                     <div className="otd-header-wrapper">
                         <div className="search-input-wrap">
                             <label>Cari Order</label>
-                            <Input placeholder="masukkan email customer atau nomor order, misal: mbokde@gmail.com"></Input>
+                            <Input onChange={(event)=>{this.queryInputChangeHandler(event)}} placeholder="masukkan email customer atau nomor order, misal: mbokde@gmail.com"></Input>
                         </div>
                         <div className="date-input-filter">
-                            <label className="count">Count : 12</label>
+                            <label className="count">Count : {this.state.count}</label>
                             <label>Date Filter</label>
                             <DatePicker
                                 className="form-control"
@@ -91,7 +137,7 @@ class OrderListToDeliver extends Component {
                                 selectsStart
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
-                                onChange={this.handleChangeStart}
+                                onChange={(val)=>this.handleChangeStart(val)}
                             />
 
                             <DatePicker
@@ -101,14 +147,11 @@ class OrderListToDeliver extends Component {
                                 selectsEnd
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
-                                onChange={this.handleChangeEnd}
+                                onChange={(val)=>this.handleChangeEnd(val)}
                             />
                         </div>
-                    </div>
-                    <OrderCard></OrderCard>
-                    <OrderCard></OrderCard>
-                    <OrderCard></OrderCard>
-                    <OrderCard></OrderCard>
+                    </div>     
+                    {listorder}               
                 </div>
                 {/* <Row className="payment-card-wrapper">
                         <Col xs={12} sm={12} md={10} lg={10}>

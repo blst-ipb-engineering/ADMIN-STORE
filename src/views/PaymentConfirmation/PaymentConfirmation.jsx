@@ -70,13 +70,14 @@ class PaymentConfrimation extends Component {
     }
 
     fetchOrderCard = () => {
-        this.setState({ isFetching: true })
+       
         const content = {
             searchby: this.state.selectBy.id,
             value: this.state.value
         }
 
         if (this.state.value !== null && this.state.value > 1) {
+            this.setState({ isFetching: true })
             ListPayment(content).then(res => {
                 this.setState({ data: res, isFetching: false })
                 console.log(res)
@@ -252,7 +253,7 @@ class PaymentConfrimation extends Component {
                     <Col md={3} xs={12}>
                         <div className="input-by">Cari berdasarkan</div>
                         <Select
-                            onChange={(val) => this.setState({ selectBy: val })}
+                            onChange={(val) => this.setState({ selectBy: val },()=>{this.fetchOrderCard()})}
                             name="findby"
                             value={this.state.selectBy}
                             className="basic-multi-select"
