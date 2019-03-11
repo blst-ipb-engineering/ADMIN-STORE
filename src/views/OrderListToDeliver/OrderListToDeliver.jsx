@@ -80,6 +80,7 @@ class OrderListToDeliver extends Component {
         }
 
         ListOrder(content).then(result => {
+            console.log(result.result)
             this.setState({dataListOrder:result.result,isFetching:false});
         })
     }
@@ -115,7 +116,7 @@ class OrderListToDeliver extends Component {
 
         if(this.state.dataListOrder !== null ){
             listorder = this.state.dataListOrder.map((value,index)=>
-                (<OrderCard tesOnload={this.fetchOrderCard} OrderProps={value} key={index}></OrderCard>            )        
+                (<OrderCard OrderProps={value} key={index}></OrderCard>            )        
             )
         }
 
