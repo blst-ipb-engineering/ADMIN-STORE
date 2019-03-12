@@ -81,25 +81,22 @@ class OrderListToDeliver extends Component {
 
         ListOrder(content).then(result => {
             console.log(result.result)
-            this.setState({dataListOrder:result.result,isFetching:false});
+            this.setState({dataListOrder:result.result,isFetching:false,count:result.result.length});
         })
     }
 
     queryInputChangeHandler = (event)=> {
         event.preventDefault();
-        this.setState({value:event.target.value})
+        this.setState({value:event.target.value},()=>this.fetchOrderCard())
 
     }
 
     handleChangeStart = (val) => {
-       
-        this.setState({startDate:val})
-
+        this.setState({startDate:val},()=>this.fetchOrderCard())
     }
 
     handleChangeEnd = (val) => {
-        
-        this.setState({endDate:val})
+        this.setState({endDate:val},()=>this.fetchOrderCard())
     }
 
     componentDidMount(){

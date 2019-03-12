@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
     Input,
     Button,
@@ -23,11 +24,11 @@ class OrderCard extends Component {
         }
     }
 
-    fetchData(){
+    fetchData() {
         const content = {
             transactionId: this.props.OrderProps.transactionId
         }
-        ListOrderDetail(content).then(res => {           
+        ListOrderDetail(content).then(res => {
             this.setState({ data: res.result[0] })
         }).catch(err => {
             console.log(err)
@@ -35,7 +36,7 @@ class OrderCard extends Component {
     }
 
     componentDidMount() {
-       this.fetchData();
+        this.fetchData();
     }
 
     detailHandler = (event) => {
@@ -66,10 +67,9 @@ class OrderCard extends Component {
 
         ConfirmSend(content).then(res => {
             if (res.status === "success") {
-                this.setState({ isInputResiOpen: false, isbackdropOpen: false },()=>{this.fetchData()})
+                this.setState({ isInputResiOpen: false, isbackdropOpen: false }, () => { this.fetchData() })
             }
         }).catch(err => { console.log(err) })
-
     }
 
 
@@ -95,14 +95,14 @@ class OrderCard extends Component {
             <>
                 {this.state.data !== null ? (
                     <>
-                    
+
                         <div className={this.state.isCollapse ? "otd-dard-header-short yellow" : "otd-dard-header-short"} onClick={() => { this.setState({ isCollapse: !this.state.isCollapse }) }}>
-                            <div>{this.state.data.invoiceNumber}</div>
-                            <div>{this.state.data.Customer.email}</div>
-                            <div><strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
-                            <div><Button size="sm" style={{ margin: '0', background: this.state.data.StatusOrder.color }}>{this.state.data.StatusOrder.statusName}</Button></div>
-                            <div>{this.state.data.no_resi}</div>
-                            <div></div>
+                            <div className="col1">{this.state.data.invoiceNumber}</div>
+                            <div className="col2">{this.state.data.Customer.email}</div>
+                            <div className="col3"><strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
+                            <div className="col4"><Button size="sm" style={{ margin: '0', background: this.state.data.StatusOrder.color }}>{this.state.data.StatusOrder.statusName}</Button></div>
+                            <div className="col5">{this.state.data.no_resi}</div>
+                            <div className="col6"></div>
                         </div>
                         <div className={this.state.isCollapse ? "otd-card otd-open" : "otd-card"}>
                             <div className="otd-card-description">
@@ -125,8 +125,12 @@ class OrderCard extends Component {
                                 <div className="shipment-info-wrapper">
                                     <div className="descri">Nomor Resi: <strong>{this.state.data.no_resi}</strong> </div>
                                     <div className="descri">Shipping Service: <strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
-                                    <div className="descri">Ongkos Kirim: <strong>Rp 15.000</strong></div>
-                                    <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> Input Resi</Button>
+                                    <div className="descri">Ongkos Kirim: <strong>Rp {this.formatuang(this.state.data.value)}</strong></div>
+
+                                    {this.props.auth.companyId == this.state.data.companyId ? (
+                                        <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> Input Resi</Button>
+                                    ) : null}
+
                                 </div>
                             </div>
                             <div className="otd-timeline-process">
@@ -157,4 +161,10 @@ class OrderCard extends Component {
     }
 }
 
-export default OrderCard;
+const mapStateToProps = state => {
+    return {
+        auth: state.authsd
+    }
+};
+
+export default connect(mapStateToProps)(OrderCard);
