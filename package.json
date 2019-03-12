@@ -1,8 +1,8 @@
 {
-  "name": "paper-dashboard-react",
+  "name": "blst-admin-store",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://creativetimofficial.github.io/paper-dashboard-react/#/dashboard",
+  "homepage": "https://admin-store.blst.co.id",
   "dependencies": {
     "@types/react": "16.8.7",
     "axios": "^0.18.0",
