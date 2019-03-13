@@ -398,7 +398,7 @@ class ProductEditor extends Component {
                     })
                 });
 
-                const push_author = res.Categories.map((value, index) => {
+                const push_author = res.Authors.map((value, index) => {
                     authors.push({
                         id: value.id,
                         value: value.id,
