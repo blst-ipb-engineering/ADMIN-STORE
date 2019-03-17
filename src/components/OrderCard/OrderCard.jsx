@@ -28,8 +28,11 @@ class OrderCard extends Component {
         const content = {
             transactionId: this.props.OrderProps.transactionId
         }
+
         ListOrderDetail(content).then(res => {
-            this.setState({ data: res.result[0] })
+            if(res.length > 0){
+                this.setState({ data: res.result })
+            }
         }).catch(err => {
             console.log(err)
         })
@@ -78,6 +81,7 @@ class OrderCard extends Component {
         let otdProduct = null;
 
         if (this.state.data !== null) {
+            // console.log(this.state.data)
             otdProduct = this.state.data.OrderProducts.map((value, index) => (
                 <div className="otd-product" key={index}>
                     <div className="pict">

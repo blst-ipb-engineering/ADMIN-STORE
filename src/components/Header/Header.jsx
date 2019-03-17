@@ -20,7 +20,7 @@ import {
   Input
 } from "reactstrap";
 
-import {data_user} from "../../api/index"
+import { data_user } from "../../api/index"
 
 import jwt from "jsonwebtoken";
 
@@ -56,6 +56,7 @@ class Header extends React.Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   }
+
   getBrand() {
     var name;
     dashboardRoutes.map((prop, key) => {
@@ -111,7 +112,7 @@ class Header extends React.Component {
     }
   }
   render() {
-       
+
     return (
       // add or remove classes depending if we are on full-screen-maps page or not
       <Navbar
@@ -125,7 +126,7 @@ class Header extends React.Component {
           this.props.location.pathname.indexOf("full-screen-maps") !== -1
             ? "navbar-absolute fixed-top"
             : "navbar-absolute fixed-top " +
-              (this.state.color === "transparent" ? "navbar-transparent " : "")
+            (this.state.color === "transparent" ? "navbar-transparent " : "")
         }
       >
         <Container fluid>
@@ -143,7 +144,7 @@ class Header extends React.Component {
               </button>
             </div>
             <NavbarBrand>{this.getBrand()}</NavbarBrand>
-            <a color="primary" style={{cursor:'pointer', fontSize:'8pt'}} onClick={(event) => this.props.history.goBack()} size="sm">Back</a>   
+            <a color="primary" style={{ cursor: 'pointer', fontSize: '8pt' }} onClick={(event) => this.props.history.goBack()} size="sm">Back</a>
 
           </div>
           <NavbarToggler onClick={this.toggle}>
@@ -156,12 +157,12 @@ class Header extends React.Component {
             navbar
             className="justify-content-end"
           >
-          <div>
-            
-            <small><b>{this.props.auth.nameUser}</b>  |  {this.props.auth.name_company}</small>
-           
-          </div>
-          
+            <div>
+
+              <small><b>{this.props.auth.nameUser}</b>  |  {this.props.auth.name_company}</small>
+
+            </div>
+
             {/* <form>
               <InputGroup className="no-border">
                 <Input placeholder="Search..." />
@@ -214,12 +215,12 @@ class Header extends React.Component {
   }
 }
 
-const mapStateToProps = state => {  
+const mapStateToProps = state => {
   return {
-    isAuth : state.authsd.token !== null,
+    isAuth: state.authsd.token !== null,
     authRedirectPath: state.authsd.authRedirectPath,
-    ui:state.ui,
-    auth:state.authsd
+    ui: state.ui,
+    auth: state.authsd
   }
 };
 

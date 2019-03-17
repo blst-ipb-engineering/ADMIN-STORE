@@ -2,7 +2,7 @@ import axios from 'axios';
 import querystring from 'querystring';
 import { createStore } from 'redux';
 import authreducers from "../store/reducer/auth";
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import jwt from 'jsonwebtoken'
 import {logout} from '../store/action/auth';
 

@@ -79,8 +79,7 @@ class OrderListToDeliver extends Component {
 	        page: 1
         }
 
-        ListOrder(content).then(result => {
-            console.log(result.result)
+        ListOrder(content).then(result => {            
             this.setState({dataListOrder:result.result,isFetching:false,count:result.result.length});
         })
     }
@@ -113,6 +112,7 @@ class OrderListToDeliver extends Component {
 
         if(this.state.dataListOrder !== null ){
             listorder = this.state.dataListOrder.map((value,index)=>
+            // console.log(value)
                 (<OrderCard OrderProps={value} key={index}></OrderCard>            )        
             )
         }
