@@ -57,7 +57,7 @@ class OrderCard extends Component {
             amount = 0;
         }
         // deletecomma
-        let comadel = amount.toString().replace(/\,/g, '');
+        let comadel = amount.toString().replace(/,/g, '');
         let price = comadel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
         return price;
     }
@@ -131,7 +131,7 @@ class OrderCard extends Component {
                                     <div className="descri">Shipping Service: <strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
                                     <div className="descri">Ongkos Kirim: <strong>Rp {this.formatuang(this.state.data.value)}</strong></div>
 
-                                    {this.props.auth.companyId == this.state.data.companyId ? (
+                                    {this.props.auth.companyId === this.state.data.companyId ? (
                                         <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> Input Resi</Button>
                                     ) : null}
 

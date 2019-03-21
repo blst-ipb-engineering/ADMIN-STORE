@@ -151,7 +151,7 @@ class PaymentConfrimation extends Component {
         }
 
         if (this.state.data !== null && !this.state.isFetching && this.state.data.length > 0) {
-            listOrder = this.state.data.map((value, index) => {
+            listOrder = this.state.data.map((value, index) => {                
                 let btn = null;
                 let dateInput = null
                 let time = <Moment fromNow={true} locale="id" format="LLLL">{value.createdAt}</Moment>;
@@ -177,7 +177,7 @@ class PaymentConfrimation extends Component {
                     </Button>
                 }
                 
-                console.log(time)
+                
                 return <Row className="payment-card-wrapper">
                     <Col xs={12} sm={12} md={10} lg={10}>
                         <Card className="card-stats">
@@ -194,6 +194,7 @@ class PaymentConfrimation extends Component {
                                             <CardTitle tag="p" style={{ fontWeight: '700', color: 'grey' }}>
                                                 Rp {this.formatuang(value.subtotal)}
                                             </CardTitle>
+                                            <p className="card-category">Via: {value.Bank.bankname} {value.Bank.norek} <br></br> {value.Bank.an}</p>
                                         </div>
                                     </Col>
                                     <Col xs={12} md={5}>
