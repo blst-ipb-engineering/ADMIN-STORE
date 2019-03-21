@@ -113,7 +113,7 @@ class OrderListToDeliver extends Component {
         if(this.state.dataListOrder !== null ){
             listorder = this.state.dataListOrder.map((value,index)=>
             // console.log(value)
-                (<OrderCard OrderProps={value} key={index}></OrderCard>            )        
+                (<OrderCard OrderProps={value} key={index}></OrderCard>)        
             )
         }
 

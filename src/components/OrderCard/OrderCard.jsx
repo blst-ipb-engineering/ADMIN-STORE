@@ -27,10 +27,11 @@ class OrderCard extends Component {
     fetchData() {
         const content = {
             transactionId: this.props.OrderProps.transactionId
-        }
+        }       
 
         ListOrderDetail(content).then(res => {
-            if(res.length > 0){
+            // console.log(res)
+            if(res){
                 this.setState({ data: res.result })
             }
         }).catch(err => {
@@ -38,7 +39,7 @@ class OrderCard extends Component {
         })
     }
 
-    componentDidMount() {
+    componentDidMount() {        
         this.fetchData();
     }
 
