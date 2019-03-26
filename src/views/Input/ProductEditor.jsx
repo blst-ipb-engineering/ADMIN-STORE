@@ -1194,30 +1194,47 @@ class ProductEditor extends Component {
                                     <Row>
                                         <Col md={4}>
                                             <Label for="name" required>Penerbit</Label>
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.source_fin_publisher)}
-                                                name="source_fin_publisher"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                            <InputGroup>
+                                                <Input
+                                                    type="text"
+                                                    value={this.formatuang(this.state.source_fin_publisher)}
+                                                    name="source_fin_publisher"
+                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                </Input>
+                                                <InputGroupAddon addonType="append">
+                                                    <InputGroupText>%</InputGroupText>
+                                                </InputGroupAddon>
+                                            </InputGroup>
+
                                         </Col>
                                         <Col md={4}>
                                             <Label for="name" required>Penulis</Label>
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.source_fin_author)}
-                                                name="source_fin_author"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                            <InputGroup>
+                                                <Input
+                                                    type="text"
+                                                    value={this.formatuang(this.state.source_fin_author)}
+                                                    name="source_fin_author"
+                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                </Input>
+                                                <InputGroupAddon addonType="append">
+                                                    <InputGroupText>%</InputGroupText>
+                                                </InputGroupAddon>
+                                            </InputGroup>
                                         </Col>
                                         <Col md={4}>
                                             <Label for="name" required>Project</Label>
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.source_fin_sponsor)}
-                                                name="source_fin_sponsor"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                            <InputGroup>
+                                                <Input
+                                                    type="text"
+                                                    value={this.formatuang(this.state.source_fin_sponsor)}
+                                                    name="source_fin_sponsor"
+                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                </Input>
+                                                <InputGroupAddon addonType="append">
+                                                    <InputGroupText>%</InputGroupText>
+                                                </InputGroupAddon>
+                                            </InputGroup>
+
                                         </Col>
                                     </Row>
                                 </CardBody>
