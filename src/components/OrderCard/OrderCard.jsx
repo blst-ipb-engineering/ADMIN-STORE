@@ -29,8 +29,7 @@ class OrderCard extends Component {
             transactionId: this.props.OrderProps.transactionId
         }       
 
-        ListOrderDetail(content).then(res => {
-            // console.log(res)
+        ListOrderDetail(content).then(res => {           
             if(res){
                 this.setState({ data: res.result })
             }
