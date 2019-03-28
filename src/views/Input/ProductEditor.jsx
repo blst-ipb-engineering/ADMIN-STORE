@@ -51,7 +51,7 @@ class ProductEditor extends Component {
             create_price: 0,
             published_price: 0,
             base_price: 0,
-            unit_product: "Pcs",
+            unit: "Pcs",
             publish_date: new Date(),
             weight: 0,
             isbn: '',
@@ -111,19 +111,19 @@ class ProductEditor extends Component {
             show_button_author: false,
             show_button_material: false,
             // Detail untuk buku
-            tim_penulis: null,
-            mou_end: new Date(),
+            tim_penulis: '-',
+            mou_data: new Date(),
             source_fin_publisher: 0,
             source_fin_author: 0,
             source_fin_sponsor: 0,
             cost_of_goods_sold: 0,
-            added_value_price: 0,
+            add_value_price: 0,
             royalti_percent: 0,
 
-            product_editor: null,
-            product_layouter: null,
-            product_desainer: null,
-            product_manager: null,
+            editor_product: null,
+            layouter_product: null,
+            desainer_product: null,
+            manager_proyek: null,
 
             user_blst: []
 
@@ -176,19 +176,20 @@ class ProductEditor extends Component {
             event.preventDefault();
             const content = this.state;
             ProductUpdate(content).then(res => {
-                if (res.status === "success") {
+                console.log(res)
+                // if (res.status === "success") {
 
-                    const toaster = {
-                        isOpenToast: true,
-                        toastMessage: res.data.name + " Berhasil diUpdate",
-                        toastType: 'success',
-                    }
-                    this.props.toggleToaster(toaster)
+                //     const toaster = {
+                //         isOpenToast: true,
+                //         toastMessage: res.data.name + " Berhasil diUpdate",
+                //         toastType: 'success',
+                //     }
+                //     this.props.toggleToaster(toaster)
 
-                    this.props.history.replace('/dashboard/products');
-                    this.props.history.push('/dashboard/products');
-                }
-            })
+                //     this.props.history.replace('/dashboard/products');
+                //     this.props.history.push('/dashboard/products');
+                // }
+            }).catch(err=>console.log(err))
         })
     }
 
@@ -397,7 +398,7 @@ class ProductEditor extends Component {
 
         // call for employee
         const list_emp = [];
-        ListEmployee().then(res => {
+        const push_blst_employee = ListEmployee().then(res => {
             res.map((value, index) => {
                 list_emp.push({
                     id: value.id_user,
@@ -405,8 +406,7 @@ class ProductEditor extends Component {
                     label: value.name
                 })
             })
-        }).then(() => {
-            console.log(list_emp);
+        }).then(() => {            
             this.setState({ user_blst: list_emp });
         });
 
@@ -419,7 +419,7 @@ class ProductEditor extends Component {
                 id: this.props.match.params.id
             }
             ProductEdit(content).then(res => {
-
+                console.log(res)
                 this.setState({ edit_status: this.props.match.params.status });
                 const categories = [];
                 const authors = [];
@@ -466,9 +466,32 @@ class ProductEditor extends Component {
                         signature: value.signature
                     })
 
-                })
+                })               
+                
+                Promise.all([push_cat, push_author, push_material, push_picture,push_blst_employee]).then(() => {
+                                       
+                    const push_manager = this.state.user_blst.filter((user)=>{                       
+                        return new RegExp(res.manager_proyek,"i").exec(user.id);                                
+                    });
 
-                Promise.all([push_cat, push_author, push_material, push_picture]).then(() => {
+                    const push_layouter_product = this.state.user_blst.filter((user)=>{                       
+                        return new RegExp(res.layouter_product,"i").exec(user.id);                                
+                    });
+
+                    const push_editor_product = this.state.user_blst.filter((user)=>{                       
+                        return new RegExp(res.editor_product,"i").exec(user.id);                                
+                    });
+
+                    const push_desainer_product = this.state.user_blst.filter((user)=>{                       
+                        return new RegExp(res.desainer_product,"i").exec(user.id);                                
+                    });
+                    
+    
+                    this.setState({manager_proyek:push_manager[0]});
+                    this.setState({layouter_product:push_layouter_product[0]});
+                    this.setState({editor_product:push_editor_product[0]});
+                    this.setState({desainer_product:push_editor_product[0]});
+
                     this.setState({ category: categories });
                     this.setState({ author: authors });
                     this.setState({ material: materials });
@@ -495,7 +518,15 @@ class ProductEditor extends Component {
                         isbn: res.isbn,
                         sku: res.sku,
                         saveable: true,
-                        productId: res.id
+                        productId: res.id,
+                        royalti_percent:res.royalti_percent,
+                        mou_data:res.mou_data,
+                        source_fin_publisher:res.source_fin_publisher,
+                        source_fin_author:res.source_fin_author,
+                        source_fin_sponsor:res.source_fin_sponsor,
+                        cost_of_goods_sold:res.cost_of_goods_sold,
+                        add_value_price:res.add_value_price,
+
                     }, () => {
                         this.countFilled();
                     })
@@ -646,8 +677,6 @@ class ProductEditor extends Component {
 
 
     render() {
-        console.log("[RENDER]")
-
         let modalform = null;
         let titlemodal = null;
         let status = false;
@@ -856,7 +885,7 @@ class ProductEditor extends Component {
                                         />
 
                                     </Col>
-                                    <Col md={12}>
+                                    <Col md={6}>
                                         <Label for="date_publish" required>Published Date <small>/ Tanggal Terbit</small></Label>
                                         <DatePicker
                                             className="form-control"
@@ -896,9 +925,9 @@ class ProductEditor extends Component {
                                                 <InputGroupAddon addonType="prepend">/</InputGroupAddon>
                                                 <Input style={{ fontWeight: '700', fontSize: '20pt' }}
                                                     type="text"
-                                                    value={this.state.unit_product}
-                                                    name="unit_product"
-                                                    onChange={(event) => { this.setState({ unit_product: event.target.value }) }}>
+                                                    value={this.state.unit}
+                                                    name="unit"
+                                                    onChange={(event) => { this.setState({ unit: event.target.value }) }}>
                                                 </Input>
                                             </InputGroup>
 
@@ -913,6 +942,26 @@ class ProductEditor extends Component {
                             </Input>
                         </Col>                                                             */}
                                     </Row>
+
+                                    {this.state.categoryGeneral.label === "Book" ? (
+                                        <Row>
+                                            <Col md={12}>
+                                                <Label for="date_publish" required>Persentase Royalti <small>Royalti % x Harga Jual</small></Label>
+                                                <InputGroup>
+                                                    <Input
+                                                        type="text"
+                                                        style={{ textAlign: 'center' }}
+                                                        value={this.formatuang(this.state.royalti_percent)}
+                                                        name="royalti_percent"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
+                                                    <InputGroupAddon addonType="append">
+                                                        <InputGroupText>%</InputGroupText>
+                                                    </InputGroupAddon>
+                                                </InputGroup>
+                                            </Col>
+                                        </Row>
+                                    ) : null}
                                     {/* <Row>
                         <Col md={6}>
                             <Label for="name" required>Production Price <small>/ HPP</small></Label>                        
@@ -1069,59 +1118,61 @@ class ProductEditor extends Component {
                                 </CardBody>
                             </Card>
 
-                            <Card className="card-user">
-                                <CardHeader>
-                                    <h6>Book Detail <small>/ Detail Buku</small></h6>
-                                </CardHeader>
-                                <CardBody>
-                                    <Row>
-                                        <Col md={4}>
-                                            <Label for="name" required>Product Edition <small>/ Edisi Buku</small></Label>
+                            {this.state.categoryGeneral.label === "Book" ? (
+                                <>
+                                    <Card className="card-user">
+                                        <CardHeader>
+                                            <h6>Book Detail <small>/ Detail Buku</small></h6>
+                                        </CardHeader>
+                                        <CardBody>
+                                            <Row>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Product Edition <small>/ Edisi Buku</small></Label>
 
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.version)}
-                                                name="version"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.formatuang(this.state.version)}
+                                                        name="version"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
 
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="name" required>Print Version <small>/ Cetakan ke</small></Label>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Print Version <small>/ Cetakan ke</small></Label>
 
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.production_version)}
-                                                name="production_version"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.formatuang(this.state.production_version)}
+                                                        name="production_version"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
 
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="name">Product Pages <small>/ Total Halaman</small></Label>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="name">Product Pages <small>/ Total Halaman</small></Label>
 
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.pages)}
-                                                name="pages"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.formatuang(this.state.pages)}
+                                                        name="pages"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
 
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col md={12}>
-                                            <Label> ISBN</Label>
-                                            <Input
-                                                type="text"
-                                                value={this.state.isbn}
-                                                name="isbn"
-                                                onChange={(event) => this.setState({ isbn: event.target.value }, () => { this.countFilled() })}>
-                                            </Input>
-                                        </Col>
-                                    </Row>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col md={12}>
+                                                    <Label> ISBN</Label>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.state.isbn}
+                                                        name="isbn"
+                                                        onChange={(event) => this.setState({ isbn: event.target.value }, () => { this.countFilled() })}>
+                                                    </Input>
+                                                </Col>
+                                            </Row>
 
-                                    <Row>
+                                            {/* <Row>
                                         <Col md={12}>
                                             <Label> Tim Penulis</Label>
                                             <Input
@@ -1131,188 +1182,193 @@ class ProductEditor extends Component {
                                                 onChange={(event) => this.setState({ tim_penulis: event.target.value }, () => { this.countFilled() })}>
                                             </Input>
                                         </Col>
-                                    </Row>
+                                    </Row> */}
 
-                                    <Row>
-                                        <Col md={4}>
-                                            <Label for="mou_end" required>MoU End Date</Label>
-                                            <DatePicker
-                                                className="form-control"
-                                                selected={this.state.mou_end}
-                                                dateFormat="dd-MM-yyyy"
-                                                onChange={(val) => this.setState({ mou_end: val })}
-                                            />
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="name" required>Harga Cetak</Label>
-                                            <InputGroup>
-                                            <InputGroupAddon addonType="prepend">
-                                                    <InputGroupText>Rp</InputGroupText>
-                                                </InputGroupAddon>
-                                                <Input
-                                                    type="text"
-                                                    value={this.formatuang(this.state.cost_of_goods_sold)}
-                                                    name="cost_of_goods_sold"
-                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                                </Input>
-                                            </InputGroup>
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="added_value_price" required>Harga Terbit</Label>
+                                            <Row>
+                                                <Col md={4}>
+                                                    <Label for="mou_data" required>MoU End Date</Label>
+                                                    <DatePicker
+                                                        className="form-control"
+                                                        selected={this.state.mou_data}
+                                                        dateFormat="dd-MM-yyyy"
+                                                        onChange={(val) => this.setState({ mou_data: val })}
+                                                    />
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Harga Cetak</Label>
+                                                    <InputGroup>
+                                                        <InputGroupAddon addonType="prepend">
+                                                            <InputGroupText>Rp</InputGroupText>
+                                                        </InputGroupAddon>
+                                                        <Input
+                                                            type="text"
+                                                            value={this.formatuang(this.state.cost_of_goods_sold)}
+                                                            name="cost_of_goods_sold"
+                                                            onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                        </Input>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="add_value_price" required>Harga Terbit</Label>
+                                                    <InputGroup>
+                                                        <InputGroupAddon addonType="prepend">
+                                                            <InputGroupText>Rp</InputGroupText>
+                                                        </InputGroupAddon>
+                                                        <Input
+                                                            type="text"
+                                                            value={this.formatuang(this.state.add_value_price)}
+                                                            name="add_value_price"
+                                                            onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                        </Input>
+                                                    </InputGroup>
+                                                </Col>
+                                            </Row>
 
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.added_value_price)}
-                                                name="added_value_price"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
-                                        </Col>
-                                    </Row>
+                                            <Row>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Product Edition <small>/ Edisi Buku</small></Label>
 
-                                    <Row>
-                                        <Col md={4}>
-                                            <Label for="name" required>Product Edition <small>/ Edisi Buku</small></Label>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.formatuang(this.state.version)}
+                                                        name="version"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
 
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.version)}
-                                                name="version"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Print Version <small>/ Cetakan ke</small></Label>
 
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="name" required>Print Version <small>/ Cetakan ke</small></Label>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.formatuang(this.state.production_version)}
+                                                        name="production_version"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
 
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.production_version)}
-                                                name="production_version"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="name">Product Pages <small>/ Total Halaman</small></Label>
 
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="name">Product Pages <small>/ Total Halaman</small></Label>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.formatuang(this.state.pages)}
+                                                        name="pages"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
 
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.pages)}
-                                                name="pages"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
+                                                </Col>
+                                            </Row>
+                                        </CardBody>
+                                    </Card>
 
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                            </Card>
+                                    <Card>
+                                        <CardHeader>
+                                            <h6>Persentase Sumber Dana</h6>
+                                        </CardHeader>
+                                        <CardBody>
+                                            <Row>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Penerbit</Label>
+                                                    <InputGroup>
+                                                        <Input
+                                                            type="text"
+                                                            value={this.formatuang(this.state.source_fin_publisher)}
+                                                            name="source_fin_publisher"
+                                                            onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                        </Input>
+                                                        <InputGroupAddon addonType="append">
+                                                            <InputGroupText>%</InputGroupText>
+                                                        </InputGroupAddon>
+                                                    </InputGroup>
 
-                            <Card>
-                                <CardHeader>
-                                    <h6>Persentase Sumber Dana</h6>
-                                </CardHeader>
-                                <CardBody>
-                                    <Row>
-                                        <Col md={4}>
-                                            <Label for="name" required>Penerbit</Label>
-                                            <InputGroup>
-                                                <Input
-                                                    type="text"
-                                                    value={this.formatuang(this.state.source_fin_publisher)}
-                                                    name="source_fin_publisher"
-                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                                </Input>
-                                                <InputGroupAddon addonType="append">
-                                                    <InputGroupText>%</InputGroupText>
-                                                </InputGroupAddon>
-                                            </InputGroup>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Penulis</Label>
+                                                    <InputGroup>
+                                                        <Input
+                                                            type="text"
+                                                            value={this.formatuang(this.state.source_fin_author)}
+                                                            name="source_fin_author"
+                                                            onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                        </Input>
+                                                        <InputGroupAddon addonType="append">
+                                                            <InputGroupText>%</InputGroupText>
+                                                        </InputGroupAddon>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="name" required>Project</Label>
+                                                    <InputGroup>
+                                                        <Input
+                                                            type="text"
+                                                            value={this.formatuang(this.state.source_fin_sponsor)}
+                                                            name="source_fin_sponsor"
+                                                            onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                        </Input>
+                                                        <InputGroupAddon addonType="append">
+                                                            <InputGroupText>%</InputGroupText>
+                                                        </InputGroupAddon>
+                                                    </InputGroup>
 
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="name" required>Penulis</Label>
-                                            <InputGroup>
-                                                <Input
-                                                    type="text"
-                                                    value={this.formatuang(this.state.source_fin_author)}
-                                                    name="source_fin_author"
-                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                                </Input>
-                                                <InputGroupAddon addonType="append">
-                                                    <InputGroupText>%</InputGroupText>
-                                                </InputGroupAddon>
-                                            </InputGroup>
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="name" required>Project</Label>
-                                            <InputGroup>
-                                                <Input
-                                                    type="text"
-                                                    value={this.formatuang(this.state.source_fin_sponsor)}
-                                                    name="source_fin_sponsor"
-                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                                </Input>
-                                                <InputGroupAddon addonType="append">
-                                                    <InputGroupText>%</InputGroupText>
-                                                </InputGroupAddon>
-                                            </InputGroup>
+                                                </Col>
+                                            </Row>
+                                        </CardBody>
+                                    </Card>
 
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                            </Card>
-
-                            <Card>
-                                <CardHeader>
-                                    <h6>Product Manager</h6>
-                                </CardHeader>
-                                <CardBody>
-                                    <Row>
-                                        <Col md={12}>
-                                            <Label for="layouter" required>Manager Product / PIC</Label>
-                                            <Select
-                                                onChange={(val) => this.setState({ product_manager: val }, () => { this.countFilled() })}
-                                                name="product_manager"
-                                                value={this.state.product_manager}
-                                                className="basic-multi-select"
-                                                options={this.state.user_blst}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col md={4}>
-                                            <Label for="editor" required>Editor</Label>
-                                            <Select
-                                                onChange={(val) => this.setState({ product_editor: val }, () => { this.countFilled() })}
-                                                name="product_editor"
-                                                value={this.state.product_editor}
-                                                className="basic-multi-select"
-                                                options={this.state.user_blst}
-                                            />
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="layouter" required>Layouter</Label>
-                                            <Select
-                                                onChange={(val) => this.setState({ product_layouter: val }, () => { this.countFilled() })}
-                                                name="product_layouter"
-                                                value={this.state.product_layouter}
-                                                className="basic-multi-select"
-                                                options={this.state.user_blst}
-                                            />
-                                        </Col>
-                                        <Col md={4}>
-                                            <Label for="layouter" required>Desainer</Label>
-                                            <Select
-                                                onChange={(val) => this.setState({ product_desainer: val }, () => { this.countFilled() })}
-                                                name="product_desainer"
-                                                value={this.state.product_desainer}
-                                                className="basic-multi-select"
-                                                options={this.state.user_blst}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                            </Card>
-
+                                    <Card>
+                                        <CardHeader>
+                                            <h6>Product Manager</h6>
+                                        </CardHeader>
+                                        <CardBody>
+                                            <Row>
+                                                <Col md={12}>
+                                                    <Label for="layouter" required>Manager Product / PIC</Label>
+                                                    <Select
+                                                        onChange={(val) => this.setState({ manager_proyek: val }, () => { this.countFilled() })}
+                                                        name="manager_proyek"
+                                                        value={this.state.manager_proyek}
+                                                        className="basic-multi-select"
+                                                        options={this.state.user_blst}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col md={4}>
+                                                    <Label for="editor" required>Editor</Label>
+                                                    <Select
+                                                        onChange={(val) => this.setState({ editor_product: val }, () => { this.countFilled() })}
+                                                        name="editor_product"
+                                                        value={this.state.editor_product}
+                                                        className="basic-multi-select"
+                                                        options={this.state.user_blst}
+                                                    />
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="layouter" required>Layouter</Label>
+                                                    <Select
+                                                        onChange={(val) => this.setState({ layouter_product: val }, () => { this.countFilled() })}
+                                                        name="layouter_product"
+                                                        value={this.state.layouter_product}
+                                                        className="basic-multi-select"
+                                                        options={this.state.user_blst}
+                                                    />
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Label for="layouter" required>Desainer</Label>
+                                                    <Select
+                                                        onChange={(val) => this.setState({ desainer_product: val }, () => { this.countFilled() })}
+                                                        name="desainer_product"
+                                                        value={this.state.desainer_product}
+                                                        className="basic-multi-select"
+                                                        options={this.state.user_blst}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </CardBody>
+                                    </Card>
+                                </>
+                            ) : null}
 
 
 
