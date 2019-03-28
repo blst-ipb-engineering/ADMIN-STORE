@@ -25,6 +25,12 @@ class Products extends Component {
         let price = comadel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 		return price;
     }
+
+    componentWillReceiveProps(nextProps){        
+       if (this.state.price !== this.formatuang(this.props.produk.price)){
+           this.setState({price:this.formatuang(nextProps.produk.price)})
+       }
+    }
     
     onChangeHandler= (event) => { 
         // validasi input tidak boleh huruf
@@ -41,9 +47,7 @@ class Products extends Component {
         this.setState({price:price})        
     }
 
-    componentDidMount() {
-        
-    }
+    
 
     cancelHandler = (event) => {
         event.preventDefault();
