@@ -490,7 +490,7 @@ class ProductEditor extends Component {
                     this.setState({manager_proyek:push_manager[0]});
                     this.setState({layouter_product:push_layouter_product[0]});
                     this.setState({editor_product:push_editor_product[0]});
-                    this.setState({desainer_product:push_editor_product[0]});
+                    this.setState({desainer_product:push_desainer_product[0]});
 
                     this.setState({ category: categories });
                     this.setState({ author: authors });
