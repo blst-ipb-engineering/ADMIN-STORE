@@ -4,34 +4,34 @@ import { createStore } from 'redux';
 import authreducers from "../store/reducer/auth";
 // import { connect } from 'react-redux';
 import jwt from 'jsonwebtoken'
-import {logout} from '../store/action/auth';
+import { logout } from '../store/action/auth';
 
 
 
 const store = createStore(authreducers); // redux api for get store without using connect
 
-const token = localStorage.getItem('token'); 
-const exptime = new Date(localStorage.getItem('expireIn'));  
+const token = localStorage.getItem('token');
+const exptime = new Date(localStorage.getItem('expireIn'));
 const now = new Date();
 
 // // validasi jika token expired
 const condition = now.getTime() > exptime.getTime();
 let data_user = null;
 
-if(condition){
+if (condition) {
   store.dispatch(logout());
 }
 
-function getToken () {
-  const JWT_DECODE = jwt.verify(localStorage.getItem('token'),'secretmasojodibukak'); 
+function getToken() {
+  const JWT_DECODE = jwt.verify(localStorage.getItem('token'), 'secretmasojodibukak');
   return data_user = {
-      userId:JWT_DECODE.userId,
-      nameUser: JWT_DECODE.nameUser,
-      name_company: JWT_DECODE.name_company,
-      companyId:JWT_DECODE.companyId,
-      createdBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
-      updatedBy:JWT_DECODE.nameUser +' ('+JWT_DECODE.userId+')',
-    }    
+    userId: JWT_DECODE.userId,
+    nameUser: JWT_DECODE.nameUser,
+    name_company: JWT_DECODE.name_company,
+    companyId: JWT_DECODE.companyId,
+    createdBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
+    updatedBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
+  }
 }
 
 
@@ -42,12 +42,12 @@ function getToken () {
 // membuat middleware agar bisa akses state store redux di non connectfunction
 
 // const data_user = {
-  // userId: store.userId,
-  // nameUser: store.nameUser,
-  // name_company: store.name_company,
-  // companyId: store.companyId,
-  // createdBy: store.nameUser + ' (' + store.userId + ')',
-  // updatedBy: store.nameUser + ' (' + store.userId + ')',
+// userId: store.userId,
+// nameUser: store.nameUser,
+// name_company: store.name_company,
+// companyId: store.companyId,
+// createdBy: store.nameUser + ' (' + store.userId + ')',
+// updatedBy: store.nameUser + ' (' + store.userId + ')',
 // }
 
 const HOSTNAME = process.env.REACT_APP_API_URL || 'http://localhost:8080';
@@ -56,6 +56,8 @@ const API_SERVICES = {
   Login: `${HOSTNAME}/auth/login`,
   CheckEmail: `${HOSTNAME}/auth/checkemail`,
   SignUp: `${HOSTNAME}/auth/signup`,
+  ListEmployee: `${HOSTNAME}/auth/listem`,
+
   ProductIndex: `${HOSTNAME}/product/index`,
   ProductAdd: `${HOSTNAME}/product/add`,
   ProductEdit: `${HOSTNAME}/product/edit`,
@@ -70,14 +72,14 @@ const API_SERVICES = {
   MaterialCreate: `${HOSTNAME}/material/add`,
   SlideBarCreate: `${HOSTNAME}/slidebar/add`,
   SlideBarGet: `${HOSTNAME}/slidebar/index`,
-  SlideBarUpdate:`${HOSTNAME}/slidebar/update`,
-  SlideBarDelete:`${HOSTNAME}/slidebar/delete`,
+  SlideBarUpdate: `${HOSTNAME}/slidebar/update`,
+  SlideBarDelete: `${HOSTNAME}/slidebar/delete`,
   ListPayment: `${HOSTNAME}/orderproduct/subtotal`,
-  ConfirmPayment : `${HOSTNAME}/order/updatepayment`,
+  ConfirmPayment: `${HOSTNAME}/order/updatepayment`,
   // modul ADMIN STORE untuk search Order yang sudah dikonfirmasi
-  ListOrder:`${HOSTNAME}/orderproduct/searchorder`,
+  ListOrder: `${HOSTNAME}/orderproduct/searchorder`,
   ListOrderDetail: `${HOSTNAME}/orderproduct/searchorderdetail`,
-  UpdateResi:`${HOSTNAME}/order/updateSending`
+  UpdateResi: `${HOSTNAME}/order/updateSending`,
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -266,13 +268,13 @@ const AuthorCreate = (contents) => {
 
 //SLIDEBAR
 
-const getSlidebar = (contents)=> {
+const getSlidebar = (contents) => {
   getToken()
   const content = {
     ...contents,
     ...data_user
   }
-  
+
   const url = API_SERVICES.SlideBarGet;
   const extraHeaders = {
     Authorization: `Bearer ` + localStorage.getItem('token')
@@ -298,7 +300,7 @@ const CreateSlidebar = (contents) => {
   return axios(configFetch(url, 'post', content, true, extraHeaders))
     .then(result => result.data)
     .catch(err => console.log(err))
-} 
+}
 
 const updateSlidebar = (contents) => {
   getToken();
@@ -315,7 +317,7 @@ const updateSlidebar = (contents) => {
   return axios(configFetch(url, 'put', content, true, extraHeaders))
     .then(result => result.data)
     .catch(err => console.log(err))
-} 
+}
 
 const deleteSlidebar = (contents) => {
   getToken();
@@ -332,7 +334,7 @@ const deleteSlidebar = (contents) => {
   return axios(configFetch(url, 'delete', content, true, extraHeaders))
     .then(result => result.data)
     .catch(err => console.log(err))
-} 
+}
 
 
 // MATERIAL    
@@ -467,6 +469,25 @@ const ConfirmSend = (contents) => {
     .catch(err => console.log(err))
 }
 
+const ListEmployee = (contents) => {
+
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user,
+  }
+
+  // const id = data_user.companyId;
+  const url = API_SERVICES.ListEmployee;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result =>result.data.data)    
+    .catch(err => console.log(err))
+}
 
 
 
@@ -498,5 +519,7 @@ export {
   ConfirmPayment,
   ListOrder,
   ConfirmSend,
-  ListOrderDetail
+  ListOrderDetail,
+
+  ListEmployee
 }

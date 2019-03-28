@@ -27,7 +27,8 @@ import {
     AuthorIndex,
     AuthorCreate,
     MaterialIndex,
-    MaterialCreate
+    MaterialCreate,
+    ListEmployee
 } from '../../api/index';
 
 
@@ -119,10 +120,10 @@ class ProductEditor extends Component {
             added_value_price: 0,
             royalti_percent: 0,
 
-            editor_product: null,
-            layouter_product: null,
-            desainer_product: null,
-            manager_project: null,
+            product_editor: null,
+            product_layouter: null,
+            product_desainer: null,
+            product_manager: null,
 
             user_blst: []
 
@@ -325,17 +326,16 @@ class ProductEditor extends Component {
     }
 
     componentWillUnmount() {
-        console.log("[Will Unmount]")
         // Make sure to revoke the data uris to avoid memory leaks
         this.state.thumbnailFile.forEach(file => URL.revokeObjectURL(file.preview))
     }
 
     componentWillMount() {
-        console.log("[WILL MOUNT]")
+
     }
 
     componentDidMount() {
-        console.log("[DIDMOUNT]")
+
         // call for CategoryGeneral
         this.props.setLoading(true)
         const categoryGeneral = [];
@@ -394,6 +394,24 @@ class ProductEditor extends Component {
             })
             this.setState({ authors_options: authorsnya })
         });
+
+        // call for employee
+        const list_emp = [];
+        ListEmployee().then(res => {
+            res.map((value, index) => {
+                list_emp.push({
+                    id: value.id_user,
+                    value: value.name,
+                    label: value.name
+                })
+            })
+        }).then(() => {
+            console.log(list_emp);
+            this.setState({ user_blst: list_emp });
+        });
+
+
+
 
         // if status == edit
         if (this.props.match.params.status === "edit" || this.props.match.params.status === "duplicate") {
@@ -1108,7 +1126,7 @@ class ProductEditor extends Component {
                                             <Label> Tim Penulis</Label>
                                             <Input
                                                 type="text"
-                                                value={this.state.isbn}
+                                                value={this.state.tim_penulis}
                                                 name="tim_penulis"
                                                 onChange={(event) => this.setState({ tim_penulis: event.target.value }, () => { this.countFilled() })}>
                                             </Input>
@@ -1127,14 +1145,17 @@ class ProductEditor extends Component {
                                         </Col>
                                         <Col md={4}>
                                             <Label for="name" required>Harga Cetak</Label>
-
-                                            <Input
-                                                type="text"
-                                                value={this.formatuang(this.state.cost_of_goods_sold)}
-                                                name="cost_of_goods_sold"
-                                                onChange={(event) => this.onChangeMoneyHandler(event)}>
-                                            </Input>
-
+                                            <InputGroup>
+                                            <InputGroupAddon addonType="prepend">
+                                                    <InputGroupText>Rp</InputGroupText>
+                                                </InputGroupAddon>
+                                                <Input
+                                                    type="text"
+                                                    value={this.formatuang(this.state.cost_of_goods_sold)}
+                                                    name="cost_of_goods_sold"
+                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                </Input>
+                                            </InputGroup>
                                         </Col>
                                         <Col md={4}>
                                             <Label for="added_value_price" required>Harga Terbit</Label>
@@ -1242,16 +1263,16 @@ class ProductEditor extends Component {
 
                             <Card>
                                 <CardHeader>
-                                    <h6>Tim Pembuat</h6>
+                                    <h6>Product Manager</h6>
                                 </CardHeader>
                                 <CardBody>
                                     <Row>
                                         <Col md={12}>
-                                            <Label for="layouter" required>Manager</Label>
+                                            <Label for="layouter" required>Manager Product / PIC</Label>
                                             <Select
-                                                onChange={(val) => this.setState({ editor_product: val }, () => { this.countFilled() })}
-                                                name="editor_product"
-                                                value={this.state.editor_product}
+                                                onChange={(val) => this.setState({ product_manager: val }, () => { this.countFilled() })}
+                                                name="product_manager"
+                                                value={this.state.product_manager}
                                                 className="basic-multi-select"
                                                 options={this.state.user_blst}
                                             />
@@ -1261,9 +1282,9 @@ class ProductEditor extends Component {
                                         <Col md={4}>
                                             <Label for="editor" required>Editor</Label>
                                             <Select
-                                                onChange={(val) => this.setState({ editor_product: val }, () => { this.countFilled() })}
-                                                name="editor_product"
-                                                value={this.state.editor_product}
+                                                onChange={(val) => this.setState({ product_editor: val }, () => { this.countFilled() })}
+                                                name="product_editor"
+                                                value={this.state.product_editor}
                                                 className="basic-multi-select"
                                                 options={this.state.user_blst}
                                             />
@@ -1271,9 +1292,9 @@ class ProductEditor extends Component {
                                         <Col md={4}>
                                             <Label for="layouter" required>Layouter</Label>
                                             <Select
-                                                onChange={(val) => this.setState({ editor_product: val }, () => { this.countFilled() })}
-                                                name="editor_product"
-                                                value={this.state.editor_product}
+                                                onChange={(val) => this.setState({ product_layouter: val }, () => { this.countFilled() })}
+                                                name="product_layouter"
+                                                value={this.state.product_layouter}
                                                 className="basic-multi-select"
                                                 options={this.state.user_blst}
                                             />
@@ -1281,9 +1302,9 @@ class ProductEditor extends Component {
                                         <Col md={4}>
                                             <Label for="layouter" required>Desainer</Label>
                                             <Select
-                                                onChange={(val) => this.setState({ editor_product: val }, () => { this.countFilled() })}
-                                                name="editor_product"
-                                                value={this.state.editor_product}
+                                                onChange={(val) => this.setState({ product_desainer: val }, () => { this.countFilled() })}
+                                                name="product_desainer"
+                                                value={this.state.product_desainer}
                                                 className="basic-multi-select"
                                                 options={this.state.user_blst}
                                             />
