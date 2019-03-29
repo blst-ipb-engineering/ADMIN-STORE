@@ -175,20 +175,18 @@ class ProductEditor extends Component {
         this.setState({ prompt: false }, () => {
             event.preventDefault();
             const content = this.state;
-            ProductUpdate(content).then(res => {
-                console.log(res)
-                // if (res.status === "success") {
-
-                //     const toaster = {
-                //         isOpenToast: true,
-                //         toastMessage: res.data.name + " Berhasil diUpdate",
-                //         toastType: 'success',
-                //     }
-                //     this.props.toggleToaster(toaster)
-
-                //     this.props.history.replace('/dashboard/products');
-                //     this.props.history.push('/dashboard/products');
-                // }
+            console.log(content)
+            ProductUpdate(content).then(res => {                
+                if (res.status === "success") {
+                    const toaster = {
+                        isOpenToast: true,
+                        toastMessage: res.data.name + " Berhasil diUpdate",
+                        toastType: 'success',
+                    }
+                    this.props.toggleToaster(toaster)
+                    this.props.history.replace('/dashboard/products');
+                    this.props.history.push('/dashboard/products');
+                }
             }).catch(err=>console.log(err))
         })
     }
@@ -486,11 +484,12 @@ class ProductEditor extends Component {
                         return new RegExp(res.desainer_product,"i").exec(user.id);                                
                     });
                     
-    
-                    this.setState({manager_proyek:push_manager[0]});
-                    this.setState({layouter_product:push_layouter_product[0]});
-                    this.setState({editor_product:push_editor_product[0]});
-                    this.setState({desainer_product:push_desainer_product[0]});
+                   if(push_manager[0] !== undefined){
+                       this.setState({manager_proyek:push_manager[0]});
+                       this.setState({layouter_product:push_layouter_product[0]});
+                       this.setState({editor_product:push_editor_product[0]});
+                       this.setState({desainer_product:push_desainer_product[0]});
+                   }
 
                     this.setState({ category: categories });
                     this.setState({ author: authors });
@@ -519,13 +518,13 @@ class ProductEditor extends Component {
                         sku: res.sku,
                         saveable: true,
                         productId: res.id,
-                        royalti_percent:res.royalti_percent,
+                        royalti_percent:res.royalti_percent !== null ? res.royalti_percent : 0,
                         mou_data:res.mou_data,
-                        source_fin_publisher:res.source_fin_publisher,
-                        source_fin_author:res.source_fin_author,
-                        source_fin_sponsor:res.source_fin_sponsor,
-                        cost_of_goods_sold:res.cost_of_goods_sold,
-                        add_value_price:res.add_value_price,
+                        source_fin_publisher:res.source_fin_publisher !== null ? res.source_fin_publisher : 0,
+                        source_fin_author:res.source_fin_author !== null ? res.source_fin_author : 0,
+                        source_fin_sponsor:res.source_fin_sponsor !== null ? res.source_fin_sponsor : 0,
+                        cost_of_goods_sold:res.cost_of_goods_sold !== null ? res.cost_of_goods_sold : 0 ,
+                        add_value_price:res.add_value_price !== null ? res.add_value_price : 0,
 
                     }, () => {
                         this.countFilled();
