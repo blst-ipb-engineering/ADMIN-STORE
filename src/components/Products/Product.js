@@ -26,11 +26,11 @@ class Products extends Component {
 		return price;
     }
 
-    componentWillReceiveProps(nextProps){        
-       if (this.state.price !== this.formatuang(this.props.produk.price)){
-           this.setState({price:this.formatuang(nextProps.produk.price)})
-       }
-    }
+    // componentWillReceiveProps(nextProps){        
+    //    if (this.state.price !== this.formatuang(this.props.produk.price)){
+    //        this.setState({price:this.formatuang(nextProps.produk.price)})
+    //    }
+    // }
     
     onChangeHandler= (event) => { 
         // validasi input tidak boleh huruf
