@@ -153,7 +153,8 @@ class OrderCard extends Component {
                             </div>
                             <div className="otd-card-shipment">
                                 <h4>Alamat Pengiriman</h4>
-                                <strong>{this.state.data.Address_Customer.shipTo}</strong>
+                                <h5 style={{margin:'0px'}}><strong>{this.state.data.Address_Customer.shipTo}</strong><br/></h5>
+                                <strong>{this.state.data.Address_Customer.phone}</strong>
                                 <p>{this.state.data.Address_Customer.address1 + ", " + this.state.data.Address_Customer.city + ", " + this.state.data.Address_Customer.subdistrict + ", " + this.state.data.Address_Customer.province}</p>
                             </div>
                         </div>
