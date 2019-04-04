@@ -85,7 +85,7 @@ class OrderCard extends Component {
             otdProduct = this.state.data.OrderProducts.map((value, index) => (
                 <div className="otd-product" key={index}>
                     <div className="pict">
-                        <img src={value.Product.Pictures[0].url_small} alt="" />
+                        <img src={value.Product !== null ? value.Product.Pictures[0].url_small : null} alt="" />
                     </div>
                     <div className="desc">
                         {value.Product.name} <strong>x {value.qty} pcs</strong>
@@ -131,7 +131,7 @@ class OrderCard extends Component {
                                     <div className="descri">Shipping Service: <strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
                                     <div className="descri">Ongkos Kirim: <strong>Rp {this.formatuang(this.state.data.value)}</strong></div>
 
-                                    {this.props.auth.companyId === this.state.data.companyId ? (
+                                    {this.props.auth.companyId == this.state.data.companyId ? (
                                         <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> Input Resi</Button>
                                     ) : null}
 

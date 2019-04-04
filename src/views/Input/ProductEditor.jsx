@@ -3,17 +3,18 @@ import { Card, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, CardFo
 
 import ImageUploader from '../../components/Products/ImageUploader/ImageUploader.jsx';
 import { Label } from '../../components/UI/Form/Label/Label';
-import Select from 'react-select';
 import { Prompt } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import Select from 'react-select';
 import ReactTooltip from 'react-tooltip'
 import axios from 'axios';
-import { connect } from 'react-redux';
 import * as actionCreator from '../../store/action/index';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from '../../components/Loader/Loader';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Spinner from '../../components/Spinner/Spinner';
 
 
 import {
@@ -36,6 +37,7 @@ class ProductEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isFetching:false,
             name: '',
             categoryGeneral: {
                 id: 4,
@@ -65,7 +67,6 @@ class ProductEditor extends Component {
             sku: '',
             format: null,
             material: [],
-            percent_royalti: null,
             author: [],
             pages: 0,
             category_general_options: [],
@@ -176,7 +177,7 @@ class ProductEditor extends Component {
             event.preventDefault();
             const content = this.state;
             console.log(content)
-            ProductUpdate(content).then(res => {                
+            ProductUpdate(content).then(res => {
                 if (res.status === "success") {
                     const toaster = {
                         isOpenToast: true,
@@ -187,7 +188,7 @@ class ProductEditor extends Component {
                     this.props.history.replace('/dashboard/products');
                     this.props.history.push('/dashboard/products');
                 }
-            }).catch(err=>console.log(err))
+            }).catch(err => console.log(err))
         })
     }
 
@@ -404,7 +405,7 @@ class ProductEditor extends Component {
                     label: value.name
                 })
             })
-        }).then(() => {            
+        }).then(() => {
             this.setState({ user_blst: list_emp });
         });
 
@@ -413,6 +414,8 @@ class ProductEditor extends Component {
 
         // if status == edit
         if (this.props.match.params.status === "edit" || this.props.match.params.status === "duplicate") {
+            this.setState({isFetching:true});
+            
             const content = {
                 id: this.props.match.params.id
             }
@@ -464,32 +467,33 @@ class ProductEditor extends Component {
                         signature: value.signature
                     })
 
-                })               
-                
-                Promise.all([push_cat, push_author, push_material, push_picture,push_blst_employee]).then(() => {
-                                       
-                    const push_manager = this.state.user_blst.filter((user)=>{                       
-                        return new RegExp(res.manager_proyek,"i").exec(user.id);                                
+                })
+
+                Promise.all([push_cat, push_author, push_material, push_picture, push_blst_employee]).then(() => {
+
+                    const push_manager = this.state.user_blst.filter((user) => {
+                        return new RegExp(res.manager_proyek, "i").exec(user.id);
                     });
 
-                    const push_layouter_product = this.state.user_blst.filter((user)=>{                       
-                        return new RegExp(res.layouter_product,"i").exec(user.id);                                
+                    const push_layouter_product = this.state.user_blst.filter((user) => {
+                        return new RegExp(res.layouter_product, "i").exec(user.id);
                     });
 
-                    const push_editor_product = this.state.user_blst.filter((user)=>{                       
-                        return new RegExp(res.editor_product,"i").exec(user.id);                                
+                    const push_editor_product = this.state.user_blst.filter((user) => {
+                        return new RegExp(res.editor_product, "i").exec(user.id);
                     });
 
-                    const push_desainer_product = this.state.user_blst.filter((user)=>{                       
-                        return new RegExp(res.desainer_product,"i").exec(user.id);                                
+                    const push_desainer_product = this.state.user_blst.filter((user) => {
+                        return new RegExp(res.desainer_product, "i").exec(user.id);
                     });
-                    
-                   if(push_manager[0] !== undefined){
-                       this.setState({manager_proyek:push_manager[0]});
-                       this.setState({layouter_product:push_layouter_product[0]});
-                       this.setState({editor_product:push_editor_product[0]});
-                       this.setState({desainer_product:push_desainer_product[0]});
-                   }
+
+
+                    if (push_manager[0] !== undefined) {
+                        this.setState({ manager_proyek: push_manager[0] });
+                        this.setState({ layouter_product: push_layouter_product[0] });
+                        this.setState({ editor_product: push_editor_product[0] });
+                        this.setState({ desainer_product: push_desainer_product[0] });
+                    }
 
                     this.setState({ category: categories });
                     this.setState({ author: authors });
@@ -518,16 +522,17 @@ class ProductEditor extends Component {
                         sku: res.sku,
                         saveable: true,
                         productId: res.id,
-                        royalti_percent:res.royalti_percent !== null ? res.royalti_percent : 0,
-                        mou_data:res.mou_data,
-                        source_fin_publisher:res.source_fin_publisher !== null ? res.source_fin_publisher : 0,
-                        source_fin_author:res.source_fin_author !== null ? res.source_fin_author : 0,
-                        source_fin_sponsor:res.source_fin_sponsor !== null ? res.source_fin_sponsor : 0,
-                        cost_of_goods_sold:res.cost_of_goods_sold !== null ? res.cost_of_goods_sold : 0 ,
-                        add_value_price:res.add_value_price !== null ? res.add_value_price : 0,
+                        royalti_percent: res.royalti_percent !== null ? res.royalti_percent : 0,
+                        mou_data: res.mou_data !== null ? res.mou_data : new Date(),
+                        source_fin_publisher: res.source_fin_publisher !== null ? res.source_fin_publisher : 0,
+                        source_fin_author: res.source_fin_author !== null ? res.source_fin_author : 0,
+                        source_fin_sponsor: res.source_fin_sponsor !== null ? res.source_fin_sponsor : 0,
+                        cost_of_goods_sold: res.cost_of_goods_sold !== null ? res.cost_of_goods_sold : 0,
+                        add_value_price: res.add_value_price !== null ? res.add_value_price : 0,
 
                     }, () => {
                         this.countFilled();
+                        this.setState({isFetching:false});
                     })
 
                 })
@@ -746,6 +751,9 @@ class ProductEditor extends Component {
         return (
 
             <div className="content">
+                {this.state.isFetching ? (<div style={{ width: '100%', height: '85vh' }}>
+                    <Spinner></Spinner>
+                </div>) : null }
                 <Prompt when={this.state.prompt} message="You have unsaved form data. Are you sure you want to leave?" />
                 {/* Modal Tambah */}
                 <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>

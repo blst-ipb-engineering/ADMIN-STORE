@@ -82,7 +82,10 @@ class Login extends Component {
         let loading = null;
         
         if(this.props.loading){
-            loading = <Spinner></Spinner>;
+            loading = 
+            <div style={{position:'absolute',height:'100%',width:'100%'}}>
+                <Spinner></Spinner>
+            </div>
         }
         
         let loginForm = null;

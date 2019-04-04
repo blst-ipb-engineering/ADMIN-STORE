@@ -29,6 +29,7 @@ function getToken() {
     nameUser: JWT_DECODE.nameUser,
     name_company: JWT_DECODE.name_company,
     companyId: JWT_DECODE.companyId,
+    branchId: JWT_DECODE.branchId,
     createdBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
     updatedBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
   }
@@ -155,6 +156,8 @@ const ProductUpdate = (contents) => {
     ...contents,
     ...data_user
   }
+
+  console.log(content)
 
   const url = API_SERVICES.ProductUpdate;
   const extraHeaders = {

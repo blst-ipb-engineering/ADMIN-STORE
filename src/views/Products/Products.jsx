@@ -5,11 +5,9 @@ import { Link } from "react-router-dom";
 import './Products.css';
 import * as actionCreator from '../../store/action/index';
 import { connect } from 'react-redux';
-import Loader from '../../components/Loader/Loader';
-import Spinner from '../../components/Spinner/Spinner';
+// import Loader from '../../components/Loader/Loader';
+// import Spinner from '../../components/Spinner/Spinner';
 import LoadingProductAdmin from '../../components/UI/LoadingData/ProductList/Loadingdata';
-
-
 
 
 import { ToastContainer, toast } from 'react-toastify';
