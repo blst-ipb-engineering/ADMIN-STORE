@@ -157,10 +157,6 @@ class Header extends React.Component {
             navbar
             className="justify-content-end"
           >
-            <div className="user-info-header">
-              <small><b>{this.props.auth.nameUser}</b>  <br/>  {this.props.auth.name_company}</small>
-            </div>
-
             {/* <form>
               <InputGroup className="no-border">
                 <Input placeholder="Search..." />
@@ -197,13 +193,24 @@ class Header extends React.Component {
                   <DropdownItem tag="a">Something else here</DropdownItem>
                 </DropdownMenu>
               </Dropdown> */}
+              <div className="user-info-header">
+                <small>{this.props.auth.name_company}</small>
+              </div>
               <NavItem>
-                <Link to="/logout" className="nav-link btn-rotate">
+                <Link to="#" className="nav-link btn-rotate">
+                  <i className="nc-icon nc-circle-10" />
+                  <p>
+                    <span className="">{this.props.auth.nameUser}</span>
+                  </p>
+                </Link>
+              </NavItem>
+              <NavItem>
+                <a href="/logout" className="nav-link btn-rotate">
                   <i className="nc-icon nc-user-run" />
                   <p>
                     <span className="">Log Out</span>
                   </p>
-                </Link>
+                </a>
               </NavItem>
             </Nav>
           </Collapse>

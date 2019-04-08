@@ -1,6 +1,8 @@
 .user-info-header{
     color:black;
     text-align: right;
+    display: flex;
+    align-items: center;
   }
   
 
@@ -12,7 +14,7 @@
 
     a{
         vertical-align: middle;
-
+        
         &:not(.btn):not(.dropdown-item){
             color: $white-color;
         }

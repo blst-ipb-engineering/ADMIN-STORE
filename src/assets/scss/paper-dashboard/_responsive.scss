@@ -1,7 +1,15 @@
 @media screen and (max-width: 991px){
   .user-info-header{
-    color:#ffcc00;
+    color: #ffcc00;
     text-align: center;
+    margin-left: 0px;
+    position: absolute;
+    top: 14px;
+    right: 46px;
+    width: 43%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-end;
   }
 
   .navbar {
@@ -43,11 +51,12 @@
         }
 
         .navbar-nav{
+          margin-bottom: 10px;          
             .nav-item:first-child{
               margin-top: 10px;
             }
             .nav-item:not(:last-child){
-                margin-bottom: 10px;
+                margin-bottom: 0px;
             }
         }
 

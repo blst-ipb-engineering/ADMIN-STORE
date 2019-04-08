@@ -81,6 +81,7 @@ const API_SERVICES = {
   ListOrder: `${HOSTNAME}/orderproduct/searchorder`,
   ListOrderDetail: `${HOSTNAME}/orderproduct/searchorderdetail`,
   UpdateResi: `${HOSTNAME}/order/updateSending`,
+  TakeThisOrder : `${HOSTNAME}/orderproduct/take-this-order`
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -492,6 +493,22 @@ const ListEmployee = (contents) => {
     .catch(err => console.log(err))
 }
 
+const TakeThisOrder = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user,
+  }
+  // const id = data_user.companyId;
+  const url = API_SERVICES.TakeThisOrder;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result =>result.data)    
+    .catch(err => console.log(err))
+}
+
 
 
 export {
@@ -524,5 +541,6 @@ export {
   ConfirmSend,
   ListOrderDetail,
 
-  ListEmployee
+  ListEmployee,
+  TakeThisOrder
 }

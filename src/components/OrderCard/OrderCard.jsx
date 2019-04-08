@@ -6,7 +6,9 @@ import {
 } from "reactstrap";
 import Moment from 'react-moment';
 import 'moment/locale/id';
-import { ConfirmSend, ListOrderDetail } from '../../api/index';
+import { ConfirmSend, ListOrderDetail,TakeThisOrder } from '../../api/index';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 
@@ -27,10 +29,10 @@ class OrderCard extends Component {
     fetchData() {
         const content = {
             transactionId: this.props.OrderProps.transactionId
-        }       
+        }
 
-        ListOrderDetail(content).then(res => {           
-            if(res){
+        ListOrderDetail(content).then(res => {
+            if (res) {
                 this.setState({ data: res.result })
             }
         }).catch(err => {
@@ -38,7 +40,7 @@ class OrderCard extends Component {
         })
     }
 
-    componentDidMount() {        
+    componentDidMount() {
         this.fetchData();
     }
 
@@ -75,10 +77,34 @@ class OrderCard extends Component {
         }).catch(err => { console.log(err) })
     }
 
+    takeItHandler =(e,invNumber) =>{
+        e.stopPropagation();
+        const content = {
+            invoiceNumber:invNumber
+        }
+        TakeThisOrder(content).then(result=>{
+            this.setState((prevState)=> ({
+                data:{
+                    ...prevState.data,
+                    prosesBy:result.data.prosesBy,
+                    dateproses:result.data.dateproses
+                }
+            }))
+
+            toast.success("Selamat bertugas 👍🏻"+ result.data.prosesBy+" Segera input nomor resi jika sudah mengirimkannya");
+            
+            console.log(result);
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
+
 
     render() {
 
         let otdProduct = null;
+        let ButtonCondition = null;
+        
 
         if (this.state.data !== null) {
             // console.log(this.state.data)
@@ -95,8 +121,21 @@ class OrderCard extends Component {
             ))
         }
 
+        // untuk menampilkan logic pada sebelah kanan (Button Take It, Process By, Nomor Resi)
+        if (this.state.data !== null) {
+            if (this.state.data.prosesBy !== null && this.state.data.no_resi == null) {
+                ButtonCondition = <small><strong>Diproses : </strong>{this.state.data.prosesBy} <Moment fromNow>{this.state.data.dateproses}</Moment></small>
+            } else if (this.state.data.prosesBy == null && this.state.data.no_resi == null) {
+                ButtonCondition = <Button onClick={(e)=> this.takeItHandler(e,this.state.data.invoiceNumber)} style={{margin:'0',width:'100%',borderRadius:'0px'}} size="lg" className="take-it-background">TAKE IT !</Button>;
+            } else {
+                ButtonCondition = this.state.data.no_resi;
+            }
+        }
+
+
         return (
             <>
+            <ToastContainer />
                 {this.state.data !== null ? (
                     <>
 
@@ -104,8 +143,10 @@ class OrderCard extends Component {
                             <div className="col1">{this.state.data.invoiceNumber}</div>
                             <div className="col2">{this.state.data.Customer.email}</div>
                             <div className="col3"><strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
-                            <div className="col4"><Button size="sm" style={{ margin: '0', background: this.state.data.StatusOrder.color }}>{this.state.data.StatusOrder.statusName}</Button></div>
-                            <div className="col5">{this.state.data.no_resi}</div>
+                            <div className="col4"><Button size="sm" style={{ margin: '0', borderRadius: '23px', background: this.state.data.StatusOrder.color }}>{this.state.data.StatusOrder.statusName}</Button></div>
+                            <div className="col5">
+                                {ButtonCondition}
+                            </div>
                             <div className="col6"></div>
                         </div>
                         <div className={this.state.isCollapse ? "otd-card otd-open" : "otd-card"}>
@@ -132,7 +173,7 @@ class OrderCard extends Component {
                                     <div className="descri">Ongkos Kirim: <strong>Rp {this.formatuang(this.state.data.value)}</strong></div>
 
                                     {this.props.auth.companyId == this.state.data.companyId ? (
-                                        <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> Input Resi</Button>
+                                        <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> {this.state.data.no_resi == null ? "Input Resi" : "Update Resi"}</Button>
                                     ) : null}
 
                                 </div>
@@ -153,7 +194,7 @@ class OrderCard extends Component {
                             </div>
                             <div className="otd-card-shipment">
                                 <h4>Alamat Pengiriman</h4>
-                                <h5 style={{margin:'0px'}}><strong>{this.state.data.Address_Customer.shipTo}</strong><br/></h5>
+                                <h5 style={{ margin: '0px' }}><strong>{this.state.data.Address_Customer.shipTo}</strong><br /></h5>
                                 <strong>{this.state.data.Address_Customer.phone}</strong>
                                 <p>{this.state.data.Address_Customer.address1 + ", " + this.state.data.Address_Customer.city + ", " + this.state.data.Address_Customer.subdistrict + ", " + this.state.data.Address_Customer.province}</p>
                             </div>

@@ -6,6 +6,7 @@
   display: flex;
   margin-top: 10px;
   justify-content: space-between;
+  align-items: center;
 
   .col1 {
     width: 10%;
@@ -190,6 +191,7 @@
     .chip {
       font-size: 8pt;
       padding: 5px;
+      // bo
       margin-top: 2px;
       line-height: 13px;
       color: white;
@@ -237,6 +239,36 @@
 }
 
 @media screen and (max-width: $break-medium) {
+
+  .otd-dard-header-short {
+    flex-direction: column;
+    position: relative;
+  
+    .col1 {
+      width: 100%;
+    }
+  
+    .col2 {
+      width: 100%;
+    }
+  
+    .col3 {
+      width: 100%;
+    }
+  
+    .col4 {
+      width: 100px;
+      position: absolute;
+      right: 10px;
+    }
+  
+    .col5{
+      width: 100%;
+      margin-top: 10px;
+  }
+  
+  }
+
   .otd-card {
     .otd-card-description {
       .otd-opened {

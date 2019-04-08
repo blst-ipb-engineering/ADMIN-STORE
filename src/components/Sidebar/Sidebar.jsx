@@ -4,7 +4,7 @@ import { Nav } from "reactstrap";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
-import logo from "../../assets/img/cart.svg";
+import logo from "../../assets/img/icon-chart-ipbstore.svg";
 
 var ps;
 
@@ -35,7 +35,7 @@ class Sidebar extends React.Component {
       <div className="sidebar" data-color={this.props.bgColor} data-active-color={this.props.activeColor}>
         <div className="logo">
           <a
-            href="https://www.blst.co.id"
+            href="/"
             className="simple-text logo-mini"
           >
             <div className="logo-img">
@@ -43,7 +43,7 @@ class Sidebar extends React.Component {
             </div>
           </a>
           <a
-            href="https://www.blst.co.id"
+            href="/"
             className="simple-text logo-normal"
           >
             <b>STORE</b> ADMIN
