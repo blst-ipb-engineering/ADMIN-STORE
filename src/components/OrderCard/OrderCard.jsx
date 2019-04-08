@@ -6,8 +6,10 @@ import {
 } from "reactstrap";
 import Moment from 'react-moment';
 import 'moment/locale/id';
-import { ConfirmSend, ListOrderDetail,TakeThisOrder } from '../../api/index';
+import { ConfirmSend, ListOrderDetail, TakeThisOrder,TrackingShip } from '../../api/index';
 import { ToastContainer, toast } from 'react-toastify';
+import Popup from '../Popup/Popup';
+import TrackingShipping from '../TrackingShipping/TrackingShipping';
 
 
 
@@ -22,7 +24,10 @@ class OrderCard extends Component {
             isInputResiOpen: false,
             isbackdropOpen: false,
             noResi: null,
-            data: null
+            data: null,
+            isPopUpOpen: false,
+            tracking: null,
+            isTracking: false
         }
     }
 
@@ -77,26 +82,46 @@ class OrderCard extends Component {
         }).catch(err => { console.log(err) })
     }
 
-    takeItHandler =(e,invNumber) =>{
+    takeItHandler = (e, invNumber) => {
         e.stopPropagation();
         const content = {
-            invoiceNumber:invNumber
+            invoiceNumber: invNumber
         }
-        TakeThisOrder(content).then(result=>{
-            this.setState((prevState)=> ({
-                data:{
+        TakeThisOrder(content).then(result => {
+            this.setState((prevState) => ({
+                data: {
                     ...prevState.data,
-                    prosesBy:result.data.prosesBy,
-                    dateproses:result.data.dateproses
+                    prosesBy: result.data.prosesBy,
+                    dateproses: result.data.dateproses
                 }
             }))
 
-            toast.success("Selamat bertugas 👍🏻"+ result.data.prosesBy+" Segera input nomor resi jika sudah mengirimkannya");
-            
+            toast.success("Selamat bertugas 👍🏻" + result.data.prosesBy + " Segera input nomor resi jika sudah mengirimkannya");
+
             console.log(result);
-        }).catch(err=>{
+        }).catch(err => {
             console.log(err)
         })
+    }
+
+    handleTrackingClick(e) {
+        e.preventDefault();
+        this.setState({ isPopUpOpen: true,isbackdropOpen:true, isTracking: true })
+        const content = {
+            id: this.state.data.id
+        }
+
+        TrackingShip(content).then(res => {
+            this.setState({ tracking: res }, () => {
+                this.setState({ isTracking: false })
+            })
+        })
+
+    }
+
+    togglePopup = (event) => {
+        event.preventDefault();
+        this.setState({ isPopUpOpen: false })
     }
 
 
@@ -104,7 +129,7 @@ class OrderCard extends Component {
 
         let otdProduct = null;
         let ButtonCondition = null;
-        
+
 
         if (this.state.data !== null) {
             // console.log(this.state.data)
@@ -126,16 +151,28 @@ class OrderCard extends Component {
             if (this.state.data.prosesBy !== null && this.state.data.no_resi == null) {
                 ButtonCondition = <small><strong>Diproses : </strong>{this.state.data.prosesBy} <Moment fromNow>{this.state.data.dateproses}</Moment></small>
             } else if (this.state.data.prosesBy == null && this.state.data.no_resi == null) {
-                ButtonCondition = <Button onClick={(e)=> this.takeItHandler(e,this.state.data.invoiceNumber)} style={{margin:'0',width:'100%',borderRadius:'0px'}} size="lg" className="take-it-background">TAKE IT !</Button>;
+                ButtonCondition = <Button onClick={(e) => this.takeItHandler(e, this.state.data.invoiceNumber)} style={{ margin: '0', width: '100%', borderRadius: '0px' }} size="lg" className="take-it-background">TAKE IT !</Button>;
             } else {
                 ButtonCondition = this.state.data.no_resi;
             }
         }
 
+        let tracking_body = <>
+            <TrackingShipping
+                isTracking={this.state.isTracking}
+                data={this.state.tracking} />
+        </>
+
 
         return (
             <>
-            <ToastContainer />
+                <ToastContainer />
+                <Popup
+                    onClosePopupHandler={this.togglePopup}
+                    isOpen={this.state.isPopUpOpen}
+                    headerTitle={"Lacak Pengiriman"}
+                    body={tracking_body}
+                />
                 {this.state.data !== null ? (
                     <>
 
@@ -153,7 +190,7 @@ class OrderCard extends Component {
                             <div className="otd-card-description">
                                 <h5>No Order: {this.state.data.invoiceNumber} <Button onClick={(event) => { this.detailHandler(event) }} size="sm" style={{ fontSize: '7pt' }}>Detail</Button> </h5>
                                 {this.state.isbackdropOpen ? (
-                                    <div className="backdrop" onClick={() => { this.setState({ isDetailOpen: false, isInputResiOpen: false, isbackdropOpen: false }) }}></div>
+                                    <div className="backdrop" onClick={() => { this.setState({ isDetailOpen: false, isInputResiOpen: false, isPopUpOpen:false, isbackdropOpen: false }) }}></div>
                                 ) : null}
                                 <div className={this.state.isDetailOpen ? "otd-dtail-order-wrapper otd-opened" : "otd-dtail-order-wrapper"}>
                                     <div className='otd-dtail-inner'>
@@ -173,7 +210,11 @@ class OrderCard extends Component {
                                     <div className="descri">Ongkos Kirim: <strong>Rp {this.formatuang(this.state.data.value)}</strong></div>
 
                                     {this.props.auth.companyId == this.state.data.companyId ? (
-                                        <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> {this.state.data.no_resi == null ? "Input Resi" : "Update Resi"}</Button>
+                                        <Button onClick={(event) => { this.inputResiHandler(event) }} size="sm" style={{ fontSize: '7pt' }}> {this.state.data.no_resi == null ? "Input Resi" : "Update Resi"}</Button>
+                                    ) : null}
+
+                                    {this.state.data.no_resi !== null ? (
+                                        <Button onClick={(e) => this.handleTrackingClick(e)} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> Lacak </Button>
                                     ) : null}
 
                                 </div>
