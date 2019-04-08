@@ -144,7 +144,7 @@ class Header extends React.Component {
               </button>
             </div>
             <NavbarBrand>{this.getBrand()}</NavbarBrand>
-            <a color="primary" style={{ cursor: 'pointer', fontSize: '8pt' }} onClick={(event) => this.props.history.goBack()} size="sm">Back</a>
+            {/* <a color="primary" style={{ cursor: 'pointer', fontSize: '8pt' }} onClick={(event) => this.props.history.goBack()} size="sm">Back</a> */}
 
           </div>
           <NavbarToggler onClick={this.toggle}>
@@ -157,10 +157,8 @@ class Header extends React.Component {
             navbar
             className="justify-content-end"
           >
-            <div>
-
-              <small><b>{this.props.auth.nameUser}</b>  |  {this.props.auth.name_company}</small>
-
+            <div className="user-info-header">
+              <small><b>{this.props.auth.nameUser}</b>  <br/>  {this.props.auth.name_company}</small>
             </div>
 
             {/* <form>
@@ -174,15 +172,15 @@ class Header extends React.Component {
               </InputGroup>
             </form> */}
             <Nav navbar>
-              <NavItem>
+              {/* <NavItem>
                 <Link to="#pablo" className="nav-link btn-magnify">
                   <i className="nc-icon nc-layout-11" />
                   <p>
                     <span className="d-lg-none d-md-block">Stats</span>
                   </p>
                 </Link>
-              </NavItem>
-              <Dropdown
+              </NavItem> */}
+              {/* <Dropdown
                 nav
                 isOpen={this.state.dropdownOpen}
                 toggle={e => this.dropdownToggle(e)}
@@ -198,12 +196,12 @@ class Header extends React.Component {
                   <DropdownItem tag="a">Another Action</DropdownItem>
                   <DropdownItem tag="a">Something else here</DropdownItem>
                 </DropdownMenu>
-              </Dropdown>
+              </Dropdown> */}
               <NavItem>
-                <Link to="#pablo" className="nav-link btn-rotate">
-                  <i className="nc-icon nc-settings-gear-65" />
+                <Link to="/logout" className="nav-link btn-rotate">
+                  <i className="nc-icon nc-user-run" />
                   <p>
-                    <span className="d-lg-none d-md-block">Account</span>
+                    <span className="">Log Out</span>
                   </p>
                 </Link>
               </NavItem>
