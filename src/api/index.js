@@ -107,9 +107,14 @@ const ProductList = (contents) => {
     ...data_user
   }
 
-  console.log(content)
-  const url = API_SERVICES.ProductIndex;
-  return axios(configFetch(url, 'get', content)).then(result => result.data.result).catch(err => console.log(err))
+  const page    = contents.page ? contents.page : 1 ;
+  const limit   = contents.limit ? contents.limit : 10 ;
+  const sortby  = contents.sortby ? contents.sortby : "name" ;
+  const order  = contents.order ? contents.order : "asc" ;
+  const name    = contents.name ? contents.name : "" ;
+
+  const url = API_SERVICES.ProductIndex+"/?page="+page+"&limit="+limit+"&sortby="+sortby+"&name="+name;
+  return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
 }
 
 const ProductAdd = (contents) => {

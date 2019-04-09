@@ -5,10 +5,8 @@ import { Link } from "react-router-dom";
 import './Products.css';
 import * as actionCreator from '../../store/action/index';
 import { connect } from 'react-redux';
-// import Loader from '../../components/Loader/Loader';
-// import Spinner from '../../components/Spinner/Spinner';
 import LoadingProductAdmin from '../../components/UI/LoadingData/ProductList/Loadingdata';
-
+import InfiniteScroll from 'react-infinite-scroller';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -35,16 +33,30 @@ class Product extends Component {
         price: null,
         picture_url: null,
         category_general: null
-      }
+      },
+      page: 1,
+      limit: 5,
+      sortby: "name",
+      order: "asc",
+      name: null,
+      hasMoreItems: true,
+      count: null,
+      maxPages: null
     }
   }
 
-  loadProduct = () => {
-    const products = [];
-    const content = {}
-    ProductList(content).then(res => {
+  loadProduct = (page) => {
+    const products = this.state.products;
+    const content = {
+      page: page,
+      limit: this.state.limit,
+      sortby: this.state.sortby,
+      order: this.state.order,
+      name: this.state.name,
+    }
 
-      res.map((value, index) => {
+    ProductList(content).then(res => {
+      res.result.map((value, index) => {
         products.push({
           id: value.id,
           name: value.name,
@@ -53,9 +65,24 @@ class Product extends Component {
           category_general: value.CategoryGeneral.name
         })
       });
+
+      return res
     }).then(res => {
-      this.setState({ products: products, loadingdata: false }, () => {
+      console.log(res);
+      this.setState({
+        products: products,
+        count: res.count,
+        maxPages: res.pages,
+        loadingdata: false
+      }, () => {
+
       });
+
+      if (content.page == this.state.maxPages) {
+        console.log("Treu Gaes")
+        this.setState({ hasMoreItems: false });
+      }
+
       this.props.setLoading(false)
     });
   }
@@ -69,10 +96,6 @@ class Product extends Component {
     this.props.toggleToaster(toaster)
   }
 
-  // componentDidUpdate(prevProps){
-  //   console.log(prevProps)
-  //   console.log(this.props)
-  // }
 
   componentDidMount() {
     this.loadProduct();
@@ -87,6 +110,7 @@ class Product extends Component {
       modal: !this.state.modal
     })
   }
+
 
   deleteHandler = (event, product) => {
     this.setState({
@@ -146,6 +170,7 @@ class Product extends Component {
       </Table>;
     }
 
+    // kalau barangnya kososng
     if (this.state.products.length === 0 && !this.state.loadingdata) {
       ProductList = <div className="product-null-wrapper">
         <div className="image-wrapper">
@@ -162,36 +187,45 @@ class Product extends Component {
     }
 
     else if (this.state.products.length > 0) {
-      ProductList = <Table responsive>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Product
-             <Link to="/dashboard/products/new" style={{ marginLeft: '10px' }} >
-                <Button color="primary" size="sm">
-                  <i className="nc-icon nc-simple-add"></i> Add Product
-               </Button>
-              </Link>
-            </th>
-            <th>Price <small>Per PCS</small></th>
-            <th>Stock </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            this.state.products.map((res, key) =>
-              <Products
-                id={res.id}
-                produk={res}
-                key={key}               
-                images={res.picture_url}
-                deleteHandler={this.deleteHandler}
-              />
-            )
-          }
-        </tbody>
-      </Table>;
+      const items = this.state.products.map((res, key) =>
+        <Products
+          id={res.id}
+          produk={res}
+          key={key}
+          images={res.picture_url}
+          deleteHandler={this.deleteHandler}
+        />
+      )
+
+      ProductList =
+        <InfiniteScroll
+          pageStart={1}
+          loadMore={this.loadProduct.bind(this)}
+          hasMore={this.state.hasMoreItems}
+          loader={<div className="loader" key={0}>Loading ...</div>}
+        >
+          {items}
+        </InfiniteScroll>
+        // <Table responsive>
+        //   <thead>
+        //     <tr>
+        //       <th></th>
+        //       <th>Product
+        //      <Link to="/dashboard/products/new" style={{ marginLeft: '10px' }} >
+        //           <Button color="primary" size="sm">
+        //             <i className="nc-icon nc-simple-add"></i> Add Product
+        //        </Button>
+        //         </Link>
+        //       </th>
+        //       <th>Price <small>Per PCS</small></th>
+        //       <th>Stock </th>
+        //       <th></th>
+        //     </tr>
+        //   </thead>
+        //   <tbody style={{ height: "300px", overflow: "auto" }}>
+
+        //   </tbody>
+        // </Table>;
     }
 
     return (
@@ -220,11 +254,11 @@ class Product extends Component {
         </Modal>
         <Row>
           <Col md={12}>
-            <Card>
+            {/* <Card> */}
               <CardBody>
                 {ProductList}
               </CardBody>
-            </Card>
+            {/* </Card> */}
           </Col>
         </Row>
         <ToastContainer />
