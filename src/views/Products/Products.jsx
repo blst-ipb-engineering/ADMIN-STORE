@@ -202,7 +202,7 @@ class Product extends Component {
           pageStart={1}
           loadMore={this.loadProduct.bind(this)}
           hasMore={this.state.hasMoreItems}
-          loader={<div className="loader" key={0}>Loading ...</div>}
+          loader={<div className="" key={0}>Loading Please Wait ...</div>}
         >
           {items}
         </InfiniteScroll>
