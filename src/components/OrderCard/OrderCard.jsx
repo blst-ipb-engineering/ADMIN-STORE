@@ -6,7 +6,7 @@ import {
 } from "reactstrap";
 import Moment from 'react-moment';
 import 'moment/locale/id';
-import { ConfirmSend, ListOrderDetail, TakeThisOrder,TrackingShip } from '../../api/index';
+import { ConfirmSend, ListOrderDetail, TakeThisOrder, TrackingShip } from '../../api/index';
 import { ToastContainer, toast } from 'react-toastify';
 import Popup from '../Popup/Popup';
 import TrackingShipping from '../TrackingShipping/TrackingShipping';
@@ -95,7 +95,6 @@ class OrderCard extends Component {
                     dateproses: result.data.dateproses
                 }
             }))
-
             toast.success("Selamat bertugas 👍🏻" + result.data.prosesBy + " Segera input nomor resi jika sudah mengirimkannya");
 
             console.log(result);
@@ -104,9 +103,10 @@ class OrderCard extends Component {
         })
     }
 
+
     handleTrackingClick(e) {
         e.preventDefault();
-        this.setState({ isPopUpOpen: true,isbackdropOpen:true, isTracking: true })
+        this.setState({ isPopUpOpen: true, isbackdropOpen: true, isTracking: true })
         const content = {
             id: this.state.data.id
         }
@@ -149,10 +149,17 @@ class OrderCard extends Component {
         // untuk menampilkan logic pada sebelah kanan (Button Take It, Process By, Nomor Resi)
         if (this.state.data !== null) {
             if (this.state.data.prosesBy !== null && this.state.data.no_resi == null) {
-                ButtonCondition = <small><strong>Diproses : </strong>{this.state.data.prosesBy} <Moment fromNow>{this.state.data.dateproses}</Moment></small>
-            } else if (this.state.data.prosesBy == null && this.state.data.no_resi == null) {
-                ButtonCondition = <Button onClick={(e) => this.takeItHandler(e, this.state.data.invoiceNumber)} style={{ margin: '0', width: '100%', borderRadius: '0px' }} size="lg" className="take-it-background">TAKE IT !</Button>;
-            } else {
+                ButtonCondition = <small><strong>Diproses : </strong>{this.state.data.prosesBy} <br></br> <Moment fromNow>{this.state.data.dateproses}</Moment></small>
+            } else if (this.state.data.status > 1 && this.state.data.status > 5 && this.state.data.prosesBy == null && this.state.data.no_resi == null) {
+                ButtonCondition = <Button onClick={(e) => this.takeItHandler(e, this.state.data.invoiceNumber)} style={{ margin: '0', width: '100%', borderRadius: '0px' }} size="lg" className="take-it-background">PROSES</Button>;
+            } else if (this.state.data.status == 1 && new Date(this.state.data.expireDate) > new Date()) {
+                ButtonCondition = <div style={{ marginLeft: '10px', textAlign: 'center' }}>Batas Pembayaran : <Moment fromNow>{this.state.data.expireDate}</Moment></div>;
+            } else if (this.state.data.status == 1 && new Date(this.state.data.expireDate) < new Date()) {
+                ButtonCondition = <Button onClick={(e) => this.props.DeclineItHandler(e, this.state.data.invoiceNumber)} style={{ margin: '0', borderRadius: '0px' }} size="lg" className="take-it-background">BATAL</Button>;
+            } else if (this.state.data.status == 5){
+                ButtonCondition = <span>Waktu tenggat pembayaran sudah habis</span>
+            } 
+            else {
                 ButtonCondition = this.state.data.no_resi;
             }
         }
@@ -165,8 +172,7 @@ class OrderCard extends Component {
 
 
         return (
-            <>
-                <ToastContainer />
+            <>                
                 <Popup
                     onClosePopupHandler={this.togglePopup}
                     isOpen={this.state.isPopUpOpen}
@@ -181,7 +187,7 @@ class OrderCard extends Component {
                             <div className="col2">{this.state.data.Customer.email}</div>
                             <div className="col3"><strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
                             <div className="col4"><Button size="sm" style={{ margin: '0', borderRadius: '23px', background: this.state.data.StatusOrder.color }}>{this.state.data.StatusOrder.statusName}</Button></div>
-                            <div className="col5">
+                            <div className="col5" style={{ textAlign: 'center' }}>
                                 {ButtonCondition}
                             </div>
                             <div className="col6"></div>
@@ -190,7 +196,7 @@ class OrderCard extends Component {
                             <div className="otd-card-description">
                                 <h5>No Order: {this.state.data.invoiceNumber} <Button onClick={(event) => { this.detailHandler(event) }} size="sm" style={{ fontSize: '7pt' }}>Detail</Button> </h5>
                                 {this.state.isbackdropOpen ? (
-                                    <div className="backdrop" onClick={() => { this.setState({ isDetailOpen: false, isInputResiOpen: false, isPopUpOpen:false, isbackdropOpen: false }) }}></div>
+                                    <div className="backdrop" onClick={() => { this.setState({ isDetailOpen: false, isInputResiOpen: false, isPopUpOpen: false, isbackdropOpen: false }) }}></div>
                                 ) : null}
                                 <div className={this.state.isDetailOpen ? "otd-dtail-order-wrapper otd-opened" : "otd-dtail-order-wrapper"}>
                                     <div className='otd-dtail-inner'>

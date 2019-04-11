@@ -83,6 +83,7 @@ const API_SERVICES = {
   ListOrderDetail: `${HOSTNAME}/orderproduct/searchorderdetail`,
   UpdateResi: `${HOSTNAME}/order/updateSending`,
   TakeThisOrder: `${HOSTNAME}/orderproduct/take-this-order`,
+  DeclineThisOrder: `${HOSTNAME}/orderproduct/decline-this-order`,
   TrackingShip: `${HOSTNAME}/district-recomendation/tracking`,
 }
 
@@ -519,6 +520,22 @@ const TakeThisOrder = (contents) => {
     .catch(err => console.log(err))
 }
 
+const DeclineThisOrder = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user,
+  }
+  // const id = data_user.companyId;
+  const url = API_SERVICES.DeclineThisOrder;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
 const TrackingShip = (contents) => {
   getToken();
   const content = {
@@ -544,7 +561,7 @@ const ListStatus = (contents) => {
   const extraHeaders = {
     Authorization: `Bearer ` + localStorage.getItem('token')
   }
-  return axios(configFetch(url, 'get', content, true, extraHeaders))
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
     .then(result => result.data)
     .catch(err => console.log(err))
 }
@@ -583,5 +600,6 @@ export {
 
   ListEmployee,
   TakeThisOrder,
+  DeclineThisOrder,
   TrackingShip
 }

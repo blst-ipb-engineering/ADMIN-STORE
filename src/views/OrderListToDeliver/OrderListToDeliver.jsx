@@ -16,8 +16,10 @@ import Select from 'react-select';
 
 import Toaster from '../../components/UI/Toaster/Toaster';
 import OrderCard from '../../components/OrderCard/OrderCard.jsx';
+import { ToastContainer, toast } from 'react-toastify';
 
-import { ListOrder, ConfirmSend, ListStatus } from '../../api/index';
+
+import { ListOrder, ConfirmSend, ListStatus, DeclineThisOrder } from '../../api/index';
 
 
 class OrderListToDeliver extends Component {
@@ -80,7 +82,7 @@ class OrderListToDeliver extends Component {
             querysearch: this.state.value,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
-            statusId: [2, 3],
+            statusId: [this.state.currentStatus.id],
             page: 1
         }
 
@@ -89,9 +91,14 @@ class OrderListToDeliver extends Component {
         })
     }
 
+    // status pengiriman
     fetchListStatus = () => {
         this.setState({ isFetching: true });
-        const content = {};
+        const content = {
+            querysearch: this.state.value,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate,
+        };
 
         ListStatus(content).then(result => {
             this.setState({ listStatus: result.data });
@@ -100,25 +107,52 @@ class OrderListToDeliver extends Component {
 
     queryInputChangeHandler = (event) => {
         event.preventDefault();
-        this.setState({ value: event.target.value }, () => this.fetchOrderCard())
+        this.setState({ value: event.target.value, dataListOrder: null }, () => {
+            this.fetchOrderCard();
+            this.fetchListStatus();
+        })
 
     }
 
     handleChangeStart = (val) => {
-        this.setState({ startDate: val }, () => this.fetchOrderCard())
+        this.setState({ startDate: val, dataListOrder: null }, () => {
+            this.fetchOrderCard();
+            this.fetchListStatus();
+        })
     }
 
     handleChangeEnd = (val) => {
-        this.setState({ endDate: val }, () => this.fetchOrderCard())
+        this.setState({ endDate: val, dataListOrder: null }, () => {
+            this.fetchOrderCard();
+            this.fetchListStatus();
+        })
     }
 
     handleStatusClick = (e, value) => {
-        this.setState({ currentStatus: value });
+        this.setState({ currentStatus: value, dataListOrder: null }, () => {
+            this.fetchOrderCard();
+            this.fetchListStatus();
+        });
     }
 
     componentDidMount() {
         this.fetchOrderCard();
         this.fetchListStatus();
+    }
+
+    DeclineItHandler = (e, invNumber) => {
+        e.stopPropagation();
+        const content = {
+            invoiceNumber: invNumber
+        }
+        DeclineThisOrder(content).then(result => {    
+            toast.success("Order Dibatalkan 👍🏻" + result.data.prosesBy);
+            this.fetchOrderCard();
+            this.fetchListStatus();
+
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
 
@@ -133,17 +167,19 @@ class OrderListToDeliver extends Component {
         if (this.state.dataListOrder !== null) {
             listorder = this.state.dataListOrder.map((value, index) =>
                 // console.log(value)
-                (<OrderCard OrderProps={value} key={index}></OrderCard>)
+                (<OrderCard DeclineItHandler={this.DeclineItHandler} OrderProps={value} key={index}></OrderCard>)
             )
         }
 
         let listStatus = this.state.listStatus.map((value, index) => (
             <div onClick={(e) => this.handleStatusClick(e, value)} className={this.state.currentStatus.id === value.id ? "card-status-btn active-status" : "card-status-btn"} >
-                {value.statusName} <span className="card-count-wrapper" style={{background:`${value.color}`}}>{value.OrderCount}</span>
+                {value.statusName} <span className="card-count-wrapper" style={{ background: `${value.color}` }}>{value.OrderCount}</span>
             </div>
         ));
 
         return (
+            <>
+            <ToastContainer />
             <div className="content">
                 <div className="otd-wrapper">
                     <div className="otd-header-wrapper">
@@ -174,11 +210,12 @@ class OrderListToDeliver extends Component {
                             />
                         </div>
                     </div>
+                    <div className="list-status-class">
+                        {listStatus}
+                    </div>
                     {listorder}
                 </div>
-                <div className="list-status-class">
-                    {listStatus}
-                </div>
+
                 {/* <Row className="payment-card-wrapper">
                         <Col xs={12} sm={12} md={10} lg={10}>
                             <Card className="card-stats" style={{boxShadow:'none'}}>
@@ -242,6 +279,7 @@ class OrderListToDeliver extends Component {
                 </Row> */}
 
             </div>
+            </>
         )
     }
 }
