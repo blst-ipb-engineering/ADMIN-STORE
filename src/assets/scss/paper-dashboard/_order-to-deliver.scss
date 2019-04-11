@@ -1,6 +1,6 @@
 .otd-wrapper{
     width: 100%;
-    margin-bottom: 30vh;
+    // margin-bottom: 30vh;
     background: rgb(241, 241, 241);
     position: relative;
 
@@ -9,7 +9,7 @@
         padding: 10px;
         background: rgb(255, 255, 255);
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
 
         .search-input-wrap{
@@ -31,11 +31,12 @@
         .date-input-filter{
             padding-left: 20px;
             display: flex;
-            justify-content: space-between;
-            width: 60%;
+            justify-content: flex-end;
+           
 
             .count{
                 font-weight: 700;
+                width: 100%
             }
 
             label{
@@ -46,6 +47,41 @@
             }
         }
     }
+}
+
+.list-status-class{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px 0px;
+
+    .card-status-btn{
+        // min-width: 20%;
+        background: white;
+        padding-left: 10px;    
+        cursor: pointer;
+        text-align: center;
+        margin:0px 2px;
+        position: relative;
+
+        .card-count-wrapper{
+            display: inline-block;
+            min-width: 22px;
+            min-height: 22px;
+            padding: 4px;          
+            color: white;  
+            margin-left: 10px;     
+            font-weight: 700;
+        }
+        
+        &:hover{
+            background: #e0e0e0;
+        }
+
+    }
+            .active-status{
+                background: #e0e0e0;
+            }
 }
 
 
@@ -67,10 +103,21 @@
                 padding: 0px;
             }
 
+            .count{
+                padding: 0px 20px;
+                .count-title{
+                    display: none;                        
+                }
+            }
+
             .date-input-filter{
                 width: 100%;
                 margin-top: 10px;
                 padding-left: 0px;
+                display: flex;
+
+
+              
             }
         }
 
@@ -98,6 +145,10 @@
             
         }
     }
+}
+
+.datepicker-input{
+    // padding: 0px
 }
 
 

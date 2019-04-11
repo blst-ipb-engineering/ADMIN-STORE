@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
                   </Col>
                   <Col xs={7} md={8}>
                     <div className="numbers">
-                      <p className="card-category">Revenue</p>
+                      <p className="card-category">Sales</p>
                       <CardTitle tag="p">Rp 0</CardTitle>
                     </div>
                   </Col>
@@ -93,12 +93,12 @@ class Dashboard extends React.Component {
                 <Row>
                   <Col xs={5} md={4}>
                     <div className="icon-big text-center">
-                      <i className="nc-icon nc-vector text-danger" />
+                      <i className="nc-icon nc-single-02 text-danger" />
                     </div>
                   </Col>
                   <Col xs={7} md={8}>
                     <div className="numbers">
-                      <p className="card-category">Waiting</p>
+                      <p className="card-category">Customer</p>
                       <CardTitle tag="p">0</CardTitle>
                     </div>
                   </Col>

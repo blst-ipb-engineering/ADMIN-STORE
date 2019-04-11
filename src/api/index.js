@@ -78,10 +78,11 @@ const API_SERVICES = {
   ListPayment: `${HOSTNAME}/orderproduct/subtotal`,
   ConfirmPayment: `${HOSTNAME}/order/updatepayment`,
   // modul ADMIN STORE untuk search Order yang sudah dikonfirmasi
+  ListStatus: `${HOSTNAME}/order/list-status`,
   ListOrder: `${HOSTNAME}/orderproduct/searchorder`,
   ListOrderDetail: `${HOSTNAME}/orderproduct/searchorderdetail`,
   UpdateResi: `${HOSTNAME}/order/updateSending`,
-  TakeThisOrder : `${HOSTNAME}/orderproduct/take-this-order`,
+  TakeThisOrder: `${HOSTNAME}/orderproduct/take-this-order`,
   TrackingShip: `${HOSTNAME}/district-recomendation/tracking`,
 }
 
@@ -107,13 +108,13 @@ const ProductList = (contents) => {
     ...data_user
   }
 
-  const page    = contents.page ? contents.page : 1 ;
-  const limit   = contents.limit ? contents.limit : 10 ;
-  const sortby  = contents.sortby ? contents.sortby : "name" ;
-  const order  = contents.order ? contents.order : "asc" ;
-  const name    = contents.name ? contents.name : "" ;
+  const page = contents.page ? contents.page : 1;
+  const limit = contents.limit ? contents.limit : 10;
+  const sortby = contents.sortby ? contents.sortby : "name";
+  const order = contents.order ? contents.order : "asc";
+  const name = contents.name ? contents.name : "";
 
-  const url = API_SERVICES.ProductIndex+"/?page="+page+"&limit="+limit+"&sortby="+sortby+"&name="+name;
+  const url = API_SERVICES.ProductIndex + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name;
   return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
 }
 
@@ -437,7 +438,10 @@ const ListOrder = (contents) => {
   }
 
   return axios(configFetch(url, 'post', content, true, extraHeaders))
-    .then(result => result.data)
+    .then(result => {      
+      return result.data
+    }
+    )
     .catch(err => console.log(err))
 }
 
@@ -495,7 +499,7 @@ const ListEmployee = (contents) => {
   }
 
   return axios(configFetch(url, 'post', content, true, extraHeaders))
-    .then(result =>result.data.data)    
+    .then(result => result.data.data)
     .catch(err => console.log(err))
 }
 
@@ -511,7 +515,7 @@ const TakeThisOrder = (contents) => {
     Authorization: `Bearer ` + localStorage.getItem('token')
   }
   return axios(configFetch(url, 'post', content, true, extraHeaders))
-    .then(result =>result.data)    
+    .then(result => result.data)
     .catch(err => console.log(err))
 }
 
@@ -526,6 +530,21 @@ const TrackingShip = (contents) => {
     Authorization: `Bearer ` + localStorage.getItem('token')
   }
   return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const ListStatus = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+  const url = API_SERVICES.ListStatus;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'get', content, true, extraHeaders))
     .then(result => result.data)
     .catch(err => console.log(err))
 }
@@ -555,6 +574,7 @@ export {
   deleteSlidebar,
 
   // Payment Confirmation
+  ListStatus,
   ListPayment,
   ConfirmPayment,
   ListOrder,

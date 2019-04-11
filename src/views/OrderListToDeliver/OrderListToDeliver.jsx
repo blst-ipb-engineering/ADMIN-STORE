@@ -17,7 +17,7 @@ import Select from 'react-select';
 import Toaster from '../../components/UI/Toaster/Toaster';
 import OrderCard from '../../components/OrderCard/OrderCard.jsx';
 
-import { ListOrder,ConfirmSend } from '../../api/index';
+import { ListOrder, ConfirmSend, ListStatus } from '../../api/index';
 
 
 class OrderListToDeliver extends Component {
@@ -25,7 +25,7 @@ class OrderListToDeliver extends Component {
         super(props);
 
         this.state = {
-            isFetching:false,
+            isFetching: false,
             selectBy: { id: 2, value: 'Jumlah Transfer', label: 'Jumlah Transfer' },
             selectByOptions: [
                 { id: 1, value: 'Nomor Invoice', label: 'Nomor Invoice' },
@@ -35,8 +35,13 @@ class OrderListToDeliver extends Component {
             value: null,
             startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
             endDate: new Date(),
-            count:0,
-            dataListOrder:null            
+            count: 0,
+            dataListOrder: null,
+            listStatus: [],
+            currentStatus: {
+                id: 2,
+                statusName: "Menunggu pembayaran"
+            }
 
         }
     }
@@ -69,87 +74,110 @@ class OrderListToDeliver extends Component {
 
     }
 
-    fetchOrderCard = () => {    
-        this.setState({isFetching:true})  
+    fetchOrderCard = () => {
+        this.setState({ isFetching: true })
         const content = {
             querysearch: this.state.value,
             startDate: this.state.startDate,
-            endDate:this.state.endDate,
-            statusId:[2,3],
-	        page: 1
+            endDate: this.state.endDate,
+            statusId: [2, 3],
+            page: 1
         }
 
-        ListOrder(content).then(result => {            
-            this.setState({dataListOrder:result.result,isFetching:false,count:result.result.length});
+        ListOrder(content).then(result => {
+            this.setState({ dataListOrder: result.result, isFetching: false, count: result.result.length });
         })
     }
 
-    queryInputChangeHandler = (event)=> {
+    fetchListStatus = () => {
+        this.setState({ isFetching: true });
+        const content = {};
+
+        ListStatus(content).then(result => {
+            this.setState({ listStatus: result.data });
+        })
+    }
+
+    queryInputChangeHandler = (event) => {
         event.preventDefault();
-        this.setState({value:event.target.value},()=>this.fetchOrderCard())
+        this.setState({ value: event.target.value }, () => this.fetchOrderCard())
 
     }
 
     handleChangeStart = (val) => {
-        this.setState({startDate:val},()=>this.fetchOrderCard())
+        this.setState({ startDate: val }, () => this.fetchOrderCard())
     }
 
     handleChangeEnd = (val) => {
-        this.setState({endDate:val},()=>this.fetchOrderCard())
+        this.setState({ endDate: val }, () => this.fetchOrderCard())
     }
 
-    componentDidMount(){
-        this.fetchOrderCard()
+    handleStatusClick = (e, value) => {
+        this.setState({ currentStatus: value });
     }
+
+    componentDidMount() {
+        this.fetchOrderCard();
+        this.fetchListStatus();
+    }
+
 
 
     render() {
         let listorder = <>
-        <div className="loading-background" style={{width:'100%',height:'40px',marginTop:'10px'}}></div>
-        <div className="loading-background" style={{width:'100%',height:'40px',marginTop:'10px'}}></div>
-        <div className="loading-background" style={{width:'100%',height:'40px',marginTop:'10px'}}></div>
+            <div className="loading-background" style={{ width: '100%', height: '40px', marginTop: '10px' }}></div>
+            <div className="loading-background" style={{ width: '100%', height: '40px', marginTop: '10px' }}></div>
+            <div className="loading-background" style={{ width: '100%', height: '40px', marginTop: '10px' }}></div>
         </>
 
-        if(this.state.dataListOrder !== null ){
-            listorder = this.state.dataListOrder.map((value,index)=>
-            // console.log(value)
-                (<OrderCard OrderProps={value} key={index}></OrderCard>)        
+        if (this.state.dataListOrder !== null) {
+            listorder = this.state.dataListOrder.map((value, index) =>
+                // console.log(value)
+                (<OrderCard OrderProps={value} key={index}></OrderCard>)
             )
         }
+
+        let listStatus = this.state.listStatus.map((value, index) => (
+            <div onClick={(e) => this.handleStatusClick(e, value)} className={this.state.currentStatus.id === value.id ? "card-status-btn active-status" : "card-status-btn"} >
+                {value.statusName} <span className="card-count-wrapper" style={{background:`${value.color}`}}>{value.OrderCount}</span>
+            </div>
+        ));
 
         return (
             <div className="content">
                 <div className="otd-wrapper">
                     <div className="otd-header-wrapper">
                         <div className="search-input-wrap">
-                            <label>Cari Order</label>
-                            <Input onChange={(event)=>{this.queryInputChangeHandler(event)}} placeholder="masukkan email customer atau nomor order, misal: mbokde@gmail.com"></Input>
+                            <Input onChange={(event) => { this.queryInputChangeHandler(event) }} placeholder="Cari Order, masukkan email customer atau nomor order, misal: mbokde@gmail.com"></Input>
                         </div>
+                        <div className="count"><span className="count-title">Count :</span> {this.state.count}</div>
                         <div className="date-input-filter">
-                            <label className="count">Count : {this.state.count}</label>
-                            <label>Date Filter</label>
+                            <label style={{ padding: '0px 10px' }}><i className="nc-icon nc-calendar-60" /></label>
                             <DatePicker
-                                className="form-control"
+                                className="form-control datepicker-input"
                                 selected={this.state.startDate}
                                 dateFormat="dd-MM-yyyy"
                                 selectsStart
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
-                                onChange={(val)=>this.handleChangeStart(val)}
+                                onChange={(val) => this.handleChangeStart(val)}
                             />
-
+                            <span style={{ padding: '0px 10px' }}>-</span>
                             <DatePicker
-                                className="form-control"
+                                className="form-control datepicker-input"
                                 selected={this.state.endDate}
                                 dateFormat="dd-MM-yyyy"
                                 selectsEnd
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
-                                onChange={(val)=>this.handleChangeEnd(val)}
+                                onChange={(val) => this.handleChangeEnd(val)}
                             />
                         </div>
-                    </div>     
-                    {listorder}               
+                    </div>
+                    {listorder}
+                </div>
+                <div className="list-status-class">
+                    {listStatus}
                 </div>
                 {/* <Row className="payment-card-wrapper">
                         <Col xs={12} sm={12} md={10} lg={10}>
