@@ -86,6 +86,7 @@ const API_SERVICES = {
   DeclineThisOrder: `${HOSTNAME}/orderproduct/decline-this-order`,
   TrackingShip: `${HOSTNAME}/district-recomendation/tracking`,
   DashboardStat: `${HOSTNAME}/dashboard/index`,
+  CategoryListCompany: `${HOSTNAME}/category/company`
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -582,6 +583,21 @@ const DashboardStat = (contents) => {
     .catch(err => console.log(err))
 }
 
+const CategoryListCompany = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+  const url = API_SERVICES.CategoryListCompany;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
 
 
 
@@ -622,5 +638,6 @@ export {
   DeclineThisOrder,
   TrackingShip,
 
-  DashboardStat
+  DashboardStat,
+  CategoryListCompany
 }

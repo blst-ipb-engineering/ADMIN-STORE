@@ -11,6 +11,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from "react-datepicker";
+import Select from 'react-select';
+
 
 
 
@@ -19,7 +21,8 @@ import axios from "axios";
 
 import {
   ProductList,
-  ProductDelete
+  ProductDelete,
+  CategoryListCompany
 } from '../../api/index';
 
 class Product extends Component {
@@ -37,14 +40,91 @@ class Product extends Component {
         category_general: null
       },
       page: 1,
-      limit: 5,
-      sortby: "name",
-      order: "ASC",
+      limit: 5,            
       name: null,
       hasMoreItems: true,
       count: null,
-      maxPages: null
+      maxPages: null,
+
+      categories: [],
+      category_selected: [],
+      querysearch: null,
+
+      sortby: [
+        {
+          id:"name",
+          value:"Nama",
+          label:"Nama"
+        },
+        {
+          id:"weight",
+          value:"Berat",
+          label:"Berat"
+        },
+        {
+          id:"promoPrice",
+          value:"Harga",
+          label:"Harga"
+        },
+        {
+          id:"pages",
+          value:"Halaman",
+          label:"Halaman"
+        },
+        {
+          id:"stok",
+          value:"Ketersediaan",
+          label:"Ketersediaan"
+        },
+        {
+          id:"royalti_percent",
+          value:"Royalti",
+          label:"Royalti"
+        }
+      ],
+      sortbySelect : {
+        id:"name",
+        value:"Nama",
+        label:"Nama"
+      },
+
+      order: [
+        {
+          id:"DESC",
+          value:"Terbesar",
+          label:"Terbesar"
+        },
+        {
+          id:"ASC",
+          value:"Terkecil",
+          label:"Terkecil"
+        }
+      ],
+      orderSelect:{
+        id:"DESC",
+        name:"Terbesar",
+        label:"Terbesar"
+      }
+
+      
     }
+  }
+
+  fetchCategories = async () => {
+    const contents = {}
+    const categories = [];
+    await CategoryListCompany(contents).then(res => {
+      console.log(res)
+      res.map((value, key) => {
+        categories.push({
+          id: value.id,
+          value: value.id,
+          label: value.name
+        });
+      });
+
+      this.setState({ categories: categories })
+    }).catch(err => console.log(err));
   }
 
   loadProduct = (page) => {
@@ -52,9 +132,9 @@ class Product extends Component {
     const content = {
       page: page,
       limit: this.state.limit,
-      sortby: this.state.sortby,
-      order: this.state.order,
-      name: this.state.name,
+      sortby: this.state.sortbySelect.id,
+      order: this.state.orderSelect.id,
+      name: this.state.querysearch,
     }
 
     ProductList(content).then(res => {
@@ -102,7 +182,8 @@ class Product extends Component {
 
   componentDidMount() {
     this.loadProduct();
-    console.log(this.props.ui.toaster.isOpenToast)
+    this.fetchCategories();
+
     if (this.props.ui.toaster.isOpenToast) {
       toast.success(this.props.ui.toaster.toastMessage);
     }
@@ -146,11 +227,28 @@ class Product extends Component {
     })
   }
 
+  onSortByHandler = (val) => {
+    this.setState({sortbySelect:val,products: []}, () => this.loadProduct());
+  }
+
+  onOrderHandler = (val) => {
+    this.setState({orderSelect:val,products: []}, () => this.loadProduct());
+  }
+
+  onChangeCategoryHandler = (val) => {
+    this.setState({ category_selected: val,products: []});
+  }
+
+  queryInputChangeHandler = (e) => {
+    e.preventDefault();
+    this.setState({ querysearch: e.target.value, products: [] }, () => this.loadProduct());
+  }
+
   render() {
     let ProductList = null;
     if (this.state.loadingdata) {
       ProductList = <Table responsive>
-        <thead>
+        {/* <thead>
           <tr>
             <th></th>
             <th>Product
@@ -164,7 +262,7 @@ class Product extends Component {
             <th>Stock </th>
             <th></th>
           </tr>
-        </thead>
+        </thead> */}
         <tbody>
           <LoadingProductAdmin />
           <LoadingProductAdmin />
@@ -179,8 +277,8 @@ class Product extends Component {
         <div className="image-wrapper">
           <img src="/box.svg" alt="" />
         </div>
-        <h2 style={{ marginBottom: '12px' }}>Belum ada Barang dijual</h2>
-        <p >Barang jualan kamu akan muncul di halaman ini. Ayo mulai berjualan sekarang!</p>
+        <h2 style={{ marginBottom: '12px' }}>Produk tidak ditemukan</h2>
+        <p >Produk kamu muncul di halaman ini. Jika tidak muncul ayo dimunculkan / mulai jualan sekarang!</p>
         <Link to="/dashboard/products/new" style={{ marginLeft: '10px' }} href="http://google.com">
           <Button color="primary" style={{ marginBottom: '90px' }} size="bg">
             <i className="nc-icon nc-simple-add"></i> Add Product
@@ -261,29 +359,52 @@ class Product extends Component {
               <div className="search-input-wrap">
                 <Input onChange={(event) => { this.queryInputChangeHandler(event) }} placeholder="Cari Produk, masukkan nama produk"></Input>
               </div>
-              {/* <div className="count"><span className="count-title">Count :</span> {this.state.count}</div> */}
-              <div className="date-input-filter">
-                <label style={{ padding: '0px 10px' }}><i className="nc-icon nc-calendar-60" /></label>
-                <DatePicker
-                  className="form-control datepicker-input"
-                  selected={this.state.startDate}
-                  dateFormat="dd-MM-yyyy"
-                  selectsStart
-                  startDate={this.state.startDate}
-                  endDate={this.state.endDate}
-                  onChange={(val) => this.handleChangeStart(val)}
-                />
-                <span style={{ padding: '0px 10px' }}>-</span>
-                <DatePicker
-                  className="form-control datepicker-input"
-                  selected={this.state.endDate}
-                  dateFormat="dd-MM-yyyy"
-                  selectsEnd
-                  startDate={this.state.startDate}
-                  endDate={this.state.endDate}
-                  onChange={(val) => this.handleChangeEnd(val)}
+              
+              <div className="count">
+                <Select
+                  onChange={(val) => this.onSortByHandler(val)}
+                  name="sortby"
+                  placeholder="Urutkan Berdasarkan"                  
+                  // value={this.state.sortbySelect}
+                  className="basic-multi-select"
+                  options={this.state.sortby}
                 />
               </div>
+              <div className="count">
+                <Select
+                  onChange={(val) => this.onOrderHandler(val)}
+                  name="order"
+                  placeholder="Dari.."                  
+                  value={this.state.orderSelect}
+                  className="basic-multi-select"
+                  options={this.state.order}
+                />
+              </div>
+              {/* <div className="count">
+                <Select
+                  onChange={(val)=>this.onChangeCategoryHandler(val)}
+                  name="categoryGeneral"
+                  placeholder="Category"
+                  isMulti
+                  value={this.state.category_selected}
+                  className="basic-multi-select"
+                  options={this.state.categories}
+                />
+              </div> */}
+              <div className="date-input-filter">
+                <label style={{ padding: '0px 10px' }}><i className="nc-icon nc-tag-content" /></label><span>{this.state.count}</span>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+            <div className="">
+              <Link to="/dashboard/products/new" style={{ marginLeft: '10px' }} href="http://google.com">
+                <Button color="primary" size="sm">
+                  <i className="nc-icon nc-simple-add"></i> Add Product
+               </Button>
+              </Link>
             </div>
           </Col>
         </Row>
