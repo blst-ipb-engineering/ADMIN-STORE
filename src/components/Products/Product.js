@@ -116,7 +116,7 @@ class Products extends Component {
                 </div>
                 {/* Stock */}
                 <div className="stock-info-wrapper" style={{ verticalAlign: 'top', textAlign: 'center' }}>
-                    <small>Tersedia</small>
+                    <small data-tip="Print On Demand">{this.props.produk.stok !== null ? "Tersedia":"POD"}</small>
                     <h5>{this.props.produk.stock}</h5>
                 </div>
                 {/* Edit Publish */}

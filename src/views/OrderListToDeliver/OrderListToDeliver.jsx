@@ -142,6 +142,7 @@ class OrderListToDeliver extends Component {
 
     DeclineItHandler = (e, invNumber) => {
         e.stopPropagation();
+        this.setState({dataListOrder: null});
         const content = {
             invoiceNumber: invNumber
         }
@@ -186,7 +187,7 @@ class OrderListToDeliver extends Component {
                         <div className="search-input-wrap">
                             <Input onChange={(event) => { this.queryInputChangeHandler(event) }} placeholder="Cari Order, masukkan email customer atau nomor order, misal: mbokde@gmail.com"></Input>
                         </div>
-                        <div className="count"><span className="count-title">Count :</span> {this.state.count}</div>
+                        {/* <div className="count"><span className="count-title">Count :</span> {this.state.count}</div> */}
                         <div className="date-input-filter">
                             <label style={{ padding: '0px 10px' }}><i className="nc-icon nc-calendar-60" /></label>
                             <DatePicker

@@ -85,6 +85,7 @@ const API_SERVICES = {
   TakeThisOrder: `${HOSTNAME}/orderproduct/take-this-order`,
   DeclineThisOrder: `${HOSTNAME}/orderproduct/decline-this-order`,
   TrackingShip: `${HOSTNAME}/district-recomendation/tracking`,
+  DashboardStat: `${HOSTNAME}/dashboard/index`,
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -112,10 +113,10 @@ const ProductList = (contents) => {
   const page = contents.page ? contents.page : 1;
   const limit = contents.limit ? contents.limit : 10;
   const sortby = contents.sortby ? contents.sortby : "name";
-  const order = contents.order ? contents.order : "asc";
+  const order = contents.order ? contents.order : "ASC";
   const name = contents.name ? contents.name : "";
 
-  const url = API_SERVICES.ProductIndex + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name;
+  const url = API_SERVICES.ProductIndex + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name + "&orderby="+ order;
   return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
 }
 
@@ -566,6 +567,24 @@ const ListStatus = (contents) => {
     .catch(err => console.log(err))
 }
 
+const DashboardStat = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+  const url = API_SERVICES.DashboardStat;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'get', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+
+
+
 
 export {
   ProductList,
@@ -601,5 +620,7 @@ export {
   ListEmployee,
   TakeThisOrder,
   DeclineThisOrder,
-  TrackingShip
+  TrackingShip,
+
+  DashboardStat
 }

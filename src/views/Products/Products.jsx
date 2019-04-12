@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Modal, ModalHeader, ModalBody, ModalFooter, Table, CardBody, Row, Col } from "reactstrap";
+import { Card, Button, Modal, ModalHeader, ModalBody, Input, ModalFooter, Table, CardBody, Row, Col } from "reactstrap";
 import Products from '../../components/Products/Product';
 import { Link } from "react-router-dom";
 import './Products.css';
@@ -10,6 +10,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DatePicker from "react-datepicker";
+
 
 
 import icons from "../../variables/icons";
@@ -37,7 +39,7 @@ class Product extends Component {
       page: 1,
       limit: 5,
       sortby: "name",
-      order: "asc",
+      order: "ASC",
       name: null,
       hasMoreItems: true,
       count: null,
@@ -62,7 +64,8 @@ class Product extends Component {
           name: value.name,
           price: value.base_price,
           picture_url: typeof value.Pictures[0] !== 'undefined' ? value.Pictures[0].url_small : 'https://www.bukalapak.com/images/jual_barang/upload-image-v4.png',
-          category_general: value.CategoryGeneral.name
+          category_general: value.CategoryGeneral.name,
+          stok: value.stok
         })
       });
 
@@ -206,26 +209,26 @@ class Product extends Component {
         >
           {items}
         </InfiniteScroll>
-        // <Table responsive>
-        //   <thead>
-        //     <tr>
-        //       <th></th>
-        //       <th>Product
-        //      <Link to="/dashboard/products/new" style={{ marginLeft: '10px' }} >
-        //           <Button color="primary" size="sm">
-        //             <i className="nc-icon nc-simple-add"></i> Add Product
-        //        </Button>
-        //         </Link>
-        //       </th>
-        //       <th>Price <small>Per PCS</small></th>
-        //       <th>Stock </th>
-        //       <th></th>
-        //     </tr>
-        //   </thead>
-        //   <tbody style={{ height: "300px", overflow: "auto" }}>
+      // <Table responsive>
+      //   <thead>
+      //     <tr>
+      //       <th></th>
+      //       <th>Product
+      //      <Link to="/dashboard/products/new" style={{ marginLeft: '10px' }} >
+      //           <Button color="primary" size="sm">
+      //             <i className="nc-icon nc-simple-add"></i> Add Product
+      //        </Button>
+      //         </Link>
+      //       </th>
+      //       <th>Price <small>Per PCS</small></th>
+      //       <th>Stock </th>
+      //       <th></th>
+      //     </tr>
+      //   </thead>
+      //   <tbody style={{ height: "300px", overflow: "auto" }}>
 
-        //   </tbody>
-        // </Table>;
+      //   </tbody>
+      // </Table>;
     }
 
     return (
@@ -254,10 +257,42 @@ class Product extends Component {
         </Modal>
         <Row>
           <Col md={12}>
+            <div className="otd-header-wrapper">
+              <div className="search-input-wrap">
+                <Input onChange={(event) => { this.queryInputChangeHandler(event) }} placeholder="Cari Produk, masukkan nama produk"></Input>
+              </div>
+              {/* <div className="count"><span className="count-title">Count :</span> {this.state.count}</div> */}
+              <div className="date-input-filter">
+                <label style={{ padding: '0px 10px' }}><i className="nc-icon nc-calendar-60" /></label>
+                <DatePicker
+                  className="form-control datepicker-input"
+                  selected={this.state.startDate}
+                  dateFormat="dd-MM-yyyy"
+                  selectsStart
+                  startDate={this.state.startDate}
+                  endDate={this.state.endDate}
+                  onChange={(val) => this.handleChangeStart(val)}
+                />
+                <span style={{ padding: '0px 10px' }}>-</span>
+                <DatePicker
+                  className="form-control datepicker-input"
+                  selected={this.state.endDate}
+                  dateFormat="dd-MM-yyyy"
+                  selectsEnd
+                  startDate={this.state.startDate}
+                  endDate={this.state.endDate}
+                  onChange={(val) => this.handleChangeEnd(val)}
+                />
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
             {/* <Card> */}
-              <CardBody>
-                {ProductList}
-              </CardBody>
+            <CardBody>
+              {ProductList}
+            </CardBody>
             {/* </Card> */}
           </Col>
         </Row>

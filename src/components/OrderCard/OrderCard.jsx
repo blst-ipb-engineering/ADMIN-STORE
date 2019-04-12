@@ -150,7 +150,7 @@ class OrderCard extends Component {
         if (this.state.data !== null) {
             if (this.state.data.prosesBy !== null && this.state.data.no_resi == null) {
                 ButtonCondition = <small><strong>Diproses : </strong>{this.state.data.prosesBy} <br></br> <Moment fromNow>{this.state.data.dateproses}</Moment></small>
-            } else if (this.state.data.status > 1 && this.state.data.status > 5 && this.state.data.prosesBy == null && this.state.data.no_resi == null) {
+            } else if (this.state.data.status > 1 && this.state.data.status < 5 && this.state.data.prosesBy == null && this.state.data.no_resi == null) {
                 ButtonCondition = <Button onClick={(e) => this.takeItHandler(e, this.state.data.invoiceNumber)} style={{ margin: '0', width: '100%', borderRadius: '0px' }} size="lg" className="take-it-background">PROSES</Button>;
             } else if (this.state.data.status == 1 && new Date(this.state.data.expireDate) > new Date()) {
                 ButtonCondition = <div style={{ marginLeft: '10px', textAlign: 'center' }}>Batas Pembayaran : <Moment fromNow>{this.state.data.expireDate}</Moment></div>;

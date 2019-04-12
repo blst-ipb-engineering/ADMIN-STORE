@@ -1,156 +1,147 @@
-.otd-wrapper{
-    width: 100%;
-    // margin-bottom: 30vh;
-    background: rgb(241, 241, 241);
+.otd-wrapper {
+  width: 100%;
+  // margin-bottom: 30vh;
+  background: rgb(241, 241, 241);
+  position: relative;
+}
+
+.otd-header-wrapper {
+  width: 100%;
+  padding: 10px;
+  background: rgb(255, 255, 255);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .search-input-wrap {
+    width: 80%;
+    padding-right: 20px;
+    border-right: 1px solid rgb(224, 224, 224);
+
+    input {
+      background: rgb(224, 224, 224);
+      border: none;
+      padding: 10px;
+
+      &::placeholder {
+        color: rgb(151, 151, 151) !important;
+      }
+    }
+  }
+
+  .date-input-filter {
+    padding-left: 20px;
+    display: flex;
+    justify-content: flex-end;
+
+    .count {
+      font-weight: 700;
+      width: 100%;
+    }
+
+    label {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.list-status-class {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin: 10px 0px;
+
+  .card-status-btn {
+    // min-width: 20%;
+    background: white;
+    padding-left: 10px;
+    cursor: pointer;
+    text-align: center;
+    margin: 0px 2px;
     position: relative;
 
-    .otd-header-wrapper{
-        width:100%;
-        padding: 10px;
-        background: rgb(255, 255, 255);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .search-input-wrap{
-            width: 40%;
-            padding-right: 20px;
-            border-right: 1px solid rgb(224, 224, 224) ;    
-
-            input{
-                background: rgb(224, 224, 224);
-                border: none;
-                padding: 10px;
-
-                &::placeholder{
-                    color:rgb(151, 151, 151) !important;
-                }
-            }
-        }
-
-        .date-input-filter{
-            padding-left: 20px;
-            display: flex;
-            justify-content: flex-end;
-           
-
-            .count{
-                font-weight: 700;
-                width: 100%
-            }
-
-            label{
-                margin: 0;                
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-        }
+    .card-count-wrapper {
+      display: inline-block;
+      min-width: 22px;
+      min-height: 22px;
+      padding: 4px;
+      color: white;
+      margin-left: 8px;
+      font-weight: 700;
     }
-}
 
-.list-status-class{
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    margin: 10px 0px;
-
-    .card-status-btn{
-        // min-width: 20%;
-        background: white;
-        padding-left: 10px;    
-        cursor: pointer;
-        text-align: center;
-        margin:0px 2px;
-        position: relative;
-
-        .card-count-wrapper{
-            display: inline-block;
-            min-width: 22px;
-            min-height: 22px;
-            padding: 4px;          
-            color: white;  
-            margin-left: 8px;     
-            font-weight: 700;
-        }
-        
-        &:hover{
-            background: #e0e0e0;
-        }
-
+    &:hover {
+      background: #e0e0e0;
     }
-            .active-status{
-                background: #e0e0e0;
-            }
+  }
+  .active-status {
+    background: #e0e0e0;
+  }
 }
 
+@media screen and (max-width: $break-small) {
+  .otd-header-wrapper {
+    flex-direction: column;
 
-@media screen and (max-width:$break-small) {
-    .otd-wrapper{
-        margin-top: -40px;
-        padding: 0px -10px;
-        margin-top: -40px;
-        margin-left: -13px;
-        width: 107%;
-
-        .otd-header-wrapper{
-
-            flex-direction: column;
-
-            .search-input-wrap{
-                width:100%;
-                border: none;
-                padding: 0px;
-            }
-
-            .count{
-                padding: 0px 20px;
-                .count-title{
-                    display: none;                        
-                }
-            }
-
-            .date-input-filter{
-                width: 100%;
-                margin-top: 10px;
-                padding-left: 0px;
-                display: flex;
-
-
-              
-            }
-        }
-
-        .otd-card{
-            flex-direction: column;
-
-            .otd-card-description{
-                width: 100%;
-
-                .shipment-info-wrapper{
-                    margin-top: 5px;
-                    margin-bottom: 5px;
-                    width: 100%;
-                    margin-right: 0px;
-                }
-            }
-
-            .otd-timeline-process{
-                width: 100%;
-            }
-
-            .otd-card-shipment{
-                width: 100%;
-            }
-            
-        }
+    .search-input-wrap {
+      width: 100%;
+      border: none;
+      padding: 0px;
     }
+
+    .count {
+      padding: 0px 20px;
+      .count-title {
+        display: none;
+      }
+    }
+
+    .date-input-filter {
+      width: 100%;
+      margin-top: 10px;
+      padding-left: 0px;
+      display: flex;
+    }
+  }
+
+  .otd-wrapper {
+    margin-top: -40px;
+    padding: 0px -10px;
+    margin-top: -40px;
+    margin-left: -13px;
+    width: 107%;
+
+    .otd-card {
+      flex-direction: column;
+
+      .otd-card-description {
+        width: 100%;
+
+        .shipment-info-wrapper {
+          margin-top: 5px;
+          margin-bottom: 5px;
+          width: 100%;
+          margin-right: 0px;
+        }
+      }
+
+      .otd-timeline-process {
+        width: 100%;
+      }
+
+      .otd-card-shipment {
+        width: 100%;
+      }
+    }
+  }
 }
 
-.datepicker-input{
-    // padding: 0px
+.datepicker-input {
+  // padding: 0px
 }
-
 
 // @media screen and (max-width: $break-medium){
 //     .otd-wrapper{

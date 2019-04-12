@@ -14,6 +14,7 @@ import { Line, Pie } from "react-chartjs-2";
 
 import Stats from "../../components/Stats/Stats.jsx";
 import Toaster from '../../components/UI/Toaster/Toaster';
+import {DashboardStat} from "../../api/index"; 
 
 
 import {
@@ -23,11 +24,41 @@ import {
 } from "../../variables/charts.jsx";
 
 class Dashboard extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      data:null
+    }
+  }
+
+  formatuang(amount) {
+    if (amount === null) {
+        amount = 0;
+    }
+    // deletecomma
+    let comadel = amount.toString().replace(/\,/g, '');
+    let price = comadel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    return price;
+}
+
+  fetchDashboardData(){    
+    DashboardStat().then(result=>{
+      this.setState({data:result})
+    })
+    
+  }
+
+  componentDidMount(){
+    this.fetchDashboardData();  
+  }
+
+
   render() {
     return (
       <div className="content">        
         <Row>
-          <Col xs={12} sm={6} md={6} lg={3}>
+          <Col xs={12} sm={6} md={6} lg={4}>
             <Card className="card-stats">
               <CardBody>
                 <Row>
@@ -39,7 +70,7 @@ class Dashboard extends React.Component {
                   <Col xs={7} md={8}>
                     <div className="numbers">
                       <p className="card-category">Order</p>
-                      <CardTitle tag="p">0</CardTitle>
+                      <CardTitle tag="p">{this.state.data !== null ? this.state.data.Order: 0} </CardTitle>
                     </div>
                   </Col>
                 </Row>
@@ -50,14 +81,14 @@ class Dashboard extends React.Component {
                   {[
                     {
                       i: "fas fa-sync-alt",
-                      t: "Update Now"
+                      t: "Last Year"
                     }
                   ]}
                 </Stats>
               </CardFooter>
             </Card>
           </Col>
-          <Col xs={12} sm={6} md={6} lg={3}>
+          <Col xs={12} sm={6} md={6} lg={4}>
             <Card className="card-stats">
               <CardBody>
                 <Row>
@@ -69,7 +100,7 @@ class Dashboard extends React.Component {
                   <Col xs={7} md={8}>
                     <div className="numbers">
                       <p className="card-category">Sales</p>
-                      <CardTitle tag="p">Rp 0</CardTitle>
+                      <CardTitle tag="p">Rp {this.state.data !== null ? this.formatuang(this.state.data.sales[0].total): 0}</CardTitle>
                     </div>
                   </Col>
                 </Row>
@@ -80,14 +111,14 @@ class Dashboard extends React.Component {
                   {[
                     {
                       i: "far fa-calendar",
-                      t: "Last day"
+                      t: "Last Year"
                     }
                   ]}
                 </Stats>
               </CardFooter>
             </Card>
           </Col>
-          <Col xs={12} sm={6} md={6} lg={3}>
+          <Col xs={12} sm={6} md={6} lg={4}>
             <Card className="card-stats">
               <CardBody>
                 <Row>
@@ -98,8 +129,8 @@ class Dashboard extends React.Component {
                   </Col>
                   <Col xs={7} md={8}>
                     <div className="numbers">
-                      <p className="card-category">Customer</p>
-                      <CardTitle tag="p">0</CardTitle>
+                      <p className="card-category">Users</p>
+                      <CardTitle tag="p">{this.state.data !== null ? this.state.data.Customer: 0}</CardTitle>
                     </div>
                   </Col>
                 </Row>
@@ -110,14 +141,14 @@ class Dashboard extends React.Component {
                   {[
                     {
                       i: "far fa-clock",
-                      t: "In the last hour"
+                      t: "Last Year"
                     }
                   ]}
                 </Stats>
               </CardFooter>
             </Card>
           </Col>
-          <Col xs={12} sm={6} md={6} lg={3}>
+          {/* <Col xs={12} sm={6} md={6} lg={3}>
             <Card className="card-stats">
               <CardBody>
                 <Row>
@@ -146,7 +177,7 @@ class Dashboard extends React.Component {
                 </Stats>
               </CardFooter>
             </Card>
-          </Col>
+          </Col> */}
         </Row>
         {/* <Row>
           <Col xs={12}>
