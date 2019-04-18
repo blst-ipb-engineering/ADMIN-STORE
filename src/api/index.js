@@ -87,6 +87,9 @@ const API_SERVICES = {
   TrackingShip: `${HOSTNAME}/district-recomendation/tracking`,
   DashboardStat: `${HOSTNAME}/dashboard/index`,
   CategoryListCompany: `${HOSTNAME}/category/company`,
+  BranchList: `${HOSTNAME}/auth/list-branch`,
+  SetBranchSetting: `${HOSTNAME}/auth/set-branch-setting`,
+  CheckBranchChosen: `${HOSTNAME}/auth/is-company-model-exsist`,
   CheckAccountFinance: `${HOSTNAME}/product/check-account-finance`,
 }
 
@@ -118,7 +121,7 @@ const ProductList = (contents) => {
   const order = contents.order ? contents.order : "ASC";
   const name = contents.name ? contents.name : "";
 
-  const url = API_SERVICES.ProductIndex + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name + "&orderby="+ order;
+  const url = API_SERVICES.ProductIndex + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name + "&orderby=" + order;
   return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
 }
 
@@ -442,7 +445,7 @@ const ListOrder = (contents) => {
   }
 
   return axios(configFetch(url, 'post', content, true, extraHeaders))
-    .then(result => {      
+    .then(result => {
       return result.data
     }
     )
@@ -599,10 +602,59 @@ const CategoryListCompany = (contents) => {
     .catch(err => console.log(err))
 }
 
-const CheckAccountFinance = (contents) => {
+const ListBranch = (contents) => {
   getToken();
   const content = {
     ...contents,
+    ...data_user
+  }
+  const url = API_SERVICES.BranchList;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+// mengarahkan untuk produk diletakkan di branch yang mana
+const CheckBranchChosen = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+  const url = API_SERVICES.CheckBranchChosen;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const SetBranchSetting = async (contents) => {
+  await getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.SetBranchSetting;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const CheckAccountFinance = (contents) => {
+  getToken();
+
+  const content = {
+    ...contents
   }
 
   const url = API_SERVICES.CheckAccountFinance;
@@ -656,7 +708,9 @@ export {
 
   DashboardStat,
   CategoryListCompany,
-
+  ListBranch,
+  CheckBranchChosen,
+  SetBranchSetting,
   // cek integrasi ke tblAccount,
   CheckAccountFinance
 }

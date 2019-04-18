@@ -8,6 +8,7 @@ import { Card, CardHeader, CardBody, Input, CardTitle, Row, Col } from "reactstr
 // import FormInputs from '../../components/FormInputs/FormInputs';
 import Button from "../../components/CustomButton/CustomButton.jsx";
 import { Redirect } from 'react-router-dom';
+import LogoBLST from '../../assets/img/logo-blst.png';
 
 
 // Auth
@@ -111,7 +112,8 @@ class Login extends Component {
                         <Card className="card-user text-center">
                     {loading}
                         <CardHeader>
-                            <CardTitle tag="h4">{this.props.email !== null ? 'Password' : 'Log In'}</CardTitle>                       
+                            <CardTitle tag="h4">{this.props.email !== null ? 'Password' : 'Log In'}</CardTitle>  
+                            <img width="170" src={LogoBLST}></img>                     
                         </CardHeader>
                         <CardBody style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
                             <form style={{width:'100%'}} onSubmit={this.submitHandler}>  
