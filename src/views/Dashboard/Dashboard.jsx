@@ -11,7 +11,6 @@ import {
 import SpinnerGif from "../../assets/img/spinner-loading.gif";
 import { ToastContainer, toast } from 'react-toastify';
 
-
 // react plugin used to create charts
 import { Line, Pie } from "react-chartjs-2";
 // function that returns a color based on an interval of numbers
