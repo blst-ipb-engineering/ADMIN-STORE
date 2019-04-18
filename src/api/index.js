@@ -24,13 +24,14 @@ if (condition) {
 
 function getToken() {
   const JWT_DECODE = jwt.verify(localStorage.getItem('token'), 'secretmasojodibukak');
-  const COMPANY = JSON.parse(localStorage.getItem('company'));  
+  const COMPANY = JSON.parse(localStorage.getItem('company')); 
+  
   return data_user = {
     userId: JWT_DECODE.userId,
     nameUser: JWT_DECODE.nameUser,
     name_company: JWT_DECODE.name_company,
     companyId: JWT_DECODE.companyId,
-    branchId: COMPANY.branch,
+    branchId: COMPANY !== null  ? COMPANY.branch : null,
     createdBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
     updatedBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
   }

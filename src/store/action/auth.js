@@ -137,8 +137,9 @@ export const authCheckState = () => {
     return dispatch => {
         const token = localStorage.getItem('token');
         const companyId = localStorage.getItem('company');
+        
 
-        if (!token) {
+        if (!token || companyId == null) {
             dispatch(logout());
         } else {
             
@@ -160,7 +161,7 @@ export const authCheckState = () => {
                     nameUser: JWT_DECODE.nameUser,
                     name_company: JWT_DECODE.name_company,
                     companyId: JWT_DECODE.companyId,
-                    branchId: companyId.branch,
+                    branchId: companyId !== null ? companyId.branch :null,
                     createdBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
                     updatedBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
                 }
