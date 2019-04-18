@@ -37,7 +37,7 @@ class ProductEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFetching:false,
+            isFetching: false,
             name: '',
             categoryGeneral: {
                 id: 4,
@@ -117,8 +117,8 @@ class ProductEditor extends Component {
             source_fin_publisher: 0,
             source_fin_author: 0,
             source_fin_sponsor: 0,
-            cost_of_goods_sold: 0,
-            add_value_price: 0,
+            pp: 0,
+            pb: 0,
             royalti_percent: 0,
 
             editor_product: null,
@@ -173,10 +173,10 @@ class ProductEditor extends Component {
     }
 
     onUpdateHandler = (event) => {
+        event.preventDefault();
         this.setState({ prompt: false }, () => {
             event.preventDefault();
             const content = this.state;
-            console.log(content)
             ProductUpdate(content).then(res => {
                 if (res.status === "success") {
                     const toaster = {
@@ -210,6 +210,7 @@ class ProductEditor extends Component {
                     this.props.history.push('/dashboard/products');
                 }
             }).catch(err => {
+                console.log(err);
                 toast.warn("Whoops Something Error" + err);
             });
         })
@@ -414,8 +415,8 @@ class ProductEditor extends Component {
 
         // if status == edit
         if (this.props.match.params.status === "edit" || this.props.match.params.status === "duplicate") {
-            this.setState({isFetching:true});
-            
+            this.setState({ isFetching: true });
+
             const content = {
                 id: this.props.match.params.id
             }
@@ -527,12 +528,12 @@ class ProductEditor extends Component {
                         source_fin_publisher: res.source_fin_publisher !== null ? res.source_fin_publisher : 0,
                         source_fin_author: res.source_fin_author !== null ? res.source_fin_author : 0,
                         source_fin_sponsor: res.source_fin_sponsor !== null ? res.source_fin_sponsor : 0,
-                        cost_of_goods_sold: res.cost_of_goods_sold !== null ? res.cost_of_goods_sold : 0,
-                        add_value_price: res.add_value_price !== null ? res.add_value_price : 0,
+                        pp: res.pp !== null ? res.pp : 0,
+                        pb: res.pb !== null ? res.pb : 0,
 
                     }, () => {
                         this.countFilled();
-                        this.setState({isFetching:false});
+                        this.setState({ isFetching: false });
                     })
 
                 })
@@ -753,7 +754,7 @@ class ProductEditor extends Component {
             <div className="content">
                 {this.state.isFetching ? (<div style={{ width: '100%', height: '85vh' }}>
                     <Spinner></Spinner>
-                </div>) : null }
+                </div>) : null}
                 <Prompt when={this.state.prompt} message="You have unsaved form data. Are you sure you want to leave?" />
                 {/* Modal Tambah */}
                 <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>
@@ -1209,22 +1210,22 @@ class ProductEditor extends Component {
                                                         </InputGroupAddon>
                                                         <Input
                                                             type="text"
-                                                            value={this.formatuang(this.state.cost_of_goods_sold)}
-                                                            name="cost_of_goods_sold"
+                                                            value={this.formatuang(this.state.pp)}
+                                                            name="pp"
                                                             onChange={(event) => this.onChangeMoneyHandler(event)}>
                                                         </Input>
                                                     </InputGroup>
                                                 </Col>
                                                 <Col md={4}>
-                                                    <Label for="add_value_price" required>Harga Terbit</Label>
+                                                    <Label for="pb" required>Harga Terbit</Label>
                                                     <InputGroup>
                                                         <InputGroupAddon addonType="prepend">
                                                             <InputGroupText>Rp</InputGroupText>
                                                         </InputGroupAddon>
                                                         <Input
                                                             type="text"
-                                                            value={this.formatuang(this.state.add_value_price)}
-                                                            name="add_value_price"
+                                                            value={this.formatuang(this.state.pb)}
+                                                            name="pb"
                                                             onChange={(event) => this.onChangeMoneyHandler(event)}>
                                                         </Input>
                                                     </InputGroup>
