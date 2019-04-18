@@ -106,7 +106,13 @@ class Dashboard extends React.Component {
 
     SetBranchSetting(content).then(result=>{
       if(result.status === "Added"){
+        const company = JSON.parse(localStorage.getItem('company')); 
+        const new_COMPANY = {...company,branch:result.data.branchId};
+        localStorage.setItem('company',JSON.stringify(new_COMPANY));
+
         toast.success("Pengaturan Berhasil");
+
+
         this.setState({branchVerified:true});
       }else{
         this.setState({branchVerified:false});
