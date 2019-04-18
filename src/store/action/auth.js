@@ -63,6 +63,7 @@ export const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('expireIn');
     localStorage.removeItem('user');
+    localStorage.removeItem('company');
     localStorage.removeItem('comp');
     localStorage.removeItem('inst');
     return {
@@ -106,20 +107,21 @@ export const authPassword = (email, password) => {
         password: password
     }
 
-
     return dispatch => {
         dispatch(passStart());
         axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data).then(result => {            
             if (result.data.code === 401) {
                 dispatch(passWrong(email));
             } else {
+                console.log(result.data)
                 const expDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 10) // 10 Jam dari backend node expressnya                            
                 const setToken = localStorage.setItem('token', result.data.token);
+                const companyId = localStorage.setItem('company',JSON.stringify({branch:result.data.branchId,company:result.data.companyId}));
                 const setExpireTime = localStorage.setItem('expireIn', expDate);
                 // localStorage.setItem('user', result.data.userId);
                 // localStorage.setItem('comp', result.data.companyId);
                 // localStorage.setItem('inst', result.data.data.userlevel);
-                Promise.all([setToken,setExpireTime]).then(()=> {
+                Promise.all([setToken,setExpireTime,companyId]).then(()=> {
                     dispatch(authSuccess(result));
                     dispatch(checkAuthTimeout(expDate));
                 })
@@ -134,7 +136,8 @@ export const authPassword = (email, password) => {
 export const authCheckState = () => {
     return dispatch => {
         const token = localStorage.getItem('token');
-       
+        const companyId = localStorage.getItem('company');
+
         if (!token) {
             dispatch(logout());
         } else {
@@ -157,6 +160,7 @@ export const authCheckState = () => {
                     nameUser: JWT_DECODE.nameUser,
                     name_company: JWT_DECODE.name_company,
                     companyId: JWT_DECODE.companyId,
+                    branchId: companyId.branch,
                     createdBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
                     updatedBy: JWT_DECODE.nameUser + ' (' + JWT_DECODE.userId + ')',
                 }
