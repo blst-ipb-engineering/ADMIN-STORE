@@ -5,6 +5,8 @@ import NumberFormat from 'react-number-format';
 import InputMask from 'react-input-mask';
 import ReactTooltip from 'react-tooltip'
 import { Link } from "react-router-dom";
+import { CheckAccountFinance } from "../../api/index";
+import SpinnerGif from "../../assets/img/spinner-loading.gif";
 
 
 class Products extends Component {
@@ -15,7 +17,9 @@ class Products extends Component {
             idProduct: this.props.produk.id,
             price: this.formatuang(this.props.produk.price),
             errorInput: false,
-            savable: true
+            savable: true,
+            isFetchingFinanceValidation: false,
+            count_accountdata: 0
         }
     }
 
@@ -30,6 +34,19 @@ class Products extends Component {
         if (this.state.price !== this.formatuang(this.props.produk.price)) {
             this.setState({ price: this.formatuang(nextProps.produk.price) })
         }
+    }
+
+    componentDidMount() {
+        this.setState({ isFetchingFinanceValidation: true });
+        const content = {
+            identifier_name: this.props.produk.identifier_name,
+            companyId: this.props.produk.companyId,
+            branchId: this.props.produk.brancId,
+        }
+        CheckAccountFinance(content).then(result=>{
+             console.log(result.data.count)
+             this.setState({isFetchingFinanceValidation:false,count_account:result.data.count});
+        })
     }
 
     onChangeHandler = (event) => {
@@ -83,15 +100,23 @@ class Products extends Component {
                         <div className="product-pict" style={{ background: `url(${this.props.images})` }}></div>
                         {/* <img className="img-frame" src="https://www.most.co.id/tradingv2/Image/ShowImage/40?useDefault=False" alt={this.props.produk.name}></img> */}
                     </div>
-                    
-                        <div className="box-short-desc">
-                            <Link to={`/dashboard/products/${this.props.produk.id}/edit`}>
-                                <a href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</a>
-                            </Link>
-                            {/* <small>Cetakan ke 2</small> */}
-                            <div className="ellipsis">{this.props.produk.category_general}</div>
-                        </div>
-                    
+                    <div className="box-short-desc">
+                        <Link to={`/dashboard/products/${this.props.produk.id}/edit`}>
+                            <a href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</a>
+                        </Link>
+                        {/* <small>Cetakan ke 2</small> */}
+                        <div className="ellipsis">{this.props.produk.category_general}</div>
+                    </div>
+                    <div className="box-verification">
+                        {this.state.isFetchingFinanceValidation ? (
+                            <img width="40" src={SpinnerGif}></img>
+                        ) : (
+                                <span data-tip={this.state.count_account > 0 ? "Terintegrasi" : "Belum Terintegrasi"} className={this.state.count_account > 0 ? "sf-wr validated" : "sf-wr notvalidated"}>
+                                    <i className="nc-icon nc-touch-id" />
+                                </span>
+                            )}
+
+                    </div>
                 </div>
                 {/* Price    */}
 
@@ -116,7 +141,7 @@ class Products extends Component {
                 </div>
                 {/* Stock */}
                 <div className="stock-info-wrapper" style={{ verticalAlign: 'top', textAlign: 'center' }}>
-                    <small data-tip="Print On Demand">{this.props.produk.stok !== null ? "Tersedia":"POD"}</small>
+                    <small data-tip="Print On Demand">{this.props.produk.stok !== null ? "Tersedia" : "POD"}</small>
                     <h5>{this.props.produk.stock}</h5>
                 </div>
                 {/* Edit Publish */}

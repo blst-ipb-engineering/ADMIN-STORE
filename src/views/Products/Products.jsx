@@ -113,8 +113,7 @@ class Product extends Component {
   fetchCategories = async () => {
     const contents = {}
     const categories = [];
-    await CategoryListCompany(contents).then(res => {
-      console.log(res)
+    await CategoryListCompany(contents).then(res => {    
       res.map((value, key) => {
         categories.push({
           id: value.id,
@@ -145,13 +144,15 @@ class Product extends Component {
           price: value.base_price,
           picture_url: typeof value.Pictures[0] !== 'undefined' ? value.Pictures[0].url_small : 'https://www.bukalapak.com/images/jual_barang/upload-image-v4.png',
           category_general: value.CategoryGeneral.name,
-          stok: value.stok
+          stok: value.stok,
+          companyId:value.companyId,
+          brancId: value.brancId,
+          identifier_name:value.identifier_name
         })
       });
 
       return res
-    }).then(res => {
-      console.log(res);
+    }).then(res => {    
       this.setState({
         products: products,
         count: res.count,

@@ -1384,7 +1384,7 @@ class ProductEditor extends Component {
 
                             <Row >
                                 <Col md={12} style={{ textAlign: 'right' }}>
-                                    {this.state.saveable && this.state.sumFilled > 80 ? (
+                                    {this.state.saveable && this.state.sumFilled > 80 && this.state.thumbnailFile.length > 0 ? (
                                         <div>
                                             <Button onClick={(event) => this.props.history.push('/dashboard/products')} color="secondary">Cancel</Button>
                                             {/* <Button color="secondary" >Save & Add New</Button>

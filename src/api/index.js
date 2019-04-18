@@ -86,7 +86,8 @@ const API_SERVICES = {
   DeclineThisOrder: `${HOSTNAME}/orderproduct/decline-this-order`,
   TrackingShip: `${HOSTNAME}/district-recomendation/tracking`,
   DashboardStat: `${HOSTNAME}/dashboard/index`,
-  CategoryListCompany: `${HOSTNAME}/category/company`
+  CategoryListCompany: `${HOSTNAME}/category/company`,
+  CheckAccountFinance: `${HOSTNAME}/product/check-account-finance`,
 }
 
 const configFetch = (url, method, body, isJSON = false, extraHeaders = {}) => ({
@@ -598,6 +599,21 @@ const CategoryListCompany = (contents) => {
     .catch(err => console.log(err))
 }
 
+const CheckAccountFinance = (contents) => {
+  getToken();
+  const content = {
+    ...contents,
+  }
+
+  const url = API_SERVICES.CheckAccountFinance;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
 
 
 
@@ -639,5 +655,8 @@ export {
   TrackingShip,
 
   DashboardStat,
-  CategoryListCompany
+  CategoryListCompany,
+
+  // cek integrasi ke tblAccount,
+  CheckAccountFinance
 }
