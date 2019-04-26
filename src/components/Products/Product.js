@@ -102,7 +102,7 @@ class Products extends Component {
                     </div>
                     <div className="box-short-desc">
                         <Link to={`/dashboard/products/${this.props.produk.id}/edit`}>
-                            <a href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</a>
+                            <span href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</span>
                         </Link>
                         {/* <small>Cetakan ke 2</small> */}
                         <div className="ellipsis">{this.props.produk.category_general}</div>
@@ -149,17 +149,17 @@ class Products extends Component {
                     <ul className="icon-manage-product">
                         <li>
                             <Link to={`/dashboard/products/${this.props.produk.id}/edit`}>
-                                <a href="http://localhost:3000/product/edit" data-tip="Ubah">
+                                <span href="http://localhost:3000/product/edit" data-tip="Ubah">
                                     <i className="nc-icon nc-ruler-pencil" />
-                                </a>
+                                </span>
                             </Link>
                             <ReactTooltip />
                         </li>
                         <li>
                             <Link to={`/dashboard/products/${this.props.produk.id}/duplicate`}>
-                                <a href="http://localhost:3000/product/edit" data-tip="Duplikat">
+                                <span href="http://localhost:3000/product/edit" data-tip="Duplikat">
                                     <i className="nc-icon nc-single-copy-04" />
-                                </a>
+                                </span>
                             </Link>
                         </li>
                         <li>

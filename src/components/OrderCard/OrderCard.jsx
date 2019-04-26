@@ -106,7 +106,7 @@ class OrderCard extends Component {
 
     handleTrackingClick(e) {
         e.preventDefault();
-        this.setState({ isPopUpOpen: true, isbackdropOpen: true, isTracking: true })
+        this.setState({ isPopUpOpen: true, isTracking: true })
         const content = {
             id: this.state.data.id
         }

@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
+import SpinnerGif from "../../assets/img/spinner-loading.gif";
 
 
 
@@ -49,6 +50,7 @@ class Product extends Component {
       categories: [],
       category_selected: [],
       querysearch: null,
+      isFetching:false,
 
       sortby: [
         {
@@ -126,10 +128,10 @@ class Product extends Component {
     }).catch(err => console.log(err));
   }
 
-  loadProduct = (page) => {
+  loadProduct = (page) => {       
     const products = this.state.products;
     const content = {
-      page: page,
+      page: page ? page : 1,
       limit: this.state.limit,
       sortby: this.state.sortbySelect.id,
       order: this.state.orderSelect.id,
@@ -162,12 +164,10 @@ class Product extends Component {
 
       });
 
-      if (content.page == this.state.maxPages) {
-        console.log("Treu Gaes")
+      if (content.page == this.state.maxPages) {       
         this.setState({ hasMoreItems: false });
       }
-
-      this.props.setLoading(false)
+      this.props.setLoading(false)      
     });
   }
 
@@ -229,20 +229,20 @@ class Product extends Component {
   }
 
   onSortByHandler = (val) => {
-    this.setState({sortbySelect:val,products: []}, () => this.loadProduct());
+    this.setState({sortbySelect:val,products: [],loadingdata:true}, () => this.loadProduct());
   }
 
   onOrderHandler = (val) => {
-    this.setState({orderSelect:val,products: []}, () => this.loadProduct());
+    this.setState({orderSelect:val,products: [],loadingdata:true}, () => this.loadProduct());
   }
 
   onChangeCategoryHandler = (val) => {
-    this.setState({ category_selected: val,products: []});
+    this.setState({ category_selected: val,products: [],loadingdata:true});
   }
 
   queryInputChangeHandler = (e) => {
-    e.preventDefault();
-    this.setState({ querysearch: e.target.value, products: [] }, () => this.loadProduct());
+    e.preventDefault();  
+    this.setState({ querysearch: e.target.value, products: [],loadingdata:true }, () => this.loadProduct());
   }
 
   render() {
@@ -273,7 +273,7 @@ class Product extends Component {
     }
 
     // kalau barangnya kososng
-    if (this.state.products.length === 0 && !this.state.loadingdata) {
+    if (this.state.products.length === 0 && !this.state.loadingdata && this.state.isFetching == false) {
       ProductList = <div className="product-null-wrapper">
         <div className="image-wrapper">
           <img src="/box.svg" alt="" />
@@ -300,14 +300,16 @@ class Product extends Component {
       )
 
       ProductList =
+      // <div style={{height:'700px',overflow:'auto'}}>
         <InfiniteScroll
           pageStart={1}
-          loadMore={this.loadProduct.bind(this)}
           hasMore={this.state.hasMoreItems}
-          loader={<div className="" key={0}>Loading Please Wait ...</div>}
+          loadMore={this.loadProduct.bind(this)}
+          loader={<div className="">Loading Please Wait ...</div>}
         >
           {items}
         </InfiniteScroll>
+      // </div>
       // <Table responsive>
       //   <thead>
       //     <tr>
