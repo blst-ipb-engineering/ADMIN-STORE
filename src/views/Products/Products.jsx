@@ -183,6 +183,7 @@ class Product extends Component {
 
   componentDidMount() {
     this.loadProduct();
+    console.log("DIDMOUNT")
     this.fetchCategories();
 
     if (this.props.ui.toaster.isOpenToast) {
@@ -305,7 +306,7 @@ class Product extends Component {
           pageStart={1}
           hasMore={this.state.hasMoreItems}
           loadMore={this.loadProduct.bind(this)}
-          loader={<div className="">Loading Please Wait ...</div>}
+          loader={<div className="" style={{width:'100%',textAlign:'center',fontSize:'24px',marginTop:'20px'}}> <img style={{width:'100px'}} src={SpinnerGif}></img> Loading Please Wait ...</div>}
         >
           {items}
         </InfiniteScroll>

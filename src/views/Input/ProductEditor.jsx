@@ -145,13 +145,33 @@ class ProductEditor extends Component {
 
         // validasi input tidak boleh huruf
         let values = event.target.value.toString().replace(/\,/g, '');
-
         // let isNum = /^\d+$/.test(values); // tanpakoma
-        let isNum = /^[0-9]+\.?[0-9]*$/.test(values); // dengan koma output true or false                 
-
+        let isNum = /^[0-9]+\.?[0-9]*$/.test(values); // dengan koma output true or false                         
         let key = event.target.name;
+
         if (isNum || event.target.value === null) {
-            this.setState({ [key]: parseInt(values) })
+            this.setState({ [key]: parseFloat(values) })
+        }
+        else if (values.length <= 1) {
+            this.setState({ [key]: 0 })
+        }
+        this.countFilled();
+    }
+
+    onChangeNumberHandler = (event) => {
+
+        // validasi input tidak boleh huruf
+        let values = event.target.value.toString().replace(/\,/g, '');
+        // let isNum = /^\d+$/.test(values); // tanpakoma
+        let isNum = /^[0-9]+\.?[0-9]*$/.test(values); // dengan koma output true or false                         
+        let key = event.target.name;
+
+        while (values.charAt(0) === '0') {
+            values = values.substr(1);
+        }
+
+        if (isNum || event.target.value === null) {
+            this.setState({ [key]: (values) })
         }
         else if (values.length <= 1) {
             this.setState({ [key]: 0 })
@@ -1067,7 +1087,7 @@ class ProductEditor extends Component {
                                                     type="text"
                                                     value={this.formatuang(this.state.weight)}
                                                     name="weight"
-                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    onChange={(event) => this.onChangeNumberHandler(event)}>
                                                 </Input>
                                                 <InputGroupAddon addonType="append">
                                                     <InputGroupText>gram</InputGroupText>
@@ -1079,9 +1099,9 @@ class ProductEditor extends Component {
                                             <InputGroup>
                                                 <Input
                                                     type="text"
-                                                    value={this.formatuang(this.state.width)}
+                                                    value={this.state.width}
                                                     name="width"
-                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    onChange={(event) => this.onChangeNumberHandler(event)}>
                                                 </Input>
                                                 <InputGroupAddon addonType="append">
                                                     <InputGroupText>cm</InputGroupText>
@@ -1093,9 +1113,9 @@ class ProductEditor extends Component {
                                             <InputGroup>
                                                 <Input
                                                     type="text"
-                                                    value={this.formatuang(this.state.height)}
+                                                    value={this.state.height}
                                                     name="height"
-                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    onChange={(event) => this.onChangeNumberHandler(event)}>
                                                 </Input>
                                                 <InputGroupAddon addonType="append">
                                                     <InputGroupText>cm</InputGroupText>
@@ -1109,7 +1129,7 @@ class ProductEditor extends Component {
                                                     type="text" 
                                                     value={this.formatuang(this.state.thick)} 
                                                     name="thick"                             
-                                                    onChange={(event)=> this.onChangeMoneyHandler(event)}>
+                                                    onChange={(event)=> this.onChangeNumberHandler(event)}>
                                                 </Input>
                                                 <InputGroupAddon addonType="append">
                                                         <InputGroupText>cm</InputGroupText>
