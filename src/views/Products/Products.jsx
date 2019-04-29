@@ -6,7 +6,7 @@ import './Products.css';
 import * as actionCreator from '../../store/action/index';
 import { connect } from 'react-redux';
 import LoadingProductAdmin from '../../components/UI/LoadingData/ProductList/Loadingdata';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from '../../components/InfinityScroller';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -106,9 +106,8 @@ class Product extends Component {
         id:"DESC",
         name:"Terbesar",
         label:"Terbesar"
-      }
-
-      
+      },
+      typingTimeout:0
     }
   }
 
@@ -180,10 +179,8 @@ class Product extends Component {
     this.props.toggleToaster(toaster)
   }
 
-
   componentDidMount() {
-    this.loadProduct();
-    console.log("DIDMOUNT")
+    this.loadProduct();    
     this.fetchCategories();
 
     if (this.props.ui.toaster.isOpenToast) {
@@ -243,11 +240,18 @@ class Product extends Component {
 
   queryInputChangeHandler = (e) => {
     e.preventDefault();  
-    this.setState({ querysearch: e.target.value, products: [],loadingdata:true }, () => this.loadProduct());
+    if (this.state.typingTimeout) {
+      clearTimeout(this.state.typingTimeout);     
+   }
+    this.setState({ querysearch: e.target.value, products: [],loadingdata:true,
+      typingTimeout: setTimeout(()=> this.loadProduct(), 500)
+    });
+
   }
 
-  render() {
+  render() {     
     let ProductList = null;
+    let items = null;
     if (this.state.loadingdata) {
       ProductList = <Table responsive>
         {/* <thead>
@@ -290,7 +294,7 @@ class Product extends Component {
     }
 
     else if (this.state.products.length > 0) {
-      const items = this.state.products.map((res, key) =>
+     items = this.state.products.map((res, key) =>
         <Products
           id={res.id}
           produk={res}
@@ -303,10 +307,10 @@ class Product extends Component {
       ProductList =
       // <div style={{height:'700px',overflow:'auto'}}>
         <InfiniteScroll
-          pageStart={1}
+          pageStart={1}          
           hasMore={this.state.hasMoreItems}
           loadMore={this.loadProduct.bind(this)}
-          loader={<div className="" style={{width:'100%',textAlign:'center',fontSize:'24px',marginTop:'20px'}}> <img style={{width:'100px'}} src={SpinnerGif}></img> Loading Please Wait ...</div>}
+          loader={<div className="" key={0} style={{width:'100%',textAlign:'center',fontSize:'24px',marginTop:'20px'}}> <img style={{width:'100px'}} src={SpinnerGif}></img> Loading Please Wait ...</div>}
         >
           {items}
         </InfiniteScroll>

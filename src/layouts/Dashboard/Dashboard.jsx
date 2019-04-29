@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import Header from "../../components/Header/Header.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
+import InfiniteScroll from 'react-infinite-scroller';
+
 // import FixedPlugin from "../../components/FixedPlugin/FixedPlugin.jsx";
 import * as actionCreator from '../../store/action/index';
 

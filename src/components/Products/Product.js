@@ -43,10 +43,9 @@ class Products extends Component {
             companyId: this.props.produk.companyId,
             branchId: this.props.produk.brancId,
         }
-        CheckAccountFinance(content).then(result=>{
-             console.log(result.data.count)
-             this.setState({isFetchingFinanceValidation:false,count_account:result.data.count});
-        })
+        // CheckAccountFinance(content).then(result=>{            
+        //      this.setState({isFetchingFinanceValidation:false,count_account:result.data.count});
+        // })
     }
 
     onChangeHandler = (event) => {

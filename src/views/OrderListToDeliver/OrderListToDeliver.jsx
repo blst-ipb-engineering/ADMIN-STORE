@@ -36,7 +36,7 @@ class OrderListToDeliver extends Component {
             // paymentDate: new Date(),
             value: null,
             startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
-            endDate: new Date(),
+            endDate: new Date(new Date().setHours(23,59,59,999)),
             count: 0,
             dataListOrder: null,
             listStatus: [],
