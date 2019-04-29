@@ -34,7 +34,8 @@ class Dashboard extends React.Component {
   }
 
 
-  componentDidMount() {    
+  componentDidMount() {  
+    
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.mainPanel);
       document.body.classList.toggle("perfect-scrollbar-on");      
@@ -53,7 +54,7 @@ class Dashboard extends React.Component {
   componentDidUpdate(e) {
     if (e.history.action === "PUSH") {
       this.refs.mainPanel.scrollTop = 0;
-      document.scrollingElement.scrollTop = 0;
+      // document.scrollingElement.scrollTop = 0;
     }
   }
   handleActiveClick = (color) => {

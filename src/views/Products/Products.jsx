@@ -180,8 +180,10 @@ class Product extends Component {
   }
 
   componentDidMount() {
+    
     this.loadProduct();    
     this.fetchCategories();
+    console.log(window.pageYOffset)
 
     if (this.props.ui.toaster.isOpenToast) {
       toast.success(this.props.ui.toaster.toastMessage);
@@ -305,16 +307,17 @@ class Product extends Component {
       )
 
       ProductList =
-      // <div style={{height:'700px',overflow:'auto'}}>
+      <div>
         <InfiniteScroll
-          pageStart={1}          
+          pageStart={1}      
+          // isReverse={true}    
           hasMore={this.state.hasMoreItems}
           loadMore={this.loadProduct.bind(this)}
           loader={<div className="" key={0} style={{width:'100%',textAlign:'center',fontSize:'24px',marginTop:'20px'}}> <img style={{width:'100px'}} src={SpinnerGif}></img> Loading Please Wait ...</div>}
         >
           {items}
         </InfiniteScroll>
-      // </div>
+      </div>
       // <Table responsive>
       //   <thead>
       //     <tr>

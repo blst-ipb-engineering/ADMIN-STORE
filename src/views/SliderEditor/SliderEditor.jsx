@@ -195,6 +195,7 @@ class SlideEditor extends Component {
   };
 
   componentDidMount() {
+    window.scrollTo(0,0);
     this.loadSlidebar();
     this.loadSlidebarStatic();
   }
