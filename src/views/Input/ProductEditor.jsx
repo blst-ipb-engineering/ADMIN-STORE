@@ -356,7 +356,7 @@ class ProductEditor extends Component {
     }
 
     componentDidMount() {
-
+        window.scrollTo(0,0);
         // call for CategoryGeneral
         this.props.setLoading(true)
         const categoryGeneral = [];
