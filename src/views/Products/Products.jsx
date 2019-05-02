@@ -180,10 +180,10 @@ class Product extends Component {
   }
 
   componentDidMount() {
-    
+    window.scrollTo(0,0);
+
     this.loadProduct();    
     this.fetchCategories();
-    console.log(window.pageYOffset)
 
     if (this.props.ui.toaster.isOpenToast) {
       toast.success(this.props.ui.toaster.toastMessage);
