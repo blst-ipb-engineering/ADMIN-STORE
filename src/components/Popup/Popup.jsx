@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Popup extends Component {
     render() {
         return (
-            <div className={!this.props.isOpen ? "popup-wrapper hide" : "popup-wrapper"} >
+            <div style={(this.props.isLacak) ? {position:'fixed'} : null} className={!this.props.isOpen ? "popup-wrapper hide" : "popup-wrapper"} >
                 <div className="popup-card">
                     <div className="popup-header">
                         <div>{this.props.headerTitle}</div>
@@ -16,7 +16,7 @@ class Popup extends Component {
                         {/* <div>Footer</div> */}
                     </div>
                 </div>
-                <div onClick={(event) => this.props.onClosePopupHandler(event)} className="backdrop"></div>
+                <div style={(this.props.isLacak) ? {marginLeft:'80px'} : null}  onClick={(event) => this.props.onClosePopupHandler(event)} className="backdrop"></div>
             </div>
         )
     }

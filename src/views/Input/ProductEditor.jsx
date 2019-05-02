@@ -356,7 +356,7 @@ class ProductEditor extends Component {
     }
 
     componentDidMount() {
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         // call for CategoryGeneral
         this.props.setLoading(true)
         const categoryGeneral = [];
@@ -973,8 +973,22 @@ class ProductEditor extends Component {
 
                                     {this.state.categoryGeneral.label === "Book" ? (
                                         <Row>
-                                            <Col md={12}>
-                                                <Label for="date_publish" required>Persentase Royalti <small>Royalti % x Harga Jual</small></Label>
+                                            <Col md={6}>
+                                                <Label for="date_publish" required>HPP <br></br> <small>Harga Pokok Penjualan</small></Label>
+                                                <InputGroup>
+                                                    <InputGroupAddon addonType="prepend">
+                                                        <InputGroupText>Rp</InputGroupText>
+                                                    </InputGroupAddon>
+                                                    <Input
+                                                        type="text"
+                                                        value={this.formatuang(this.state.pp)}
+                                                        name="pp"
+                                                        onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                    </Input>
+                                                </InputGroup>
+                                            </Col>
+                                            <Col md={6}>
+                                                <Label for="date_publish" required>Persentase Royalti <br></br> <small>Royalti % x Harga Jual</small></Label>
                                                 <InputGroup>
                                                     <Input
                                                         type="text"

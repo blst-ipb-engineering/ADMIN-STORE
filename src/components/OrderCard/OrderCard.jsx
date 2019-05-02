@@ -173,11 +173,12 @@ class OrderCard extends Component {
 
         return (
             <>                
-                <Popup
+                <Popup 
                     onClosePopupHandler={this.togglePopup}
                     isOpen={this.state.isPopUpOpen}
                     headerTitle={"Lacak Pengiriman"}
                     body={tracking_body}
+                    isLacak={true}
                 />
                 {this.state.data !== null ? (
                     <>

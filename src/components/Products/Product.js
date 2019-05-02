@@ -43,9 +43,9 @@ class Products extends Component {
             companyId: this.props.produk.companyId,
             branchId: this.props.produk.brancId,
         }
-        // CheckAccountFinance(content).then(result=>{            
-        //      this.setState({isFetchingFinanceValidation:false,count_account:result.data.count});
-        // })
+        CheckAccountFinance(content).then(result=>{            
+             this.setState({isFetchingFinanceValidation:false,count_account:result.data.count});
+        })
     }
 
     onChangeHandler = (event) => {
@@ -104,7 +104,7 @@ class Products extends Component {
                             <span href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</span>
                         </Link>
                         {/* <small>Cetakan ke 2</small> */}
-                        <div className="ellipsis">{this.props.produk.category_general}</div>
+                        <div className="ellipsis">{this.props.produk.category_general}        <b>#{this.props.produk.identifier_name}</b></div>                        
                     </div>
                     <div className="box-verification">
                         {this.state.isFetchingFinanceValidation ? (
