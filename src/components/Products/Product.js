@@ -7,6 +7,8 @@ import ReactTooltip from 'react-tooltip'
 import { Link } from "react-router-dom";
 import { CheckAccountFinance } from "../../api/index";
 import SpinnerGif from "../../assets/img/spinner-loading.gif";
+import { Line } from 'rc-progress';
+
 
 
 class Products extends Component {
@@ -43,8 +45,8 @@ class Products extends Component {
             companyId: this.props.produk.companyId,
             branchId: this.props.produk.brancId,
         }
-        CheckAccountFinance(content).then(result=>{            
-             this.setState({isFetchingFinanceValidation:false,count_account:result.data.count});
+        CheckAccountFinance(content).then(result => {
+            this.setState({ isFetchingFinanceValidation: false, count_account: result.data.count });
         })
     }
 
@@ -77,6 +79,7 @@ class Products extends Component {
 
         // Validation Error
         let errorNotif = null;
+        
         if (this.state.errorInput) {
             errorNotif = <div className="errorInput">Input yang anda masukkan salah, masukkan angka mas</div>
         }
@@ -86,6 +89,20 @@ class Products extends Component {
         if (this.state.price !== this.formatuang(this.props.produk.price) && this.state.savable) {
             savebutton = <div ><button style={{ cursor: 'pointer' }}>Save</button>  <a style={{ cursor: 'pointer', fontSize: '9pt' }} onClick={this.cancelHandler}>Cancel</a> </div>;
         }
+
+        let color = 'grey';
+        if(this.props.produk.sumFilled < 20) {
+            color = '#fb5a5a';
+        }else if (this.props.produk.sumFilled < 40){
+            color = '#fbb35a';
+        }else if (this.props.produk.sumFilled < 60){
+            color = '#fbe75a';
+        }else if (this.props.produk.sumFilled < 80){
+            color = '#5ae5fb';
+        }else {
+            color = '#5bd400';
+        }
+
 
         return (
             <div className="product-list-admin-wrapper">
@@ -104,7 +121,7 @@ class Products extends Component {
                             <span href={`/dashboard/products/${this.props.produk.id}/edit`} target="_blank">{this.props.produk.name}</span>
                         </Link>
                         {/* <small>Cetakan ke 2</small> */}
-                        <div className="ellipsis">{this.props.produk.category_general}        <b>#{this.props.produk.identifier_name}</b></div>                        
+                        <div className="ellipsis">{this.props.produk.category_general}        <b>#{this.props.produk.identifier_name}</b></div>
                     </div>
                     <div className="box-verification">
                         {this.state.isFetchingFinanceValidation ? (
@@ -120,6 +137,10 @@ class Products extends Component {
                 {/* Price    */}
 
                 <div className="change-price-wrapper" style={{ verticalAlign: 'top' }}>
+                    <div className="">
+                        <span>Filled Percentage <b>{this.props.produk.sumFilled !== null ? this.props.produk.sumFilled : 10}%</b></span>
+                        <Line percent={this.props.produk.sumFilled} strokeWidth="2" strokeColor={color} />
+                    </div>
                     <form onSubmit={this.onSubmitHandler}>
                         {errorNotif}
                         <InputGroup>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, CardFooter, InputGroup, InputGroupAddon, InputGroupText, CardHeader, CardBody, Row, Col } from "reactstrap";
-
+import { renderToString } from 'react-dom/server'
 import ImageUploader from '../../components/Products/ImageUploader/ImageUploader.jsx';
 import { Label } from '../../components/UI/Form/Label/Label';
 import { Prompt } from 'react-router-dom';
@@ -15,6 +15,7 @@ import Loader from '../../components/Loader/Loader';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Spinner from '../../components/Spinner/Spinner';
+import { Line } from 'rc-progress';
 
 
 import {
@@ -105,6 +106,7 @@ class ProductEditor extends Component {
             thumbnailFile: [],
             productImagesUrl: [],
             sumFilled: 0,
+            formNotFilledYet: [],
             prompt: true,
             edit_status: "new",
             productId: null,
@@ -291,7 +293,37 @@ class ProductEditor extends Component {
             }).catch(err => console.log(err))
     }
 
+    pushFormNotif = (sum) => {
+        const notif = [];
+        
+        if (this.state.name === '') { notif.push("Nama Produk Belum diisi") };
+        if (this.state.category.length === 0) { notif.push("Category belum diisi") };
+        if (this.state.author.length === 0) { notif.push("Author belum diisi") };
+        if (this.state.productImagesUrl.length === 0) { notif.push("Belum ada Gambar Produk") };
+        if (this.state.category.material  === 0) { notif.push("Material belum diisi") };
+        if (this.state.categoryGeneral.length  === 0) { notif.push("Category umum belum diisi") };
+        if (this.state.description === '') { notif.push("Deskripsi belum diisi") };
+        if (this.state.base_price  === 0) { notif.push("Harga Produk belum diisi") };
+        if (this.state.pp === 0) { notif.push("Harga Pokok belum diisi") };
+        if (this.state.unit === '') { notif.push("Satuan Produk belum diisi") };
+        if (this.state.weight  === 0) { notif.push("Berat belum diisi") };
+        if (this.state.height  === 0) { notif.push("Dimensi Panjang Produk belum diisi") };
+        // if(this.state.thick !== 0) { notif.push("Tebal Produk belum diisi") };
+        if (this.state.isbn === '') { notif.push("ISBN belum diisi") };
+        if (this.state.pb === 0) { notif.push("Harga Penerbit belum diisi") };
+        if (this.state.royalti_percent === 0) { notif.push("Persen Royalti belum diisi") };
+        if (this.state.pages === 0) { notif.push("Halaman belum diisi") };
+        if (this.state.manager_proyek === null) { notif.push("Account Manager belum diisi") };
+        if (this.state.editor_product === null) { notif.push("Editor Buku belum diisi") };
+        if (this.state.layouter_product === null) { notif.push("Layouter Buku belum diisi") };
+        if (this.state.desainer_product === null) { notif.push("Desainer Buku belum diisi") };
+
+        this.setState({ formNotFilledYet: notif });
+    }
+
+    // Validation
     countFilled = () => {
+        // basic
         const title = this.state.name !== '' ? 1 : 0;
         const category = this.state.category.length !== 0 ? 1 : 0;
         const author = this.state.author.length !== 0 ? 1 : 0;
@@ -300,11 +332,23 @@ class ProductEditor extends Component {
         const categoryGeneral = this.state.categoryGeneral.length !== 0 ? 1 : 0;
         const description = this.state.description !== '' ? 1 : 0;
         const base_price = this.state.base_price !== 0 ? 1 : 0;
+        const pp = this.state.pp !== 0 ? 1 : 0; // pokok penjualan
+        const unit = this.state.unit !== '' ? 1 : 0;
         const weight = this.state.weight !== 0 ? 1 : 0;
-        const pages = this.state.pages !== 0 ? 1 : 0;
-        const height = this.state.weight !== 0 ? 1 : 0;
-        const thick = this.state.weight !== 0 ? 1 : 0;
+        const height = this.state.height !== 0 ? 1 : 0;
+        // const thick = this.state.thick !== 0 ? 1 : 0;
+
+        // penerbit
         const isbn = this.state.isbn !== '' ? 1 : 0;
+        const pb = this.state.pb > 0 ? 1 : 0; // penerbit
+        const royalti_percent = this.state.royalti_percent > 0 ? 1 : 0; // penerbit
+        const pages = this.state.pages !== 0 ? 1 : 0;
+        const manager_proyek = this.state.manager_proyek !== null ? 1 : 0;
+        const editor_product = this.state.editor_product !== null ? 1 : 0;
+        const layouter_product = this.state.layouter_product !== null ? 1 : 0;
+        const desainer_product = this.state.desainer_product !== null ? 1 : 0;
+
+
 
         const sum =
             [title,
@@ -315,11 +359,24 @@ class ProductEditor extends Component {
                 categoryGeneral,
                 description,
                 base_price,
+                pp,
                 weight,
                 pages,
                 height,
-                thick,
-                isbn];
+                // thick,
+                unit,
+
+                isbn,
+                pb,
+                royalti_percent,
+
+                manager_proyek,
+                editor_product,
+                layouter_product,
+                desainer_product
+            ];
+
+        this.pushFormNotif(sum);
 
         const sums = sum.reduce((a, b) => a + b, 0);
         const pembagi = sum.length;
@@ -610,7 +667,7 @@ class ProductEditor extends Component {
                 occupation: this.state.newAuthor.occupation,
                 phone: this.state.newAuthor.phone
             }
-            console.log(content)
+
             AuthorCreate(content).then(res => {
                 if (res.status === "success") {
                     toast.success("Author Added Successfully");
@@ -706,6 +763,27 @@ class ProductEditor extends Component {
         let titlemodal = null;
         let status = false;
 
+        let color = 'grey';
+        if (this.state.sumFilled < 20) {
+            color = '#fb5a5a';
+        } else if (this.state.sumFilled < 40) {
+            color = '#fbb35a';
+        } else if (this.state.sumFilled < 60) {
+            color = '#fbe75a';
+        } else if (this.state.sumFilled < 80) {
+            color = '#5ae5fb';
+        } else {
+            color = '#5bd400';
+        }
+
+        let datatipform = null;
+        if (this.state.formNotFilledYet !== null) {
+            datatipform = this.state.formNotFilledYet.map((value, index) => (                           
+                <div>{value}</div>
+            ))
+        }            
+
+
         if (this.state.addCategory) {
             titlemodal = "Add Category"
             status = this.state.newCategory.name === "";
@@ -774,7 +852,13 @@ class ProductEditor extends Component {
             <div className="content">
                 {this.state.isFetching ? (<div style={{ width: '100%', height: '85vh' }}>
                     <Spinner></Spinner>
-                </div>) : null}
+                </div>) : (
+                        <div className="progress-bar-class">
+                        <ReactTooltip />
+                            <span>Filled Percentage <b>{this.state.sumFilled}%</b></span>
+                            <Line data-html={true} data-tip={renderToString(datatipform)} percent={this.state.sumFilled} strokeWidth="2" strokeColor={color} />
+                        </div>
+                    )}
                 <Prompt when={this.state.prompt} message="You have unsaved form data. Are you sure you want to leave?" />
                 {/* Modal Tambah */}
                 <Modal isOpen={this.state.modal} fade={false} toggle={this.hideModal}>
@@ -917,7 +1001,7 @@ class ProductEditor extends Component {
                                         <Label for="date_publish" required>Published Date <small>/ Tanggal Terbit</small></Label>
                                         <DatePicker
                                             className="form-control"
-                                            selected={this.state.publish_date}
+                                            selected={new Date(this.state.publish_date)}
                                             dateFormat="dd-MM-yyyy"
                                             onChange={(val) => this.setState({ publish_date: val })}
                                         />
@@ -1169,7 +1253,7 @@ class ProductEditor extends Component {
                                         <CardBody>
                                             <Row>
                                                 <Col md={4}>
-                                                    <Label for="name" required>Product Edition <small>/ Edisi Buku</small></Label>
+                                                    <Label for="name">Product Edition <small>/ Edisi Buku</small></Label>
 
                                                     <Input
                                                         type="text"
@@ -1180,7 +1264,7 @@ class ProductEditor extends Component {
 
                                                 </Col>
                                                 <Col md={4}>
-                                                    <Label for="name" required>Print Version <small>/ Cetakan ke</small></Label>
+                                                    <Label for="name">Print Version <small>/ Cetakan ke</small></Label>
 
                                                     <Input
                                                         type="text"
@@ -1191,7 +1275,7 @@ class ProductEditor extends Component {
 
                                                 </Col>
                                                 <Col md={4}>
-                                                    <Label for="name">Product Pages <small>/ Total Halaman</small></Label>
+                                                    <Label required for="name">Jumlah <small> Halaman</small></Label>
 
                                                     <Input
                                                         type="text"
@@ -1204,7 +1288,7 @@ class ProductEditor extends Component {
                                             </Row>
                                             <Row>
                                                 <Col md={12}>
-                                                    <Label> ISBN</Label>
+                                                    <Label required> ISBN</Label>
                                                     <Input
                                                         type="text"
                                                         value={this.state.isbn}
@@ -1231,13 +1315,13 @@ class ProductEditor extends Component {
                                                     <Label for="mou_data" required>MoU End Date</Label>
                                                     <DatePicker
                                                         className="form-control"
-                                                        selected={this.state.mou_data}
+                                                        selected={new Date(this.state.mou_data)}
                                                         dateFormat="dd-MM-yyyy"
                                                         onChange={(val) => this.setState({ mou_data: val })}
                                                     />
                                                 </Col>
                                                 <Col md={4}>
-                                                    <Label for="name" required>Harga Cetak</Label>
+                                                    <Label for="name" required>Harga Cetak <small>/ Hpp</small></Label>
                                                     <InputGroup>
                                                         <InputGroupAddon addonType="prepend">
                                                             <InputGroupText>Rp</InputGroupText>
@@ -1311,7 +1395,7 @@ class ProductEditor extends Component {
                                         <CardBody>
                                             <Row>
                                                 <Col md={4}>
-                                                    <Label for="name" required>Penerbit</Label>
+                                                    <Label for="name">Penerbit</Label>
                                                     <InputGroup>
                                                         <Input
                                                             type="text"
@@ -1326,7 +1410,7 @@ class ProductEditor extends Component {
 
                                                 </Col>
                                                 <Col md={4}>
-                                                    <Label for="name" required>Penulis</Label>
+                                                    <Label for="name">Penulis</Label>
                                                     <InputGroup>
                                                         <Input
                                                             type="text"
@@ -1340,7 +1424,7 @@ class ProductEditor extends Component {
                                                     </InputGroup>
                                                 </Col>
                                                 <Col md={4}>
-                                                    <Label for="name" required>Project</Label>
+                                                    <Label for="name">Project</Label>
                                                     <InputGroup>
                                                         <Input
                                                             type="text"
@@ -1413,12 +1497,9 @@ class ProductEditor extends Component {
                             ) : null}
 
 
-
-
-
                             <Row >
                                 <Col md={12} style={{ textAlign: 'right' }}>
-                                    {this.state.saveable && this.state.sumFilled > 80 && this.state.thumbnailFile.length > 0 ? (
+                                    {this.state.saveable && this.state.sumFilled > 60 && this.state.thumbnailFile.length > 0 ? (
                                         <div>
                                             <Button onClick={(event) => this.props.history.push('/dashboard/products')} color="secondary">Cancel</Button>
                                             {/* <Button color="secondary" >Save & Add New</Button>

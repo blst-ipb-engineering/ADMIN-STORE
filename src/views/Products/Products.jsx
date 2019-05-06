@@ -148,7 +148,8 @@ class Product extends Component {
           stok: value.stok,
           companyId:value.companyId,
           brancId: value.brancId,
-          identifier_name:value.identifier_name
+          identifier_name:value.identifier_name,
+          sumFilled:value.sumFilled
         })
       });
 

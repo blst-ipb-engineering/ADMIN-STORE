@@ -60,7 +60,6 @@ class Dashboard extends React.Component {
     DashboardStat().then(result => {
       this.setState({ data: result })
     })
-
   }
 
   componentDidMount() {
@@ -69,6 +68,10 @@ class Dashboard extends React.Component {
 
     this.setState({ branchFetching: true, verifiyingbranch: true });
     ListBranch(content).then(result => {
+      if (this.unmounted) {
+        console.log("unmounted")
+        return
+      };
       this.setState({
         branchFetching: false,
         branchLists: result.data.list
@@ -86,6 +89,10 @@ class Dashboard extends React.Component {
 
       this.setState({ verifiyingbranch: false });
     })
+  }
+
+  componentWillUnmount(){   
+      this.unmounted = true;      
   }
 
   popUpBranchCloseHandler = (e) => {
