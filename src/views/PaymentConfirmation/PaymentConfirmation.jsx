@@ -70,7 +70,7 @@ class PaymentConfrimation extends Component {
     }
 
     fetchOrderCard = () => {
-       
+
         const content = {
             searchby: this.state.selectBy.id,
             value: this.state.value
@@ -100,7 +100,8 @@ class PaymentConfrimation extends Component {
         event.preventDefault();
         const content = {
             transactionId: this.state.SelectedData.transactionId,
-            invoiceNumber: this.state.SelectedData.invoiceNumber
+            invoiceNumber: this.state.SelectedData.invoiceNumber,
+            paymentDate: this.state.paymentDate
         }
 
         ConfirmPayment(content).then(res => {
@@ -151,7 +152,7 @@ class PaymentConfrimation extends Component {
         }
 
         if (this.state.data !== null && !this.state.isFetching && this.state.data.length > 0) {
-            listOrder = this.state.data.map((value, index) => {                
+            listOrder = this.state.data.map((value, index) => {
                 let btn = null;
                 let dateInput = null
                 let time = <Moment fromNow={true} locale="id" format="LLLL">{value.createdAt}</Moment>;
@@ -166,7 +167,7 @@ class PaymentConfrimation extends Component {
                     btn = <Button onClick={(event) => this.onConfirmationButton(event, value)} className="conf-button" style={{ width: '100%' }} size="lg" color="primary">
                         Konfirmasi Pembayaran
                         </Button>
-                } else {
+                } else if (value.status == 2) {
                     dateInput = <>
                         <label style={{ fontSize: '10pt' }}>Dikonfirmasi oleh:</label><br></br>
                         <span style={{ fontSize: '10pt' }}>{value.confirmBy}</span><br></br>
@@ -175,9 +176,18 @@ class PaymentConfrimation extends Component {
                     btn = <Button className="conf-button" style={{ width: '100%' }} size="lg" color="success">
                         Confirmed
                     </Button>
+                } else {
+                    dateInput = <>
+                        <label style={{ fontSize: '10pt' }}>Dikonfirmasi oleh:</label><br></br>
+                        <span style={{ fontSize: '10pt' }}>{value.confirmBy}</span><br></br>
+                        <span><Moment fromNow={true} locale="id" format="LLLL">{value.dateconfirm}</Moment> </span>
+                    </>
+                    btn = <Button className="conf-button" style={{ width: '100%' }} size="lg" color="danger">
+                        Waktu Pembayaran Sudah Habis
+                    </Button>
                 }
-                
-                
+
+
                 return <Row className="payment-card-wrapper">
                     <Col xs={12} sm={12} md={10} lg={10}>
                         <Card className="card-stats">
@@ -254,7 +264,7 @@ class PaymentConfrimation extends Component {
                     <Col md={3} xs={12}>
                         <div className="input-by">Cari berdasarkan</div>
                         <Select
-                            onChange={(val) => this.setState({ selectBy: val },()=>{this.fetchOrderCard()})}
+                            onChange={(val) => this.setState({ selectBy: val }, () => { this.fetchOrderCard() })}
                             name="findby"
                             value={this.state.selectBy}
                             className="basic-multi-select"
