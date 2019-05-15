@@ -156,7 +156,7 @@ class PaymentConfrimation extends Component {
                 let btn = null;
                 let dateInput = null
                 let time = <Moment fromNow={true} locale="id" format="LLLL">{value.createdAt}</Moment>;
-                if (value.status == 1) {
+                if (value.status == 1) { // Menunggu Pembayaran
                     dateInput = <><Label for="date_publish">Payment Date</Label>
                         <DatePicker
                             className="form-control"
@@ -167,7 +167,7 @@ class PaymentConfrimation extends Component {
                     btn = <Button onClick={(event) => this.onConfirmationButton(event, value)} className="conf-button" style={{ width: '100%' }} size="lg" color="primary">
                         Konfirmasi Pembayaran
                         </Button>
-                } else if (value.status == 2) {
+                } else if (value.status == 2 || value.status == 3 || value.status == 4) { // Sudah Diproses
                     dateInput = <>
                         <label style={{ fontSize: '10pt' }}>Dikonfirmasi oleh:</label><br></br>
                         <span style={{ fontSize: '10pt' }}>{value.confirmBy}</span><br></br>
