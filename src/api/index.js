@@ -78,6 +78,8 @@ const API_SERVICES = {
   SlideBarUpdate: `${HOSTNAME}/slidebar/update`,
   SlideBarDelete: `${HOSTNAME}/slidebar/delete`,
   ListPayment: `${HOSTNAME}/orderproduct/subtotal`,
+  WaitingPayment: `${HOSTNAME}/orderproduct/waiting`,
+
   ConfirmPayment: `${HOSTNAME}/order/updatepayment`,
   // modul ADMIN STORE untuk search Order yang sudah dikonfirmasi
   ListStatus: `${HOSTNAME}/order/list-status`,
@@ -413,6 +415,25 @@ const ListPayment = (contents) => {
     .catch(err => console.log(err))
 }
 
+const WaitingPayment = (contents) => {
+
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.WaitingPayment;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
 const ConfirmPayment = (contents) => {
 
   getToken();
@@ -701,6 +722,7 @@ export {
   // Payment Confirmation
   ListStatus,
   ListPayment,
+  WaitingPayment,
   ConfirmPayment,
   ListOrder,
   ConfirmSend,

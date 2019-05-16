@@ -15,7 +15,7 @@ import Stats from "../../components/Stats/Stats.jsx";
 import { Label } from '../../components/UI/Form/Label/Label';
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
-import { ListPayment, ConfirmPayment } from '../../api/index'
+import { ListPayment, ConfirmPayment, WaitingPayment } from '../../api/index'
 import { toast } from 'react-toastify';
 import Moment from 'react-moment';
 import 'moment/locale/id';
@@ -35,7 +35,7 @@ class PaymentConfrimation extends Component {
             paymentDate: new Date(),
             value: null,
             isFetching: false,
-            data: null,
+            data: null,           
             modal: false,
             SelectedData: null,
         }
@@ -60,14 +60,17 @@ class PaymentConfrimation extends Component {
         let isNum = /^[0-9]+\.?[0-9]*$/.test(values); // dengan koma output true or false                 
 
         let key = event.target.name;
-        if (isNum || event.target.value === null) {
+        if (isNum && event.target.value !== null) {
             this.setState({ [key]: parseInt(values) }, () => { this.fetchOrderCard() })
         }
-        else if (values.length <= 1) {
-            this.setState({ [key]: parseInt(0) })
+        else if (values.length <= 1) {           
+            this.setState({ [key]: parseInt(0) }, () => { this.fetchWaiting() } )
         }
 
+       
+
     }
+
 
     fetchOrderCard = () => {
 
@@ -85,6 +88,18 @@ class PaymentConfrimation extends Component {
                 console.log(err)
             })
         }
+    }
+
+    fetchWaiting = () => {
+       
+        const content = {}
+        this.setState({ isFetching: true })
+        WaitingPayment(content).then(res => {
+            this.setState({ data: res, isFetching: false })
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     onConfirmationButton = (event, value) => {
@@ -114,17 +129,22 @@ class PaymentConfrimation extends Component {
         })
     }
 
+    componentDidMount() {
+        this.fetchWaiting();
+    }
+
     render() {
 
-        let listOrder = <Row>
-            <Col md={12}>
-                <div className="icon-big text-center">
-                    <i className="nc-icon nc-money-coins icon-background-paymen-conf" />
-                    <h4 style={{ margin: '0px' }}>Hai Gaes, Ini adalah halaman konfirmasi pembayaran</h4>
-                    <p>Kamu bisa mencari berdasarkan jumlah transfer atau nomor invoice. <br />Pastikan data yang ada disesuaikan dengan kenyataan yang ada. <br></br> Ciyee ada yang order...</p>
-                </div>
-            </Col>
-        </Row>
+        let listOrder =
+            <Row>
+                <Col md={12}>
+                    <div className="icon-big text-center">
+                        <i className="nc-icon nc-money-coins icon-background-paymen-conf" />
+                        <h4 style={{ margin: '0px' }}>Hai Gaes, Ini adalah halaman konfirmasi pembayaran</h4>
+                        <p>Kamu bisa mencari berdasarkan jumlah transfer atau nomor invoice. <br />Pastikan data yang ada disesuaikan dengan kenyataan yang ada. <br></br> Ciyee ada yang order...</p>
+                    </div>
+                </Col>
+            </Row>
             ;
 
         if (this.state.isFetching) {
