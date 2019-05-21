@@ -16,9 +16,10 @@ import { Label } from '../../components/UI/Form/Label/Label';
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
 import { ListPayment, ConfirmPayment, WaitingPayment } from '../../api/index'
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Moment from 'react-moment';
 import 'moment/locale/id';
+
 
 
 
@@ -73,12 +74,10 @@ class PaymentConfrimation extends Component {
 
 
     fetchOrderCard = () => {
-
         const content = {
             searchby: this.state.selectBy.id,
             value: this.state.value
         }
-
         if (this.state.value !== null && this.state.value > 1) {
             this.setState({ isFetching: true })
             ListPayment(content).then(res => {
@@ -262,6 +261,7 @@ class PaymentConfrimation extends Component {
         return (
 
             <div className="content">
+                <ToastContainer />
                 <Modal isOpen={this.state.modal} style={{ display: 'flex', alignItems: 'center', textAlign: 'center', height: '90%' }} fade={false} toggle={this.hideModal}>
                     <ModalHeader>
                         Apakah kamu mengkonfirmasi pesanan ini sudah membayarkan tagihannya ?
