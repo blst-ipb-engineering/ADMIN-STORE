@@ -112,8 +112,7 @@ export const authPassword = (email, password) => {
         axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data).then(result => {            
             if (result.data.code === 401) {
                 dispatch(passWrong(email));
-            } else {
-                console.log(result.data)
+            } else {                
                 const expDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 10) // 10 Jam dari backend node expressnya                            
                 const setToken = localStorage.setItem('token', result.data.token);
                 const companyId = localStorage.setItem('company',JSON.stringify({branch:result.data.branchId,company:result.data.companyId}));

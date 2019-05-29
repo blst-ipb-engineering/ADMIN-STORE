@@ -69,13 +69,16 @@ class Dashboard extends React.Component {
     this.setState({ branchFetching: true, verifiyingbranch: true });
     ListBranch(content).then(result => {
       if (this.unmounted) {
-        console.log("unmounted")
+        // if will unmount        
         return
       };
       this.setState({
         branchFetching: false,
         branchLists: result.data.list
       });
+    }).catch(err=>{
+      console.log(err)
+      toast.danger("Error Finance Network");
     })
 
     // mengecek apakah branch sudah diset atau belum untuk ke sistem keuangan
@@ -116,10 +119,7 @@ class Dashboard extends React.Component {
         const company = JSON.parse(localStorage.getItem('company')); 
         const new_COMPANY = {...company,branch:result.data.branchId};
         localStorage.setItem('company',JSON.stringify(new_COMPANY));
-
         toast.success("Pengaturan Berhasil");
-
-
         this.setState({branchVerified:true});
       }else{
         this.setState({branchVerified:false});
