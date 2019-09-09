@@ -54,6 +54,7 @@ class ProductEditor extends Component {
             create_price: 0,
             published_price: 0,
             base_price: 0,
+            promo_price: 0,
             unit: "Pcs",
             publish_date: new Date(),
             weight: 0,
@@ -153,9 +154,19 @@ class ProductEditor extends Component {
 
         if (isNum || event.target.value === null) {
             this.setState({ [key]: parseFloat(values) })
+
+            // jika yang diset adalah base_price, promo price akan mengikuti base price dan harus diisi
+            if (key === "base_price") {
+                this.setState({ promo_price: parseFloat(values) })
+            }
         }
         else if (values.length <= 1) {
             this.setState({ [key]: 0 })
+
+            // jika yang diset adalah base_price, promo price akan mengikuti base price dan harus diisi
+            if (key === "base_price") {
+                this.setState({ promo_price: 0 })
+            }
         }
         this.countFilled();
     }
@@ -295,19 +306,19 @@ class ProductEditor extends Component {
 
     pushFormNotif = (sum) => {
         const notif = [];
-        
+
         if (this.state.name === '') { notif.push("Nama Produk Belum diisi") };
         if (this.state.category.length === 0) { notif.push("Category belum diisi") };
         if (this.state.author.length === 0) { notif.push("Author belum diisi") };
         if (this.state.productImagesUrl.length === 0) { notif.push("Belum ada Gambar Produk") };
-        if (this.state.category.material  === 0) { notif.push("Material belum diisi") };
-        if (this.state.categoryGeneral.length  === 0) { notif.push("Category umum belum diisi") };
+        if (this.state.category.material === 0) { notif.push("Material belum diisi") };
+        if (this.state.categoryGeneral.length === 0) { notif.push("Category umum belum diisi") };
         if (this.state.description === '') { notif.push("Deskripsi belum diisi") };
-        if (this.state.base_price  === 0) { notif.push("Harga Produk belum diisi") };
+        if (this.state.base_price === 0) { notif.push("Harga Produk belum diisi") };
         if (this.state.pp === 0) { notif.push("Harga Pokok belum diisi") };
         if (this.state.unit === '') { notif.push("Satuan Produk belum diisi") };
-        if (this.state.weight  === 0) { notif.push("Berat belum diisi") };
-        if (this.state.height  === 0) { notif.push("Dimensi Panjang Produk belum diisi") };
+        if (this.state.weight === 0) { notif.push("Berat belum diisi") };
+        if (this.state.height === 0) { notif.push("Dimensi Panjang Produk belum diisi") };
         // if(this.state.thick !== 0) { notif.push("Tebal Produk belum diisi") };
         if (this.state.isbn === '') { notif.push("ISBN belum diisi") };
         if (this.state.pb === 0) { notif.push("Harga Penerbit belum diisi") };
@@ -497,8 +508,8 @@ class ProductEditor extends Component {
             const content = {
                 id: this.props.match.params.id
             }
-            ProductEdit(content).then(res => {
-                console.log(res)
+            ProductEdit(content).then(res => { 
+                               
                 this.setState({ edit_status: this.props.match.params.status });
                 const categories = [];
                 const authors = [];
@@ -588,6 +599,7 @@ class ProductEditor extends Component {
                         },
                         publish_date: res.publish_date,
                         base_price: res.base_price,
+                        promo_price: res.promoPrice,
                         description: res.description,
                         weight: res.weight,
                         width: res.width,
@@ -778,10 +790,10 @@ class ProductEditor extends Component {
 
         let datatipform = null;
         if (this.state.formNotFilledYet !== null) {
-            datatipform = this.state.formNotFilledYet.map((value, index) => (                           
+            datatipform = this.state.formNotFilledYet.map((value, index) => (
                 <div>{value}</div>
             ))
-        }            
+        }
 
 
         if (this.state.addCategory) {
@@ -845,7 +857,7 @@ class ProductEditor extends Component {
                         <Input type="text" value={this.state.newMaterial.name} onChange={(event) => this.setState({ newMaterial: { name: event.target.value }, addMode: 'material' })}></Input>
                     </Col>
                 </Row>
-        }
+        }        
 
         return (
 
@@ -854,7 +866,7 @@ class ProductEditor extends Component {
                     <Spinner></Spinner>
                 </div>) : (
                         <div className="progress-bar-class">
-                        <ReactTooltip />
+                            <ReactTooltip />
                             <span>Filled Percentage <b>{this.state.sumFilled}%</b></span>
                             <Line data-html={true} data-tip={renderToString(datatipform)} percent={this.state.sumFilled} strokeWidth="2" strokeColor={color} />
                         </div>
@@ -1018,7 +1030,7 @@ class ProductEditor extends Component {
                                 <CardBody style={{ minHeight: "0" }}>
                                     <Row>
                                         <Col md={7}>
-                                            <Label for="name" required><strong>Price</strong><small>/ Harga Jual</small></Label>
+                                            <Label for="name" required><strong>Price</strong><small>/ Harga Jual Dasar</small></Label>
                                             <InputGroup>
                                                 <InputGroupAddon addonType="prepend">
                                                     <InputGroupText>Rp</InputGroupText>
@@ -1042,17 +1054,27 @@ class ProductEditor extends Component {
                                                     onChange={(event) => { this.setState({ unit: event.target.value }) }}>
                                                 </Input>
                                             </InputGroup>
-
                                         </Col>
-                                        {/* <Col md={6}>
-                            <Label for="name" required>Promo Price <small>/ Harga Promo</small></Label>                        
-                            <Input 
-                                type="text" 
-                                value={this.formatuang(this.state.promo_price)} 
-                                name="promo_price"                             
-                                onChange={(event)=> this.onChangeMoneyHandler(event)}>
-                            </Input>
-                        </Col>                                                             */}
+                                    </Row>
+                                    <Row>
+                                        <Col md={7}>
+                                            <Label for="name" required><strong>Promo Price</strong><small>/ Harga Promo</small></Label>
+                                            <InputGroup>
+                                                <InputGroupAddon addonType="prepend">
+                                                    <InputGroupText>Rp</InputGroupText>
+                                                </InputGroupAddon>
+                                                <Input style={{ fontWeight: '700', fontSize: '20pt' }}
+                                                    type="text"
+                                                    value={this.state.promo_price !== 0 ? this.formatuang(this.state.promo_price) : this.formatuang(this.state.base_price)}
+                                                    name="promo_price"
+                                                    onChange={(event) => this.onChangeMoneyHandler(event)}>
+                                                </Input>
+                                            </InputGroup>
+                                        </Col>
+                                        <Col md={5}>
+                                            <Label for="name" required><strong>Perhatian: </strong></Label>
+                                            <Label for="name"><small>Harga promo harus diisi, jika harga tidak ada diskon, maka isi nilainya sama dengan Price atau Harga Jual Dasar</small></Label>
+                                        </Col>
                                     </Row>
 
                                     {this.state.categoryGeneral.label === "Book" ? (
