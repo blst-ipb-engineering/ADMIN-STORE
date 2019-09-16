@@ -15,7 +15,7 @@ import Stats from "../../components/Stats/Stats.jsx";
 import { Label } from '../../components/UI/Form/Label/Label';
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
-import { ListPayment, ConfirmPayment, WaitingPayment } from '../../api/index'
+import { ListPayment, ConfirmPayment, WaitingPayment,RejurnalPayment } from '../../api/index'
 import { toast, ToastContainer } from 'react-toastify';
 import Moment from 'react-moment';
 import 'moment/locale/id';
@@ -36,9 +36,11 @@ class PaymentConfrimation extends Component {
             paymentDate: new Date(),
             value: null,
             isFetching: false,
-            data: null,           
+            data: null,
             modal: false,
             SelectedData: null,
+            rejurnalModalOpen: false,
+            RejurnalSelectedData:null
         }
     }
 
@@ -64,11 +66,11 @@ class PaymentConfrimation extends Component {
         if (isNum && event.target.value !== null) {
             this.setState({ [key]: parseInt(values) }, () => { this.fetchOrderCard() })
         }
-        else if (values.length <= 1) {           
-            this.setState({ [key]: parseInt(0) }, () => { this.fetchWaiting() } )
+        else if (values.length <= 1) {
+            this.setState({ [key]: parseInt(0) }, () => { this.fetchWaiting() })
         }
 
-       
+
 
     }
 
@@ -90,7 +92,7 @@ class PaymentConfrimation extends Component {
     }
 
     fetchWaiting = () => {
-       
+
         const content = {}
         this.setState({ isFetching: true })
         WaitingPayment(content).then(res => {
@@ -110,7 +112,16 @@ class PaymentConfrimation extends Component {
         })
     }
 
-    confirmAction = (event, data) => {
+    onRejurnalHandler = (e, value) => {
+        e.preventDefault();
+
+        this.setState({
+            rejurnalModalOpen: true,
+            RejurnalSelectedData:value
+        })
+    }
+
+    confirmAction = (event) => {
         event.preventDefault();
         const content = {
             transactionId: this.state.SelectedData.transactionId,
@@ -121,6 +132,23 @@ class PaymentConfrimation extends Component {
         ConfirmPayment(content).then(res => {
             if (res.status !== undefined) {
                 toast.success("Berhasil mengkonfirmasi " + res.data.transactionId + " " + res.data.invoiceNumber);
+                this.setState({ data: null, modal: false })
+            }
+        }).catch(err => {
+            toast.danger("Gagal Mengkonfirmasi " + err);
+        })
+    }
+
+    confirmRejurnalAction = (event) => {
+        event.preventDefault();
+        const content = {
+            transactionId: this.state.RejurnalSelectedData.transactionId,
+            invoiceNumber: this.state.RejurnalSelectedData.invoiceNumber,            
+        }
+
+        RejurnalPayment(content).then(res => {
+            if (res.status !== undefined) {
+                toast.success("Berhasil merejurnal " + res.data.transactionId + " " + res.data.invoiceNumber);
                 this.setState({ data: null, modal: false })
             }
         }).catch(err => {
@@ -173,6 +201,7 @@ class PaymentConfrimation extends Component {
         if (this.state.data !== null && !this.state.isFetching && this.state.data.length > 0) {
             listOrder = this.state.data.map((value, index) => {
                 let btn = null;
+                let rejurnal = null;
                 let dateInput = null
                 let time = <Moment fromNow={true} locale="id" format="LLLL">{value.createdAt}</Moment>;
                 if (value.status == 1) { // Menunggu Pembayaran
@@ -186,7 +215,8 @@ class PaymentConfrimation extends Component {
                     btn = <Button onClick={(event) => this.onConfirmationButton(event, value)} className="conf-button" style={{ width: '100%' }} size="lg" color="primary">
                         Konfirmasi Pembayaran
                         </Button>
-                } else if (value.status == 2 || value.status == 3 || value.status == 4) { // Sudah Diproses
+                } else if (value.status === 2 || value.status === 3 || value.status === 4) { // Sudah Diproses
+                    rejurnal = <Button onClick={(e) => this.onRejurnalHandler(e, value)} size="sm" color="info">Rejurnal</Button>
                     dateInput = <>
                         <label style={{ fontSize: '10pt' }}>Dikonfirmasi oleh:</label><br></br>
                         <span style={{ fontSize: '10pt' }}>{value.confirmBy}</span><br></br>
@@ -228,6 +258,8 @@ class PaymentConfrimation extends Component {
                                     </Col>
                                     <Col xs={12} md={5}>
                                         {dateInput}
+                                        <br />
+                                        {rejurnal}
                                     </Col>
                                 </Row>
                             </CardBody>
@@ -276,6 +308,23 @@ class PaymentConfrimation extends Component {
                     <ModalFooter>
                         <Button color="secondary" onClick={() => this.setState({ modal: false })}>Tidak</Button>
                         <Button color="success" onClick={(event) => this.confirmAction(event, this.state.SelectedData)}>Ya</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={this.state.rejurnalModalOpen} style={{ display: 'flex', alignItems: 'center', textAlign: 'center', height: '90%' }} fade={false} toggle={this.hideModal}>
+                    <ModalHeader>
+                        Apakah kamu ingin merejurnal kembali ?
+                    </ModalHeader>
+                    <ModalBody>
+                        <CardTitle tag="p" style={{ fontWeight: '700', color: 'grey', textAlign: 'center', fontSize: '18pt' }}>
+                            <p className="card-category">Invoice Number: {this.state.RejurnalSelectedData !== null ? this.state.RejurnalSelectedData.invoiceNumber : null}</p>
+
+                            {this.state.RejurnalSelectedData !== null ? `Rp ${this.formatuang(this.state.RejurnalSelectedData.subtotal)}` : null}
+                        </CardTitle>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => this.setState({ rejurnalModalOpen: false })}>Tidak</Button>
+                        <Button color="success" onClick={(event) => this.confirmRejurnalAction(event, this.state.RejurnalSelectedData)}>Ya</Button>
                     </ModalFooter>
                 </Modal>
 

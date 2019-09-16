@@ -81,6 +81,7 @@ const API_SERVICES = {
   WaitingPayment: `${HOSTNAME}/orderproduct/waiting`,
 
   ConfirmPayment: `${HOSTNAME}/order/updatepayment`,
+  RejurnalPayment:`${HOSTNAME}/order/rejurnalpayment`,
   // modul ADMIN STORE untuk search Order yang sudah dikonfirmasi
   ListStatus: `${HOSTNAME}/order/list-status`,
   ListOrder: `${HOSTNAME}/orderproduct/searchorder`,
@@ -453,6 +454,25 @@ const ConfirmPayment = (contents) => {
     .catch(err => console.log(err))
 }
 
+const RejurnalPayment = (contents) => {
+
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.RejurnalPayment;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'put', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
 const ListOrder = (contents) => {
 
   getToken();
@@ -696,6 +716,7 @@ const CheckAccountFinance = (contents) => {
 
 
 
+
 export {
   ProductList,
   ProductAdd,
@@ -724,6 +745,7 @@ export {
   ListPayment,
   WaitingPayment,
   ConfirmPayment,
+  RejurnalPayment,
   ListOrder,
   ConfirmSend,
   ListOrderDetail,
