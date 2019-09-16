@@ -166,14 +166,13 @@ class OrderListToDeliver extends Component {
         </>
 
         if (this.state.dataListOrder !== null) {
-            listorder = this.state.dataListOrder.map((value, index) =>
-                // console.log(value)
+            listorder = this.state.dataListOrder.map((value, index) =>               
                 (<OrderCard DeclineItHandler={this.DeclineItHandler} OrderProps={value} key={index}></OrderCard>)
             )
         }
 
         let listStatus = this.state.listStatus.map((value, index) => (
-            <div onClick={(e) => this.handleStatusClick(e, value)} className={this.state.currentStatus.id === value.id ? "card-status-btn active-status" : "card-status-btn"} >
+            <div key={index} onClick={(e) => this.handleStatusClick(e, value)} className={this.state.currentStatus.id === value.id ? "card-status-btn active-status" : "card-status-btn"} >
                 {value.statusName} <span className="card-count-wrapper" style={{ background: `${value.color}` }}>{value.OrderCount}</span>
             </div>
         ));

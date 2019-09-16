@@ -27,7 +27,8 @@ class OrderCard extends Component {
             data: null,
             isPopUpOpen: false,
             tracking: null,
-            isTracking: false
+            isTracking: false,
+            isTrackingValid:false
         }
     }
 
@@ -112,9 +113,19 @@ class OrderCard extends Component {
         }
 
         TrackingShip(content).then(res => {
-            this.setState({ tracking: res }, () => {
-                this.setState({ isTracking: false })
-            })
+            if (res.status === 200) {
+                this.setState({ tracking: res }, () => {
+                    this.setState({ isTracking: false, isTrackingValid:true })
+                })
+            }else{
+                this.setState({ isTracking: false, isTrackingValid:false })
+            }
+
+
+        }).catch(err => {
+            toast.error(err)
+            console.log(err)
+            this.setState({ isTracking: false })
         })
 
     }
@@ -156,9 +167,9 @@ class OrderCard extends Component {
                 ButtonCondition = <div style={{ marginLeft: '10px', textAlign: 'center' }}>Batas Pembayaran : <Moment fromNow>{this.state.data.expireDate}</Moment></div>;
             } else if (this.state.data.status == 1 && new Date(this.state.data.expireDate) < new Date()) {
                 ButtonCondition = <Button onClick={(e) => this.props.DeclineItHandler(e, this.state.data.invoiceNumber)} style={{ margin: '0', borderRadius: '0px' }} size="lg" className="take-it-background">BATAL</Button>;
-            } else if (this.state.data.status == 5){
+            } else if (this.state.data.status == 5) {
                 ButtonCondition = <span>Waktu tenggat pembayaran sudah habis</span>
-            } 
+            }
             else {
                 ButtonCondition = this.state.data.no_resi;
             }
@@ -167,13 +178,14 @@ class OrderCard extends Component {
         let tracking_body = <>
             <TrackingShipping
                 isTracking={this.state.isTracking}
+                isTrackingValid={this.state.isTrackingValid}
                 data={this.state.tracking} />
         </>
 
 
         return (
-            <>                
-                <Popup 
+            <>
+                <Popup
                     onClosePopupHandler={this.togglePopup}
                     isOpen={this.state.isPopUpOpen}
                     headerTitle={"Lacak Pengiriman"}

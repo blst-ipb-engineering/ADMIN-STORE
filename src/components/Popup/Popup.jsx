@@ -16,7 +16,7 @@ class Popup extends Component {
                         {/* <div>Footer</div> */}
                     </div>
                 </div>
-                <div style={(this.props.isLacak) ? {marginLeft:'80px'} : null}  onClick={(event) => this.props.onClosePopupHandler(event)} className="backdrop"></div>
+                <div onClick={(event) => this.props.onClosePopupHandler(event)} className="backdrop"></div>
             </div>
         )
     }

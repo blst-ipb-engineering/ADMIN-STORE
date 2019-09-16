@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Steps, { Step } from 'rc-steps';
-
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import Loader from 'react-loader-spinner';
 
 class TrackingShipping extends Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class TrackingShipping extends Component {
     }
 
     render() {
-        let body = <h1>Loading...</h1>
+        let body = <div className="loading-tracking"><Loader type="Plane"></Loader></div>
 
         // let steps = <Step
         //     // key={index}
@@ -19,8 +20,7 @@ class TrackingShipping extends Component {
         //     // description={desc}
         // />;
 
-        if (!this.props.isTracking && this.props.data !== null) {
-
+        if (!this.props.isTracking && this.props.isTrackingValid) {
             let steps = this.props.data.data.manifest.map((value, index) => {
 
                 let desc = <>
@@ -47,6 +47,10 @@ class TrackingShipping extends Component {
                         {steps}
                     </Steps>
                 </div>
+            </div>
+        }else if(!this.props.isTracking && !this.props.isTrackingValid){
+            body = <div>
+                <span>Invalid waybill. Resi yang Anda masukkan salah atau belum terdaftar.</span>
             </div>
         }
 
