@@ -5,12 +5,13 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
+  CardHeader,
   Row,
   Col
 } from "reactstrap";
 import SpinnerGif from "../../assets/img/spinner-loading.gif";
 import { ToastContainer, toast } from 'react-toastify';
-
+import { BulletList } from 'react-content-loader'
 // react plugin used to create charts
 import { Line, Pie } from "react-chartjs-2";
 // function that returns a color based on an interval of numbers
@@ -31,6 +32,7 @@ import {
   dashboardEmailStatisticsChart,
   dashboardNASDAQChart
 } from "../../variables/charts.jsx";
+import Terlaris from "../../components/Insight/Terlaris/Terlaris";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -42,7 +44,55 @@ class Dashboard extends React.Component {
       branchLists: [],
       branchFetching: false,
       verifiyingbranch: false,
-      branchChosen: null
+      branchChosen: null,
+      orderChartData: {
+        data: {
+          labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          datasets: [
+            {
+              data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              label: "Order Total",
+              fill: false,
+              borderColor: "#fbc658",
+              backgroundColor: "transparent",
+              pointBorderColor: "#fbc658",
+              pointRadius: 4,
+              pointHoverRadius: 4,
+              pointBorderWidth: 8
+            },
+            // {
+            //   data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            //   fill: false,
+            //   label: "User Joined",
+            //   borderColor: "#51CACF",
+            //   backgroundColor: "transparent",
+            //   pointBorderColor: "#51CACF",
+            //   pointRadius: 4,
+            //   pointHoverRadius: 4,
+            //   pointBorderWidth: 8
+            // }
+          ]
+        },
+        options: {
+          legend: {
+            display: false,
+            position: "top"
+          }
+        }
+      }
     }
   }
 
@@ -57,8 +107,38 @@ class Dashboard extends React.Component {
   }
 
   fetchDashboardData() {
-    DashboardStat().then(result => {
-      this.setState({ data: result })
+    DashboardStat().then(async result => {
+
+      // Data Jumlah Order
+      const newArrayMonthOrder = [];
+      await result.OrderChart.map((value, index) => {
+        newArrayMonthOrder[value.createdOn] = value.total_order;
+      })
+      const mappint = [];
+      for (let index = 1; index <= 12; index++) {
+        await mappint.push(newArrayMonthOrder[index] !== undefined ? newArrayMonthOrder[index] : 0)
+      }
+
+      // Data Jumlah User
+
+
+      this.setState({
+        data: result,
+        orderChartData: {
+          ...this.state.orderChartData,
+          data: {
+            ...this.state.orderChartData.data,
+            datasets: [
+              {
+                ...this.state.orderChartData.data.datasets[0],
+                data: mappint
+              }
+            ]
+          }
+        }
+      })
+
+
     })
   }
 
@@ -76,9 +156,9 @@ class Dashboard extends React.Component {
         branchFetching: false,
         branchLists: result.data.list
       });
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err)
-      toast.danger("Error Finance Network");
+      toast.error("Error Finance Network");
     })
 
     // mengecek apakah branch sudah diset atau belum untuk ke sistem keuangan
@@ -94,8 +174,8 @@ class Dashboard extends React.Component {
     })
   }
 
-  componentWillUnmount(){   
-      this.unmounted = true;      
+  componentWillUnmount() {
+    this.unmounted = true;
   }
 
   popUpBranchCloseHandler = (e) => {
@@ -114,15 +194,15 @@ class Dashboard extends React.Component {
       ...this.state.branchChosen
     };
 
-    SetBranchSetting(content).then(result=>{
-      if(result.status === "Added"){
-        const company = JSON.parse(localStorage.getItem('company')); 
-        const new_COMPANY = {...company,branch:result.data.branchId};
-        localStorage.setItem('company',JSON.stringify(new_COMPANY));
+    SetBranchSetting(content).then(result => {
+      if (result.status === "Added") {
+        const company = JSON.parse(localStorage.getItem('company'));
+        const new_COMPANY = { ...company, branch: result.data.branchId };
+        localStorage.setItem('company', JSON.stringify(new_COMPANY));
         toast.success("Pengaturan Berhasil");
-        this.setState({branchVerified:true});
-      }else{
-        this.setState({branchVerified:false});
+        this.setState({ branchVerified: true });
+      } else {
+        this.setState({ branchVerified: false });
       }
     })
 
@@ -161,20 +241,20 @@ class Dashboard extends React.Component {
       <>
         {!this.state.branchVerified ? (
           <div className="branch-verficiation-wrapper">
-          <Popup
-            isOpen={true}
-            onClosePopupHandler={(e) => this.popUpBranchCloseHandler(e)}
-            headerTitle={"Selamat Datang"}
-            body={body_select_branch}
-          >
-          </Popup>
-        </div>
+            <Popup
+              isOpen={true}
+              onClosePopupHandler={(e) => this.popUpBranchCloseHandler(e)}
+              headerTitle={"Selamat Datang"}
+              body={body_select_branch}
+            >
+            </Popup>
+          </div>
 
         ) : null}
 
         <div className="content">
           <Row>
-            <Col xs={12} sm={6} md={6} lg={4}>
+            <Col xs={12} sm={6} md={6} lg={3}>
               <Card className="card-stats">
                 <CardBody>
                   <Row>
@@ -204,37 +284,7 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-            <Col xs={12} sm={6} md={6} lg={4}>
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col xs={5} md={4}>
-                      <div className="icon-big text-center">
-                        <i className="nc-icon nc-money-coins text-success" />
-                      </div>
-                    </Col>
-                    <Col xs={7} md={8}>
-                      <div className="numbers">
-                        <p className="card-category">Sales</p>
-                        <CardTitle tag="p">Rp {this.state.data !== null ? this.formatuang(this.state.data.sales[0].total) : 0}</CardTitle>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <Stats>
-                    {[
-                      {
-                        i: "far fa-calendar",
-                        t: "Last Year"
-                      }
-                    ]}
-                  </Stats>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col xs={12} sm={6} md={6} lg={4}>
+            <Col xs={12} sm={6} md={6} lg={3}>
               <Card className="card-stats">
                 <CardBody>
                   <Row>
@@ -264,6 +314,37 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
+            <Col xs={12} sm={6} md={6} lg={6}>
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col xs={5} md={4}>
+                      <div className="icon-big text-center">
+                        <i className="nc-icon nc-money-coins text-success" />
+                      </div>
+                    </Col>
+                    <Col xs={7} md={8}>
+                      <div className="numbers">
+                        <p className="card-category">Sales</p>
+                        <CardTitle tag="p">Rp {this.state.data !== null ? this.formatuang(this.state.data.sales[0].total) : 0}</CardTitle>
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+                <CardFooter>
+                  <hr />
+                  <Stats>
+                    {[
+                      {
+                        i: "far fa-calendar",
+                        t: "Last Year"
+                      }
+                    ]}
+                  </Stats>
+                </CardFooter>
+              </Card>
+            </Col>
+
             {/* <Col xs={12} sm={6} md={6} lg={3}>
             <Card className="card-stats">
               <CardBody>
@@ -323,71 +404,59 @@ class Dashboard extends React.Component {
               </CardFooter>
             </Card>
           </Col>
-        </Row>
-        <Row>
-          <Col xs={12} sm={12} md={4}>
-            <Card>
-              <CardHeader>
-                <CardTitle>Email Statistics</CardTitle>
-                <p className="card-category">Last Campaign Performance</p>
-              </CardHeader>
-              <CardBody>
-                <Pie
-                  data={dashboardEmailStatisticsChart.data}
-                  options={dashboardEmailStatisticsChart.options}
-                />
-              </CardBody>
-              <CardFooter>
-                <div className="legend">
-                  <i className="fa fa-circle text-primary" /> Opened{" "}
-                  <i className="fa fa-circle text-warning" /> Read{" "}
-                  <i className="fa fa-circle text-danger" /> Deleted{" "}
-                  <i className="fa fa-circle text-gray" /> Unopened
-                </div>
-                <hr />
-                <Stats>
-                  {[
-                    {
-                      i: "fas fa-calendar-alt",
-                      t: " Number of emails sent"
-                    }
-                  ]}
-                </Stats>
-              </CardFooter>
-            </Card>
-          </Col>
-          <Col xs={12} sm={12} md={8}>
-            <Card className="card-chart">
-              <CardHeader>
-                <CardTitle>NASDAQ: AAPL</CardTitle>
-                <p className="card-category">Line Chart With Points</p>
-              </CardHeader>
-              <CardBody>
-                <Line
-                  data={dashboardNASDAQChart.data}
-                  options={dashboardNASDAQChart.options}
-                  width={400}
-                  height={100}
-                />
-              </CardBody>
-              <CardFooter>
-                <div className="chart-legend">
-                  <i className="fa fa-circle text-info" /> Tesla Model S{" "}
-                  <i className="fa fa-circle text-warning" /> BMW 5 Series
-                </div>
-                <hr />
-                <Stats>
-                  {[
-                    {
-                      i: "fas fa-check",
-                      t: " Data information certified"
-                    }
-                  ]}
-                </Stats>
-              </CardFooter>
-            </Card>
-          </Col>
         </Row> */}
+          <Row>
+            <Col xs={12} sm={12} md={4}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Produk Terlaris</CardTitle>
+                  {/* <p className="card-category">Last Campaign Performance</p> */}
+                </CardHeader>
+                <CardBody>
+
+                  {this.state.data !== null ? (
+                    <Terlaris data={this.state.data !== null ? this.state.data.terlaris : null} />
+                  ) : (<><BulletList /><BulletList /></>)}
+
+                </CardBody>
+                <CardFooter>
+
+                </CardFooter>
+              </Card>
+            </Col>
+
+
+            <Col xs={12} sm={12} md={8}>
+              <Card className="card-chart">
+                <CardHeader>
+                  <CardTitle>Jumlah Order Per Bulan</CardTitle>
+                  <p className="card-category">Data dengan status pembayaran berhasil</p>
+                </CardHeader>
+                <CardBody>
+                  <Line
+                    data={this.state.orderChartData.data}
+                    options={this.state.orderChartData.options}
+                    width={400}
+                    height={100}
+                  />
+                </CardBody>
+                <CardFooter>
+                  <div className="chart-legend">
+                    <i className="fa fa-circle text-warning" /> Jumlah Order
+                </div>
+                  <hr />
+                  <Stats>
+                    {[
+                      {
+                        i: "fas fa-check",
+                        t: " Data information in 1 year"
+                      }
+                    ]}
+                  </Stats>
+                </CardFooter>
+              </Card>
+            </Col>
+          </Row>
         </div>
         <ToastContainer />
       </>

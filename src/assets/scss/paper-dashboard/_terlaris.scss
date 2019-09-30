@@ -1,0 +1,65 @@
+.terlaris-wrapper{
+    height: 260px;
+    overflow: scroll;
+    ul{
+        margin:0;
+        padding:0;
+
+        li{
+            width:100%;
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+            padding: 10px 0px;
+
+            .image{
+                width: 20%;  
+                height: auto;             
+                overflow: hidden;
+                margin-right: 20px;
+                position: relative;
+
+                .star{                    
+                    position: absolute;
+                    background: #ffcc00;
+                    width: 20px;
+                    height: 20px;
+                    left: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: 800;
+                    color: #808080;
+                    border-radius: 24px;
+                }
+
+                
+
+                img{
+                    width: 100%;
+                }
+            }
+
+            .description{
+                width: 80%;
+                position: relative;
+                // display: flex;
+                // justify-content: space-between;
+                // align-items: center;
+                // flex-direction: column;
+                
+                .desc{
+                    display: flex;
+                    // justify-content: space-between;
+                    color: #808080;
+                    font-weight: 400;
+                    padding-right: 20px;
+
+                    b{
+                        margin-left:5px;
+                    }
+                }
+            }
+        }
+    }
+}

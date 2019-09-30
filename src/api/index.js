@@ -622,13 +622,11 @@ const DashboardStat = (contents) => {
     ...data_user
   }
 
-  console.log(content);
-
   const url = API_SERVICES.DashboardStat;
   const extraHeaders = {
     Authorization: `Bearer ` + localStorage.getItem('token')
   }
-  return axios(configFetch(url, 'get', content, true, extraHeaders))
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
     .then(result => result.data)
     .catch(err => console.log(err))
 }
