@@ -18,15 +18,16 @@ import Logout from './layouts/Logout/Logout';
 
 
 // reducer 
-import  authReducer from './store/reducer/auth';
-import  uiReducer from './store/reducer/ui-reducer';
+import authReducer from './store/reducer/auth';
+import uiReducer from './store/reducer/ui-reducer';
 import { loadingBarReducer } from 'react-redux-loading-bar'
+import LabelLogistic from "./layouts/Logistic/LabelLogistic/LabelLogistic";
 
 
 const hist = createBrowserHistory();
 const rootReducer = combineReducers({
   authsd: authReducer,
-  ui:uiReducer,
+  ui: uiReducer,
   loadingBar: loadingBarReducer,
 });
 
@@ -41,7 +42,7 @@ const logger = store => {
   }
 }
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__|| compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, thunk)));
 
 
@@ -49,11 +50,12 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={hist}>
       <Switch>
+        <Route path="/logistic/label/:id" component={LabelLogistic}></Route>
         <Route path="/dashboard" component={Dashboard}></Route>
         <Route path="/login" exact component={Login}></Route>
         <Route path="/" exact component={Login}></Route>
         <Route path="/logout" exact component={Logout} />
-        
+
 
         {/* {indexRoutes.map((prop, key) => {
           return <Route path={prop.path} key={key} component={prop.component} />;
@@ -61,7 +63,7 @@ ReactDOM.render(
 
 
 
-        
+
       </Switch>
     </Router>
   </Provider>,

@@ -28,7 +28,7 @@ class OrderCard extends Component {
             isPopUpOpen: false,
             tracking: null,
             isTracking: false,
-            isTrackingValid:false
+            isTrackingValid: false
         }
     }
 
@@ -115,10 +115,10 @@ class OrderCard extends Component {
         TrackingShip(content).then(res => {
             if (res.status === 200) {
                 this.setState({ tracking: res }, () => {
-                    this.setState({ isTracking: false, isTrackingValid:true })
+                    this.setState({ isTracking: false, isTrackingValid: true })
                 })
-            }else{
-                this.setState({ isTracking: false, isTrackingValid:false })
+            } else {
+                this.setState({ isTracking: false, isTrackingValid: false })
             }
 
 
@@ -235,6 +235,8 @@ class OrderCard extends Component {
                                     {this.state.data.no_resi !== null ? (
                                         <Button onClick={(e) => this.handleTrackingClick(e)} size="sm" style={{ fontSize: '7pt' }}><i className="nc-icon nc-send" /> Lacak </Button>
                                     ) : null}
+
+                                    <Button onClick={(event) => { window.open("/logistic/label/"+this.state.data.invoiceNumber, "_blank") }} size="sm" style={{ fontSize: '7pt' }}>Print Label</Button>
 
                                 </div>
                             </div>
