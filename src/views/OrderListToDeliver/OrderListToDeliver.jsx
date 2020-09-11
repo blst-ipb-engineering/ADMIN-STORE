@@ -167,7 +167,7 @@ class OrderListToDeliver extends Component {
 
         if (this.state.dataListOrder !== null) {
             listorder = this.state.dataListOrder.map((value, index) =>               
-                (<OrderCard DeclineItHandler={this.DeclineItHandler} OrderProps={value} key={index}></OrderCard>)
+                (<OrderCard DeclineItHandler={this.DeclineItHandler} history={this.props.history} OrderProps={value} key={index}></OrderCard>)
             )
         }
 
