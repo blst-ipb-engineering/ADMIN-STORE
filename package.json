@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://admin-store.blst.co.id",
   "dependencies": {
-    "@types/react": "16.8.7",
+    "@types/react": "^16.8.7",
     "axios": "^0.18.1",
     "bootstrap": "4.3.1",
     "chart.js": "2.7.3",
@@ -15,7 +15,6 @@
     "jsonwebtoken": "^8.5.0",
     "node-http-server": "^8.1.2",
     "node-sass": "^4.12.0",
-    "node.js": "0.0.0",
     "perfect-scrollbar": "1.4.0",
     "querystring": "^0.2.0",
     "rc-progress": "^2.3.0",
@@ -44,11 +43,11 @@
     "react-sticky": "^6.0.3",
     "react-toastify": "^4.5.2",
     "react-tooltip": "^3.10.0",
-    "reactstrap": "7.1.0",
-    "redux": "^4.0.1",
+    "reactstrap": "^7.1.0",
+    "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
-    "typescript": "^3.4.2"
+    "typescript": "^3.9.7"
   },
   "scripts": {
     "start": "react-scripts start",
