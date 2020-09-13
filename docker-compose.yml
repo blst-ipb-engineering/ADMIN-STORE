@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   application:
-    container_name: bit-frontend
+    container_name: adminstore-frontend
     restart: unless-stopped
     build:
       context: .
