@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+
+  application:
+    container_name: bit-frontend
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '4001:80'
