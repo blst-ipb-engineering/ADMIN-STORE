@@ -19,7 +19,7 @@ class OrderCard extends Component {
         super(props)
 
         this.state = {
-            isCollapse: false,
+            isCollapse: true,
             isDetailOpen: false,
             isInputResiOpen: false,
             isbackdropOpen: false,
@@ -195,7 +195,7 @@ class OrderCard extends Component {
                 {this.state.data !== null ? (
                     <>
 
-                        <div className={this.state.isCollapse ? "otd-dard-header-short yellow" : "otd-dard-header-short"} onClick={() => { this.setState({ isCollapse: !this.state.isCollapse }) }}>
+                        {/* <div className={this.state.isCollapse ? "otd-dard-header-short yellow" : "otd-dard-header-short"} onClick={() => { this.setState({ isCollapse: !this.state.isCollapse }) }}>
                             <div className="col1">{this.state.data.invoiceNumber}</div>
                             <div className="col2">{this.state.data.Customer.email}</div>
                             <div className="col3"><strong>{this.state.data.courier} ({this.state.data.etd})</strong></div>
@@ -204,7 +204,7 @@ class OrderCard extends Component {
                                 {ButtonCondition}
                             </div>
                             <div className="col6"></div>
-                        </div>
+                        </div> */}
                         <div className={this.state.isCollapse ? "otd-card otd-open" : "otd-card"}>
                             <div className="otd-card-description">
                                 <h5>No Order: {this.state.data.invoiceNumber} <Button onClick={(event) => { this.detailHandler(event) }} size="sm" style={{ fontSize: '7pt' }}>Detail</Button> </h5>
