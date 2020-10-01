@@ -194,7 +194,7 @@ class OrderListToDeliver extends Component {
             }
 
             return <>
-                <TableRow>
+                <TableRow onClick={() => setOpen(!open)}>
                     <TableCell>
                         <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -216,8 +216,7 @@ class OrderListToDeliver extends Component {
                 </TableRow>
             </>
         }
-        const rows = this.state.dataListOrder.map((value, index) => {
-            console.log(value)
+        const rows = this.state.dataListOrder.map((value, index) => {            
             return <Row key={index} data={value}></Row>
         })
 
