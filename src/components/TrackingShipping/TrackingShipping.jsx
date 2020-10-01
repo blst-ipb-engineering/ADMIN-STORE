@@ -21,15 +21,16 @@ class TrackingShipping extends Component {
         // />;
 
         if (!this.props.isTracking && this.props.isTrackingValid) {
-            let steps = this.props.data.data.manifest.map((value, index) => {
+            
+            let steps = this.props.data.manifestArray.reverse().map((value, index) => {
 
                 let desc = <>
-                    <span>{value.manifest_date} {value.manifest_time} WIB</span>
+                    <span>{value.date} WIB</span>
                 </>
 
                 return <Step
                     key={index}
-                    title={value.manifest_description}
+                    title={value.desc}
                     description={desc}
                 />
             });
@@ -39,11 +40,11 @@ class TrackingShipping extends Component {
                     <img width="100" src="https://res.cloudinary.com/blst/image/upload/v1554457731/slider/Icon-send-packet-ipbpress-small.png" alt="" />
                     <div className="tracking-basic-info">
                         <small>Nomor Resi</small>
-                        <h3>{this.props.data.data.details.waybill_number}</h3>
+                        <h3>{this.props.data.no_resi}</h3>
                     </div>
                 </div>
                 <div className="tracking-body">
-                    <Steps current={this.props.data.data.manifest.length-1} direction="vertical">
+                    <Steps current={this.props.data.manifestArray.length-1} direction="vertical">
                         {steps}
                     </Steps>
                 </div>

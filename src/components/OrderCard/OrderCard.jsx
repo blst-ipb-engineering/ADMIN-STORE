@@ -114,7 +114,7 @@ class OrderCard extends Component {
 
         TrackingShip(content).then(res => {
             if (res.status === 200) {
-                this.setState({ tracking: res }, () => {
+                this.setState({ tracking: res.data }, () => {
                     this.setState({ isTracking: false, isTrackingValid: true })
                 })
             } else {
