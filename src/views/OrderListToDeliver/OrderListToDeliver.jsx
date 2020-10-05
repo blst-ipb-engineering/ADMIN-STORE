@@ -32,6 +32,8 @@ import {
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Moment from 'react-moment';
+import { TakeThisOrder } from '../../api/index';
+
 
 
 
@@ -167,6 +169,28 @@ class OrderListToDeliver extends Component {
             this.fetchOrderCard();
             this.fetchListStatus();
 
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    takeItHandler = (e, invNumber) => {
+        e.stopPropagation();
+        const content = {
+            invoiceNumber: invNumber
+        }
+        TakeThisOrder(content).then(result => {
+            this.setState((prevState) => ({
+                data: {
+                    ...prevState.data,
+                    prosesBy: result.data.prosesBy,
+                    dateproses: result.data.dateproses
+                }
+            }))
+
+            this.fetchOrderCard();
+            this.fetchListStatus();
+            toast.success("Selamat bertugas 👍🏻" + result.data.prosesBy + " Segera input nomor resi jika sudah mengirimkannya");
         }).catch(err => {
             console.log(err)
         })
