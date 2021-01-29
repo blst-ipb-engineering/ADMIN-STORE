@@ -296,7 +296,7 @@ class SlideEditor extends Component {
 
     // Replace cloudinary upload URL with yours
     return axios
-      .post("https://api.cloudinary.com/v1_1/blst/image/upload", formData, {
+      .post("https://api.cloudinary.com/v1_1/pradika2010/image/upload", formData, {
         headers: { "X-Requested-With": "XMLHttpRequest" }
       })
       .then(response => {
