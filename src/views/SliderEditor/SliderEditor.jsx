@@ -289,14 +289,14 @@ class SlideEditor extends Component {
     formData.append("file", image);
     formData.append("tags", ["slider"]); // Add tags for the images - {Array}
     formData.append("upload_preset", "blst_product"); // Replace the preset name with your own
-    formData.append("api_key", "387685966233372"); // Replace API key with your own Cloudinary API key
+    formData.append("api_key", "899241999449336"); // Replace API key with your own Cloudinary API key
     formData.append("folder", "slider");
     formData.append("quality", "low");
     formData.append("timestamp", (Date.now() / 1000) | 0);
 
     // Replace cloudinary upload URL with yours
     return axios
-      .post("https://api.cloudinary.com/v1_1/blst/image/upload", formData, {
+      .post("https://api.cloudinary.com/v1_1/blstipb2020/image/upload", formData, {
         headers: { "X-Requested-With": "XMLHttpRequest" }
       })
       .then(response => {
