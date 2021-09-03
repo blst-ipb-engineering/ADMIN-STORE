@@ -5,7 +5,7 @@
   "homepage": "https://admin-store.blst.co.id",
   "dependencies": {
     "@types/react": "^16.8.7",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "bootstrap": "4.3.1",
     "chart.js": "2.7.3",
     "cloudinary": "^1.13.2",
