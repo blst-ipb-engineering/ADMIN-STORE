@@ -122,7 +122,7 @@ const LabelLogistic = (props) => {
                                 <table width="100%">
                                     <tr>
                                         <td>
-                                            <div class="footer-background-logo footer-jne-png"></div>                                    </td>
+                                                                               </td>
                                         <td>
                                             {data.result.courier} <br /> ({data.result.etd})
                                     </td>
