@@ -64,7 +64,7 @@ class Dashboard extends React.Component {
           datasets: [
             {
               data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-              label: "Order Total",
+              label: "Order",
               fill: false,
               borderColor: "#fbc658",
               backgroundColor: "transparent",
@@ -76,7 +76,7 @@ class Dashboard extends React.Component {
             {
               data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               fill: false,
-              label: "User Joined",
+              label: "Order",
               borderColor: "#80808099",
               backgroundColor: "transparent",
               pointBorderColor: "#80808099",
