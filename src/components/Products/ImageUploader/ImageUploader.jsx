@@ -44,7 +44,7 @@ const baseStyle = {
 class ImageUploader extends Component {
     
     handleUploadImage = () => {        
-        const cloudName = 'blst';
+        const cloudName = 'blstipb2020';
         const unsignedUploadPreset = 'product';
         const HOST = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
         let fd = new FormData()

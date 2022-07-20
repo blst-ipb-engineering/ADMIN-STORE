@@ -64,7 +64,7 @@ class Dashboard extends React.Component {
           datasets: [
             {
               data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-              label: "Order Total",
+              label: "Order.",
               fill: false,
               borderColor: "#fbc658",
               backgroundColor: "transparent",
@@ -73,17 +73,17 @@ class Dashboard extends React.Component {
               pointHoverRadius: 4,
               pointBorderWidth: 8
             },
-            // {
-            //   data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            //   fill: false,
-            //   label: "User Joined",
-            //   borderColor: "#51CACF",
-            //   backgroundColor: "transparent",
-            //   pointBorderColor: "#51CACF",
-            //   pointRadius: 4,
-            //   pointHoverRadius: 4,
-            //   pointBorderWidth: 8
-            // }
+            {
+              data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              fill: false,
+              label: "Order",
+              borderColor: "#80808099",
+              backgroundColor: "transparent",
+              pointBorderColor: "#80808099",
+              pointRadius: 4,
+              pointHoverRadius: 4,
+              pointBorderWidth: 8
+            }
           ]
         },
         options: {
@@ -109,18 +109,19 @@ class Dashboard extends React.Component {
   fetchDashboardData() {
     DashboardStat().then(async result => {
 
-      // Data Jumlah Order
+      // Data Jumlah Order Tahun Ini
       const newArrayMonthOrder = [];
       await result.OrderChart.map((value, index) => {
-        newArrayMonthOrder[value.createdOn] = value.total_order;
+        newArrayMonthOrder[value.createdOn-1] = value.total_order;
       })
-      const mappint = [];
-      for (let index = 1; index <= 12; index++) {
-        await mappint.push(newArrayMonthOrder[index] !== undefined ? newArrayMonthOrder[index] : 0)
-      }
+      
 
-      // Data Jumlah User
-
+      // Data Jumlah Order Tahun Lalu
+      const newArrayMonthOrderLastYear = [];
+      await result.OrderChartLastYear.map((value, index) => {
+        newArrayMonthOrderLastYear[value.createdOn-1] = value.total_order;
+      })
+      
 
       this.setState({
         data: result,
@@ -131,7 +132,11 @@ class Dashboard extends React.Component {
             datasets: [
               {
                 ...this.state.orderChartData.data.datasets[0],
-                data: mappint
+                data: newArrayMonthOrder
+              },
+              {
+                ...this.state.orderChartData.data.datasets[1],
+                data: newArrayMonthOrderLastYear
               }
             ]
           }
@@ -441,8 +446,9 @@ class Dashboard extends React.Component {
                   />
                 </CardBody>
                 <CardFooter>
-                  <div className="chart-legend">
-                    <i className="fa fa-circle text-warning" /> Jumlah Order
+                  <div className="chart-legend" style={{display:'flex',justifyContent:'space-between'}}>
+                    <span><i className="fa fa-circle text-warning" /> Jumlah Order Tahun Ini</span>
+                    <span><i className="fa fa-circle" style={{color:'grey'}} /> Jumlah Order Tahun Lalu </span>                    
                 </div>
                   <hr />
                   <Stats>
