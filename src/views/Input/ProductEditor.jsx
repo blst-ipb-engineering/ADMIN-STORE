@@ -67,6 +67,10 @@ class ProductEditor extends Component {
             version: 1,
             production_version: 1,
             sku: '',
+            language:'',
+            eisbn:'',
+            publisher:'',
+            seoauthor:'',
             format: null,
             material: [],
             author: [],
@@ -610,6 +614,10 @@ class ProductEditor extends Component {
                         pages: res.pages,
                         isbn: res.isbn,
                         sku: res.sku,
+                        language: res.language,
+                        eisbn: res.eisbn,
+                        publisher: res.publisher,
+                        seoauthor: res.seoauthor,
                         saveable: true,
                         productId: res.id,
                         royalti_percent: res.royalti_percent !== null ? res.royalti_percent : 0,
@@ -1009,6 +1017,14 @@ class ProductEditor extends Component {
                                         />
 
                                     </Col>
+
+                                    <Row>
+                                        <Col md={12}>
+                                            <Label for="name">Seo Author <small>/ Seo Penulis</small></Label>
+                                            <Input value={this.state.seoauthor} type="text" name="seoauthor" onChange={(event) => this.setState({ seoauthor: event.target.value }, () => { this.countFilled() })}></Input>
+                                        </Col>
+                                    </Row>
+
                                     <Col md={6}>
                                         <Label for="date_publish" required>Published Date <small>/ Tanggal Terbit</small></Label>
                                         <DatePicker
@@ -1261,6 +1277,24 @@ class ProductEditor extends Component {
                                         <Col md={12}>
                                             <Label for="name">Code <small>/ Kode Produk</small></Label>
                                             <Input value={this.state.sku} type="text" name="sku" onChange={(event) => this.setState({ sku: event.target.value }, () => { this.countFilled() })}></Input>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <Label for="name">Language <small>/ Bahasa</small></Label>
+                                            <Input value={this.state.language} type="text" name="language" onChange={(event) => this.setState({ language: event.target.value }, () => { this.countFilled() })}></Input>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <Label for="name">E-ISBN <small>/ E-ISBN</small></Label>
+                                            <Input value={this.state.eisbn} type="text" name="eisbn" onChange={(event) => this.setState({ eisbn: event.target.value }, () => { this.countFilled() })}></Input>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <Label for="name">Publisher <small>/ Penerbit</small></Label>
+                                            <Input value={this.state.publisher} type="text" name="publisher" onChange={(event) => this.setState({ publisher: event.target.value }, () => { this.countFilled() })}></Input>
                                         </Col>
                                     </Row>
                                 </CardBody>
