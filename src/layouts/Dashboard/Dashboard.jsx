@@ -15,6 +15,9 @@ import * as actionCreator from '../../store/action/index';
 //View
 import ProductEditor from '../../views/Input/ProductEditor';
 
+import ProductEditorJournal from '../../views/Input/ProductEditorJournal';
+
+
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -99,6 +102,9 @@ class Dashboard extends React.Component {
             })}
             <Route path="/dashboard/products/:status" exact component={ProductEditor} />
             <Route name='product-edit' path="/dashboard/products/:id/:status" exact component={ProductEditor} />
+
+            <Route path="/dashboard/product-jurnal/:status" exact component={ProductEditorJournal} />
+            <Route name='product-jurnal-edit' path="/dashboard/product-jurnal/:id/:status" exact component={ProductEditorJournal} />
 
             <Route path="/dashboard/slider"></Route>
           </Switch>
