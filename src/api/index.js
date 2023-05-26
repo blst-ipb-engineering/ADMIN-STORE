@@ -66,6 +66,13 @@ const API_SERVICES = {
   ProductEdit: `${HOSTNAME}/product/edit`,
   ProductUpdate: `${HOSTNAME}/product/update`,
   ProductDelete: `${HOSTNAME}/product/delete`,
+//create journal produk
+ProductIndexJournal : `${HOSTNAME}/product/indexjurnal`,
+ProductAddJournal: `${HOSTNAME}/product/addjurnal`,
+ProductEditJournal: `${HOSTNAME}/product/editjurnal`,
+ProductUpdateJournal: `${HOSTNAME}/product/updatejurnal`,
+ProductDeleteJournal: `${HOSTNAME}/product/deletejurnal`,
+
   ProductCategoryGeneral: `${HOSTNAME}/category/general`,
   ProductCategory: `${HOSTNAME}/category`,
   CategoryProductLocalAdd: `${HOSTNAME}/category/add`,
@@ -129,6 +136,28 @@ const ProductList = (contents) => {
   const url = API_SERVICES.ProductIndex + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name + "&orderby=" + order;
   return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
 }
+
+
+//API PRODUCT JOURNAL
+const ProductListJournal = (contents) => {
+
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const page = contents.page ? contents.page : 1;
+  const limit = contents.limit ? contents.limit : 10;
+  const sortby = contents.sortby ? contents.sortby : "name";
+  const order = contents.order ? contents.order : "ASC";
+  const name = contents.name ? contents.name : "";
+
+  const url = API_SERVICES.ProductIndexJournal + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name + "&orderby=" + order;
+  return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
+}
+
 
 const ProductAdd = (contents) => {
 
@@ -206,6 +235,87 @@ const ProductDelete = (contents) => {
     .then(result => result.data)
     .catch(err => console.log(err))
 }
+
+
+//journal crud
+
+const ProductAddJournal = (contents) => {
+
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  console.log(content)
+
+  const url = API_SERVICES.ProductAddJournal;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const ProductEditJournal = (contents) => {
+
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.ProductEditJournal;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const ProductUpdateJournal = (contents) => {
+
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  console.log(content)
+
+  const url = API_SERVICES.ProductUpdateJournal;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'put', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+const ProductDeleteJournal = (contents) => {
+
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.ProductDeleteJournal;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'delete', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
 
 
 const ProductCategoryGeneral = (contents) => {
@@ -723,6 +833,12 @@ export {
   ProductDelete,
   ProductCategoryGeneral,
 
+  ProductAddJournal,
+  ProductEditJournal,
+  ProductUpdateJournal,
+  ProductDeleteJournal,
+
+
   NewCategoryAction,
   ProductCategory,
 
@@ -737,6 +853,9 @@ export {
   getSlidebar,
   updateSlidebar,
   deleteSlidebar,
+
+  //product journal
+  ProductListJournal,
 
   // Payment Confirmation
   ListStatus,

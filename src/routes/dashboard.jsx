@@ -9,6 +9,7 @@ import SliderEditor from '../views/SliderEditor/SliderEditor';
 import Products from "../views/Products/Products.jsx";
 import PaymentConfrimation from "../views/PaymentConfirmation/PaymentConfirmation.jsx";
 import OrderListToDeliver from "../views/OrderListToDeliver/OrderListToDeliver.jsx";
+import ProductsJournal from "../views/ProductsJournal/ProductsJournal.jsx";
 
 var dashRoutes = [
   {
@@ -41,12 +42,19 @@ var dashRoutes = [
     icon: "nc-icon nc-box",
     component: OrderListToDeliver
   },
+  // {
+  //   path: "/dashboard/icons",
+  //   name: "Icons",
+  //   icon: "nc-icon nc-diamond",
+  //   component: Icons
+  // },
   {
-    path: "/dashboard/icons",
-    name: "Icons",
+    path: "/dashboard/product-jurnal",
+    name: "Jurnal",
     icon: "nc-icon nc-diamond",
-    component: Icons
+    component: ProductsJournal
   },
+ 
   // { path: "/dashboard/maps", name: "Maps", icon: "nc-icon nc-pin-3", component: Maps },
   // {
   //   path: "/dashboard/notifications",
