@@ -72,8 +72,12 @@ class ProductEditorJournal extends Component {
             publisher:'',
             seoauthor:'',
             link_journal: '',
+            url_submit: '',
             akreditasi: '',
             status_books: '',
+            edisi_jurnal: '',
+            month_jurnal: '',
+            type_jurnal: '',
             format: null,
             material: [],
             author: [],
@@ -622,7 +626,11 @@ class ProductEditorJournal extends Component {
                         publisher: res.publisher,
                         seoauthor: res.seoauthor,
                         link_journal: res.link_journal,
+                        url_submit: res.url_submit,
                         akreditasi: res.akreditasi,
+                        edisi_jurnal: res.edisi_jurnal,
+                        month_jurnal: res.month_jurnal,
+                        type_jurnal: res.type_jurnal,
                         saveable: true,
                         productId: res.id,
                         royalti_percent: res.royalti_percent !== null ? res.royalti_percent : 0,
@@ -922,8 +930,13 @@ class ProductEditorJournal extends Component {
                                     </Col>
 
                                     <Col md={12}>
-                                        <Label for="name" required>URL Journal</Label>
+                                        <Label for="name" required>URL Article</Label>
                                         <Input type="text" value={this.state.link_journal} name="link_journal" onChange={(event) => this.setState({ link_journal: event.target.value }, () => { this.countFilled() })}></Input>
+                                    </Col>
+
+                                    <Col md={12}>
+                                        <Label for="name" required>URL Submit</Label>
+                                        <Input type="text" value={this.state.url_submit} name="url_submit" onChange={(event) => this.setState({ url_submit: event.target.value }, () => { this.countFilled() })}></Input>
                                     </Col>
 
                                     <Col md={12}>
@@ -1050,6 +1063,17 @@ class ProductEditorJournal extends Component {
                                             onChange={(val) => this.setState({ publish_date: val })}
                                         />
                                     </Col>
+
+                                    <Col md={12}>
+                                        <Label for="name" >Bulan</Label>
+                                        <Input type="text" value={this.state.month_jurnal} name="month_jurnal" onChange={(event) => this.setState({ month_jurnal: event.target.value }, () => { this.countFilled() })}></Input>
+                                    </Col>
+
+                                    <Col md={12}>
+                                        <Label for="name" >Edisi</Label>
+                                        <Input type="text" value={this.state.edisi_jurnal} name="edisi_jurnal" onChange={(event) => this.setState({ edisi_jurnal: event.target.value }, () => { this.countFilled() })}></Input>
+                                    </Col>
+
                                 </CardBody>
                                 <CardFooter>
 
