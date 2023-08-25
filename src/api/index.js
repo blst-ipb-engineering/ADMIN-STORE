@@ -66,12 +66,19 @@ const API_SERVICES = {
   ProductEdit: `${HOSTNAME}/product/edit`,
   ProductUpdate: `${HOSTNAME}/product/update`,
   ProductDelete: `${HOSTNAME}/product/delete`,
-//create journal produk
+//journal produk
 ProductIndexJournal : `${HOSTNAME}/product/indexjurnal`,
 ProductAddJournal: `${HOSTNAME}/product/addjurnal`,
 ProductEditJournal: `${HOSTNAME}/product/editjurnal`,
 ProductUpdateJournal: `${HOSTNAME}/product/updatejurnal`,
 ProductDeleteJournal: `${HOSTNAME}/product/deletejurnal`,
+
+//ebook produk
+ProductIndexEbook : `${HOSTNAME}/product/indexebook`,
+ProductAddEbook : `${HOSTNAME}/product/addebook`,
+ProductEditEbook : `${HOSTNAME}/product/editebook`,
+ProductUpdateEbook : `${HOSTNAME}/product/updateebook`,
+ProductDeleteEbook : `${HOSTNAME}/product/deleteebook`,
 
   ProductCategoryGeneral: `${HOSTNAME}/category/general`,
   ProductCategory: `${HOSTNAME}/category`,
@@ -137,6 +144,27 @@ const ProductList = (contents) => {
   return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
 }
 
+//API PRODUCT EBOOK
+const ProductListEbook = (contents) => {
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const page = contents.page ? contents.page : 1;
+  const limit = contents.limit ? contents.limit : 10;
+  const sortby = contents.sortby ? contents.sortby : "name";
+  const order = contents.order ? contents.order : "ASC";
+  const name = contents.name ? contents.name : "";
+
+  const url = API_SERVICES.ProductIndexEbook + "/?page=" + page + "&limit=" + limit + "&sortby=" + sortby + "&name=" + name + "&orderby=" + order;
+  return axios(configFetch(url, 'get', content)).then(result => result.data).catch(err => console.log(err))
+
+
+}
+
 
 //API PRODUCT JOURNAL
 const ProductListJournal = (contents) => {
@@ -180,6 +208,34 @@ const ProductAdd = (contents) => {
     .catch(err => console.log(err))
 }
 
+//ebook add
+
+const ProductAddEbook = (contents) => {
+  getToken();
+
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  console.log(content)
+
+  const url = API_SERVICES.ProductAddEbook;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+
+  
+}
+
+
+
+
+
 const ProductEdit = (contents) => {
 
   getToken();
@@ -197,6 +253,28 @@ const ProductEdit = (contents) => {
     .then(result => result.data)
     .catch(err => console.log(err))
 }
+
+//edit ebook
+
+const ProductEditEbook = (contents) => {
+
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.ProductEditEbook;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'post', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+
 
 const ProductUpdate = (contents) => {
 
@@ -218,6 +296,29 @@ const ProductUpdate = (contents) => {
     .catch(err => console.log(err))
 }
 
+//update ebook
+const ProductUpdateEbook = (contents) => {
+
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  console.log(content)
+
+  const url = API_SERVICES.ProductUpdateEbook;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'put', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+
+
 const ProductDelete = (contents) => {
 
   getToken();
@@ -235,6 +336,29 @@ const ProductDelete = (contents) => {
     .then(result => result.data)
     .catch(err => console.log(err))
 }
+
+//delete ebook
+
+const ProductDeleteEbook = (contents) => {
+
+  getToken();
+  const content = {
+    ...contents,
+    ...data_user
+  }
+
+  const url = API_SERVICES.ProductDeleteEbook;
+  const extraHeaders = {
+    Authorization: `Bearer ` + localStorage.getItem('token')
+  }
+
+  return axios(configFetch(url, 'delete', content, true, extraHeaders))
+    .then(result => result.data)
+    .catch(err => console.log(err))
+}
+
+
+
 
 
 //journal crud
@@ -837,6 +961,12 @@ export {
   ProductEditJournal,
   ProductUpdateJournal,
   ProductDeleteJournal,
+
+  ProductListEbook,
+  ProductAddEbook,
+  ProductEditEbook,
+  ProductUpdateEbook,
+  ProductDeleteEbook,
 
 
   NewCategoryAction,
