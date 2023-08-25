@@ -10,6 +10,7 @@ import Products from "../views/Products/Products.jsx";
 import PaymentConfrimation from "../views/PaymentConfirmation/PaymentConfirmation.jsx";
 import OrderListToDeliver from "../views/OrderListToDeliver/OrderListToDeliver.jsx";
 import ProductsJournal from "../views/ProductsJournal/ProductsJournal.jsx";
+import Ebook from "../views/Ebook/Ebook.jsx"
 
 var dashRoutes = [
   {
@@ -53,6 +54,13 @@ var dashRoutes = [
     name: "Jurnal",
     icon: "nc-icon nc-diamond",
     component: ProductsJournal
+  },
+
+  {
+    path: "/dashboard/ebooks",
+    name: "E - BOOK",
+    icon: "nc-icon nc-atom",
+    component: Ebook
   },
  
   // { path: "/dashboard/maps", name: "Maps", icon: "nc-icon nc-pin-3", component: Maps },
