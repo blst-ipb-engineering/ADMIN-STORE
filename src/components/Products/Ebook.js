@@ -103,7 +103,7 @@ class Ebooks extends Component {
             color = '#5bd400';
         }
 
-
+        console.log(this.props.produk)
         return (
             <div className="product-list-admin-wrapper">
                 {/* Check */}
@@ -122,6 +122,8 @@ class Ebooks extends Component {
                         </Link>
                         {/* <small>Cetakan ke 2</small> */}
                         <div className="ellipsis">{this.props.produk.category_general}        <b>#{this.props.produk.identifier_name}</b></div>
+                        <div className="ellipsis"> URL Ebook :      <b>{this.props.produk.url_ebook}</b></div>
+                        
                     </div>
                     <div className="box-verification">
                         {this.state.isFetchingFinanceValidation ? (

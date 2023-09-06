@@ -146,7 +146,8 @@ class Ebook extends Component {
           companyId:value.companyId,
           brancId: value.brancId,
           identifier_name:value.identifier_name,
-          sumFilled:value.sumFilled
+          sumFilled:value.sumFilled,
+          url_ebook: value.url_ebook
         })
       });
 
